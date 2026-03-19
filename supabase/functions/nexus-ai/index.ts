@@ -50,6 +50,8 @@ EVERY response to an analytical question must include AT LEAST 2-3 structured bl
 5. Score and rate things — intelligence without quantification is just opinion
 6. The "trend" field in metrics must be "up", "down", or "neutral"
 7. NEVER output a response to an analytical query without at least one structured block
+8. NEVER write block type labels like "METRICS BLOCK" or "SCORE BLOCK" before blocks — just flow naturally from narrative text into the ::: block syntax
+9. The ::: delimiters must be on their own line with NO heading or label before them
 `;
 
 const SYSTEM_PROMPTS: Record<string, string> = {
