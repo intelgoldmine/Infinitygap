@@ -235,11 +235,12 @@ serve(async (req) => {
 
     // Fetch ALL sources in parallel
     const [
-      flightsRaw, cryptoRaw, earthquakesRaw, forexRaw, issRaw,
+      flightsRaw, flightsEuRaw, cryptoRaw, earthquakesRaw, forexRaw, issRaw,
       spaceWeatherRaw, apodRaw, spacexRaw,
       weatherNY, weatherLondon, weatherTokyo, weatherDubai, weatherSydney,
     ] = await Promise.all([
-      safeFetch(SOURCES.flights),
+      safeFetch(SOURCES.flights, 10000),
+      safeFetch(SOURCES.flights_europe, 10000),
       safeFetch(SOURCES.crypto),
       safeFetch(SOURCES.earthquakes),
       safeFetch(SOURCES.forex),
@@ -254,7 +255,7 @@ serve(async (req) => {
       safeFetch(SOURCES.weather_sydney),
     ]);
 
-    const flights = processFlights(flightsRaw);
+    const flights = processFlights(flightsRaw, flightsEuRaw);
     const crypto = processCrypto(cryptoRaw);
     const earthquakes = processEarthquakes(earthquakesRaw);
     const forex = processForex(forexRaw);
