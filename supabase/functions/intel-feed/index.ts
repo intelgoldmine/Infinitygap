@@ -2,13 +2,14 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // All free, no-key-required public APIs
 const SOURCES = {
   // Live flight data (OpenSky Network)
-  flights: "https://opensky-network.org/api/states/all?lamin=30&lamax=50&lomin=-100&lomax=-70",
+  flights: "https://opensky-network.org/api/states/all?lamin=25&lamax=50&lomin=-130&lomax=-60",
+  flights_europe: "https://opensky-network.org/api/states/all?lamin=35&lamax=60&lomin=-10&lomax=30",
   // Top crypto prices (CoinGecko)
   crypto: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d",
   // Significant earthquakes last 30 days (USGS)
@@ -52,10 +53,18 @@ function getWeekAgo(): string {
   return d.toISOString().split("T")[0];
 }
 
-function processFlights(raw: any) {
-  if (!raw?.states) return [];
-  // Return top 50 flights with most data
-  return raw.states
+function processFlights(raw: any, rawEu: any) {
+  const statesUS = raw?.states || [];
+  const statesEU = rawEu?.states || [];
+  const all = [...statesUS, ...statesEU];
+  // Deduplicate by icao24
+  const seen = new Set<string>();
+  const unique = all.filter((s: any[]) => {
+    if (!s[0] || seen.has(s[0])) return false;
+    seen.add(s[0]);
+    return true;
+  });
+  return unique
     .filter((s: any[]) => s[1] && s[2] && s[5] && s[6] && s[7])
     .slice(0, 60)
     .map((s: any[]) => ({
@@ -63,8 +72,8 @@ function processFlights(raw: any) {
       country: s[2],
       longitude: s[5],
       latitude: s[6],
-      altitude: Math.round((s[7] || 0) * 3.281), // meters to feet
-      velocity: Math.round((s[9] || 0) * 1.944), // m/s to knots
+      altitude: Math.round((s[7] || 0) * 3.281),
+      velocity: Math.round((s[9] || 0) * 1.944),
       heading: Math.round(s[10] || 0),
       on_ground: s[8],
     }));
@@ -226,11 +235,12 @@ serve(async (req) => {
 
     // Fetch ALL sources in parallel
     const [
-      flightsRaw, cryptoRaw, earthquakesRaw, forexRaw, issRaw,
+      flightsRaw, flightsEuRaw, cryptoRaw, earthquakesRaw, forexRaw, issRaw,
       spaceWeatherRaw, apodRaw, spacexRaw,
       weatherNY, weatherLondon, weatherTokyo, weatherDubai, weatherSydney,
     ] = await Promise.all([
-      safeFetch(SOURCES.flights),
+      safeFetch(SOURCES.flights, 10000),
+      safeFetch(SOURCES.flights_europe, 10000),
       safeFetch(SOURCES.crypto),
       safeFetch(SOURCES.earthquakes),
       safeFetch(SOURCES.forex),
@@ -245,7 +255,7 @@ serve(async (req) => {
       safeFetch(SOURCES.weather_sydney),
     ]);
 
-    const flights = processFlights(flightsRaw);
+    const flights = processFlights(flightsRaw, flightsEuRaw);
     const crypto = processCrypto(cryptoRaw);
     const earthquakes = processEarthquakes(earthquakesRaw);
     const forex = processForex(forexRaw);
