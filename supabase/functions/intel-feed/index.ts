@@ -8,7 +8,8 @@ const corsHeaders = {
 // All free, no-key-required public APIs
 const SOURCES = {
   // Live flight data (OpenSky Network)
-  flights: "https://opensky-network.org/api/states/all?lamin=30&lamax=50&lomin=-100&lomax=-70",
+  flights: "https://opensky-network.org/api/states/all?lamin=25&lamax=50&lomin=-130&lomax=-60",
+  flights_europe: "https://opensky-network.org/api/states/all?lamin=35&lamax=60&lomin=-10&lomax=30",
   // Top crypto prices (CoinGecko)
   crypto: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d",
   // Significant earthquakes last 30 days (USGS)
