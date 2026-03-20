@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "leaflet/dist/leaflet.css";
 
 @tailwind base;
 @tailwind components;
@@ -169,4 +170,24 @@
 @keyframes orbit {
   from { transform: rotate(0deg) translateX(32px) rotate(0deg); }
   to { transform: rotate(360deg) translateX(32px) rotate(-360deg); }
+}
+
+/* Leaflet map tooltip overrides */
+.map-tooltip {
+  background: hsl(220 20% 8% / 0.95) !important;
+  border: 1px solid hsl(210 20% 14% / 0.8) !important;
+  color: hsl(195 30% 90%) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+.map-tooltip::before {
+  border-top-color: hsl(220 20% 8% / 0.95) !important;
+}
+.leaflet-container {
+  background: hsl(222 25% 5%) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+.leaflet-control-attribution {
+  display: none !important;
 }
