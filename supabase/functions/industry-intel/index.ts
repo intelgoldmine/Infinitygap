@@ -78,23 +78,26 @@ KEY PRINCIPLES:
 - Reference and build upon previous analyses when available${historicalContext}`;
 
     const userPrompt = detailed
-      ? `Analyze ${scope} for EXPLOITABLE MONEY-MAKING OPPORTUNITIES.${!isGlobal ? ` Focus on the ${geoStr} market specifically.` : ""} Keywords: ${keywordStr}.
+      ? `Provide COMPREHENSIVE INTELLIGENCE on ${scope}.${!isGlobal ? ` Focus on the ${geoStr} market specifically.` : ""} Keywords: ${keywordStr}.
 
 Return JSON with these exact keys:
 {
-  "analysis": "250-word deep analysis${!isGlobal ? ` contextualized to ${geoStr}` : ""}: Where is money flowing? Where is it STUCK? Where are the biggest inefficiencies? Who is overpaying? Who is underserved? What's about to break open? Be ruthlessly specific with numbers, company names, and dollar amounts${!isGlobal ? ` relevant to ${geoStr}` : ""}.",
-  "news": [{"title": "...", "summary": "30-word summary of why this matters for making money${!isGlobal ? ` in ${geoStr}` : ""}"}] (5 recent developments that create opportunities),
-  "gaps": [{"title": "...", "detail": "60-word explanation: What's the gap, its estimated market value, why it exists, and how to exploit it${!isGlobal ? ` in ${geoStr}` : ""}", "value": "$X estimate", "urgency": "high|medium|low", "capital_needed": "low|medium|high"}] (6 exploitable gaps with profit potential),
-  "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (4 time-sensitive market alerts),
+  "analysis": "400-word deep intelligence briefing${!isGlobal ? ` contextualized to ${geoStr}` : ""}: Who are the major players and what are they doing? What deals, launches, and partnerships happened recently? What regulatory changes are underway? Where is money flowing and where is it stuck? Name companies, people, amounts, and dates.",
+  "players": [{"name": "Company/Person name", "role": "what they do in this space", "recent_activity": "what they have done recently", "strategy": "their apparent strategy", "partnerships": "who they work with"}] (8-10 key players),
+  "news": [{"title": "...", "summary": "40-word summary covering who did what, when, why, and what it means${!isGlobal ? ` for ${geoStr}` : ""}"}] (6 recent developments with full context),
+  "deals": [{"type": "funding|M&A|partnership|contract|IPO|regulatory", "parties": "who is involved", "value": "$X", "date": "when", "significance": "why it matters"}] (4-6 recent deals/events),
+  "gaps": [{"title": "...", "detail": "60-word explanation grounded in intelligence above: What specific player activity or market condition creates this gap? Its estimated market value and how to exploit it${!isGlobal ? ` in ${geoStr}` : ""}", "value": "$X estimate", "urgency": "high|medium|low", "capital_needed": "low|medium|high", "related_players": "who is relevant"}] (6 exploitable gaps derived from the intel),
+  "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (4 time-sensitive alerts),
   "liveData": {"metric_name": value} (8 relevant quantitative metrics${!isGlobal ? ` for ${geoStr}` : ""})
 }`
-      : `Give a money-flow brief for ${scope}.${!isGlobal ? ` Focus on the ${geoStr} market.` : ""} Keywords: ${keywordStr}.
+      : `Give comprehensive intelligence on ${scope}.${!isGlobal ? ` Focus on the ${geoStr} market.` : ""} Keywords: ${keywordStr}.
 
 Return JSON:
 {
-  "analysis": "150-word overview${!isGlobal ? ` for ${geoStr}` : ""}: Where does money flow? Where are the biggest leaks and underserved segments?",
-  "news": [{"title": "...", "summary": "..."}] (3 developments creating opportunities),
-  "gaps": [{"title": "...", "detail": "...", "value": "$X estimate"}] (3 major exploitable gaps)
+  "analysis": "250-word intelligence briefing${!isGlobal ? ` for ${geoStr}` : ""}: Who are the key players? What are they doing? What deals happened? Where does money flow? What gaps emerge from this landscape?",
+  "players": [{"name": "...", "role": "...", "recent_activity": "..."}] (5 key players),
+  "news": [{"title": "...", "summary": "..."}] (3 developments with full context on who/what/why),
+  "gaps": [{"title": "...", "detail": "...", "value": "$X estimate"}] (3 gaps derived from the intel)
 }`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
