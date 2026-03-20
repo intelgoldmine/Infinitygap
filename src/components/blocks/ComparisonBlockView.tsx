@@ -1,5 +1,6 @@
 import type { ComparisonBlock } from "@/lib/blockTypes";
 import { Scale } from "lucide-react";
+import { InlineMarkdown } from "@/components/InlineMarkdown";
 
 export function ComparisonBlockView({ data }: { data: ComparisonBlock["data"] }) {
   return (
@@ -9,7 +10,7 @@ export function ComparisonBlockView({ data }: { data: ComparisonBlock["data"] })
         <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide">{data.title}</h3>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-xs font-mono">
+        <table className="w-full text-xs">
           <thead>
             <tr className="border-b border-border/30">
               {data.headers.map((h, i) => (
@@ -30,11 +31,13 @@ export function ComparisonBlockView({ data }: { data: ComparisonBlock["data"] })
                 {row.map((cell, j) => (
                   <td
                     key={j}
-                    className={`px-4 py-2.5 ${
-                      j === 0 ? "text-muted-foreground font-medium" : "text-card-foreground"
+                    className={`px-4 py-2.5 align-top ${
+                      j === 0 ? "text-muted-foreground font-medium font-mono" : "text-card-foreground"
                     }`}
                   >
-                    {cell}
+                    <span className={j === 0 ? "font-mono" : undefined}>
+                      <InlineMarkdown content={String(cell)} />
+                    </span>
                   </td>
                 ))}
               </tr>
@@ -44,9 +47,10 @@ export function ComparisonBlockView({ data }: { data: ComparisonBlock["data"] })
       </div>
       {data.verdict && (
         <div className="px-4 py-3 border-t border-border/30 bg-primary/5">
-          <p className="text-xs text-primary/90 font-mono leading-relaxed">
-            <span className="font-semibold">VERDICT:</span> {data.verdict}
-          </p>
+          <div className="text-xs text-primary/90 leading-relaxed">
+            <span className="font-semibold font-mono">VERDICT:</span>{" "}
+            <InlineMarkdown content={data.verdict} />
+          </div>
         </div>
       )}
     </div>

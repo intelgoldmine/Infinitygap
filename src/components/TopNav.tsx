@@ -6,13 +6,13 @@ export function TopNav({ onClear, hasMessages }: { onClear: () => void; hasMessa
   return (
     <header className="flex items-center justify-between px-5 py-4 border-b border-border/40 glass-panel-strong z-10">
       <div className="flex items-center gap-4">
-        <BrandHexMark size="lg" />
+        <BrandHexMark size="md" />
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="text-2xl sm:text-3xl md:text-[2rem]">
+            <h1 className="text-xl sm:text-2xl md:text-[1.7rem]">
               <BrandWordmark />
             </h1>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/12 text-primary border border-primary/25 tracking-wider">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-signal-violet/10 text-signal-violet border border-signal-violet/25 tracking-wider">
               v1.0
             </span>
           </div>

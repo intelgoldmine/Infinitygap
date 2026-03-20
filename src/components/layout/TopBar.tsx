@@ -15,8 +15,8 @@ export function TopBar({ sidebarOpen, toggleSidebar }: { sidebarOpen: boolean; t
       </button>
 
       <Link to="/" className="flex items-center gap-2 min-w-0">
-        <BrandHexMark size="md" />
-        <span className="text-[15px] sm:text-base truncate">
+        <BrandHexMark size="sm" />
+        <span className="text-[13px] sm:text-[0.9rem] truncate">
           <BrandWordmark />
         </span>
       </Link>

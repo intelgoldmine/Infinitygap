@@ -1,5 +1,6 @@
 import type { ScoreBlock } from "@/lib/blockTypes";
 import { Gauge } from "lucide-react";
+import { BlockMarkdown } from "@/components/InlineMarkdown";
 
 function getScoreColor(score: number, max: number) {
   const pct = score / max;
@@ -50,7 +51,7 @@ export function ScoreBlockView({ data }: { data: ScoreBlock["data"] }) {
               {data.label}
             </span>
           </div>
-          <p className="text-xs text-card-foreground/80 leading-relaxed">{data.summary}</p>
+          <BlockMarkdown content={data.summary} className="text-xs text-card-foreground/80 leading-relaxed [&_p]:mb-1.5" />
 
           {/* Breakdown bars */}
           <div className="space-y-2 pt-1">

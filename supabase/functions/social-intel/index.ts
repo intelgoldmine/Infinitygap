@@ -87,10 +87,14 @@ function resolveGeoToCountries(geo: string): string[] {
   return matched.length > 0 ? matched : ["US", "GB"];
 }
 
-// ── X/TWITTER SEARCH (v2 Recent Search) ──
+// ── X/TWITTER SEARCH (v2 Recent Search, app-only Bearer auth) ──
+// Set Supabase secret: TWITTER_BEARER_TOKEN (or X_BEARER_TOKEN). OAuth consumer key/secret are not used here.
 async function scrapeTwitter(keywords: string[], countryCodes: string[]): Promise<any[]> {
-  const BEARER = Deno.env.get("TWITTER_BEARER_TOKEN");
-  if (!BEARER) { console.warn("No TWITTER_BEARER_TOKEN"); return []; }
+  const BEARER = Deno.env.get("TWITTER_BEARER_TOKEN") || Deno.env.get("X_BEARER_TOKEN");
+  if (!BEARER) {
+    console.warn("No TWITTER_BEARER_TOKEN or X_BEARER_TOKEN — X search skipped");
+    return [];
+  }
 
   const results: any[] = [];
   const query = keywords.slice(0, 5).join(" OR ");

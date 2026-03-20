@@ -20,21 +20,28 @@ const MaverickDashboard = () => {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
+          background: [
             "radial-gradient(ellipse 80% 40% at 50% 0%, hsl(185 90% 48% / 0.07) 0%, transparent 60%)",
+            "radial-gradient(ellipse 55% 45% at 100% 0%, hsl(265 82% 62% / 0.05) 0%, transparent 55%)",
+            "radial-gradient(ellipse 50% 40% at 0% 100%, hsl(155 62% 48% / 0.045) 0%, transparent 58%)",
+          ].join(", "),
         }}
       />
 
       <div className="relative z-10 flex flex-col h-full">
         <header className="flex items-center justify-between px-4 py-3 border-b border-border/50 glass-panel-strong">
           <div className="flex items-center gap-4">
-            <BrandHexMark size="lg" />
+            <BrandHexMark size="md" />
             <div>
-              <h1 className="text-2xl sm:text-3xl md:text-[2.125rem]">
+              <h1 className="text-xl sm:text-2xl md:text-[1.85rem]">
                 <BrandWordmark />
               </h1>
-              <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-0.5">
-                Money flow • Gaps • Signals
+              <p className="text-[10px] font-mono uppercase tracking-widest mt-0.5">
+                <span className="text-primary/90">Money flow</span>
+                <span className="text-muted-foreground/55"> • </span>
+                <span className="text-signal-emerald/90">Gaps</span>
+                <span className="text-muted-foreground/55"> • </span>
+                <span className="text-signal-amber/90">Signals</span>
               </p>
             </div>
           </div>

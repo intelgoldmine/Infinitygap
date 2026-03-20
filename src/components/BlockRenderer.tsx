@@ -1,4 +1,5 @@
 import type { ContentSegment } from "@/lib/blockTypes";
+import { normalizeMarkdownInput } from "@/lib/markdownNormalize";
 import { MetricsBlockView } from "./blocks/MetricsBlockView";
 import { ComparisonBlockView } from "./blocks/ComparisonBlockView";
 import { FrameworkBlockView } from "./blocks/FrameworkBlockView";
@@ -45,7 +46,7 @@ export function BlockRenderer({ segments }: { segments: ContentSegment[] }) {
                     hr: () => <hr className="my-4 border-border/30" />,
                   }}
                 >
-                  {seg.content}
+                  {normalizeMarkdownInput(seg.content)}
                 </ReactMarkdown>
               </div>
             );

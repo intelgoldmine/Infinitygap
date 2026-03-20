@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { normalizeMarkdownInput } from "@/lib/markdownNormalize";
 
 interface InlineMarkdownProps {
   content: string;
@@ -11,6 +12,7 @@ interface InlineMarkdownProps {
  * that may contain **bold**, *italic*, `code`, links, lists, etc.
  */
 export function InlineMarkdown({ content, className = "" }: InlineMarkdownProps) {
+  const md = normalizeMarkdownInput(content);
   return (
     <span className={`inline-markdown ${className}`}>
       <ReactMarkdown
@@ -37,7 +39,7 @@ export function InlineMarkdown({ content, className = "" }: InlineMarkdownProps)
           h3: ({ children }) => <span className="font-semibold text-foreground">{children}</span>,
         }}
       >
-        {content}
+        {md}
       </ReactMarkdown>
     </span>
   );
@@ -47,6 +49,7 @@ export function InlineMarkdown({ content, className = "" }: InlineMarkdownProps)
  * Block-level markdown renderer for multi-line AI content (summaries, analyses).
  */
 export function BlockMarkdown({ content, className = "" }: InlineMarkdownProps) {
+  const md = normalizeMarkdownInput(content);
   return (
     <div className={className}>
       <ReactMarkdown
@@ -77,7 +80,7 @@ export function BlockMarkdown({ content, className = "" }: InlineMarkdownProps) 
           hr: () => <hr className="my-3 border-border/30" />,
         }}
       >
-        {content}
+        {md}
       </ReactMarkdown>
     </div>
   );
