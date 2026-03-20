@@ -110,6 +110,9 @@ export default function SubFlowPage() {
           )}
         </div>
 
+        {/* Social Intelligence */}
+        <SocialIntelPanel data={socialData} loading={socialLoading} industryName={industry.name} subFlowName={subFlow.name} />
+
         {/* Real News Feed */}
         <NewsFeed articles={articles} loading={newsLoading} industryName={industry.name} subFlowName={subFlow.name} />
 
