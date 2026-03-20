@@ -1,6 +1,6 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { getIndustryBySlug } from "@/lib/industryData";
-import { ArrowRight, TrendingUp, Loader2 } from "lucide-react";
+import { ArrowRight, TrendingUp, Loader2, Users, Handshake } from "lucide-react";
 import { useIndustryIntel } from "@/hooks/useIndustryIntel";
 import { useIndustryNews } from "@/hooks/useIndustryNews";
 import { useSnapshots } from "@/hooks/useSnapshots";
