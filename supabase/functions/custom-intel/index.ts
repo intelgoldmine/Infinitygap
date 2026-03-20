@@ -7,11 +7,50 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Must match src/lib/parseBlocks.ts — only :::metrics|comparison|framework|insights|steps|score render as cards.
 const BLOCK_INSTRUCTIONS = `
-## STRUCTURED OUTPUT
+## STRUCTURED OUTPUT BLOCKS
 
-Use the same block syntax as Maverick deep-dives (:::metrics, :::insights, :::framework, :::comparison, :::steps, :::score).
-Put narrative BETWEEN blocks. JSON inside blocks must be valid.
+Your brief MUST use the SAME syntax as Maverick Deep Dive reports. Plain prose alone is not enough for analytical sections.
+
+### METRICS
+:::metrics
+[{"label":"Strait of Hormuz share","value":"~20% crude","trend":"up","delta":"risk-on"}]
+:::
+
+### COMPARISON (tables, player vs player, linkage matrices)
+:::comparison
+{"title":"Linkage matrix","headers":["Signal","Mechanism","Impact"],"rows":[["Hormuz risk","Supply shock","Long energy"]],"verdict":"..."}
+:::
+
+### FRAMEWORK
+:::framework
+{"title":"Dislocation triad","type":"custom","sections":[{"label":"Tier 1","color":"emerald","items":["..."]}]}
+:::
+
+### INSIGHTS
+:::insights
+{"title":"Key findings","items":[{"text":"...","score":8,"tag":"High"}]}
+:::
+
+### STEPS
+:::steps
+{"title":"Action roadmap","items":[{"phase":"Phase 1","duration":"Weeks 1-4","tasks":["..."],"status":"critical"}]}
+:::
+
+### SCORE
+:::score
+{"title":"Thesis score","score":7.8,"maxScore":10,"label":"Asymmetric","summary":"...","breakdown":[{"category":"Upside","score":9}]}
+:::
+
+RULES:
+1. Use at least 5 structured blocks per brief (mix metrics, insights, framework, comparison, steps, score as relevant).
+2. JSON inside ::: blocks MUST be valid — no trailing commas, double quotes only.
+3. Put short narrative BETWEEN blocks. The ::: lines must be on their own lines; opening :::type and closing ::: with nothing else on those lines.
+4. NEVER use markdown code fences (\`\`\`json or \`\`\`) — the UI does not treat them as cards. All machine-readable structure goes ONLY inside :::...::: blocks.
+5. NEVER emit a lone label like "comparison" or "score" — always the full :::comparison ... ::: wrapper with JSON between.
+6. Do NOT use GFM pipe tables for content that should be visual cards — use :::comparison for tabular data (headers/rows) instead.
+7. NEVER label blocks with headings like "### METRICS BLOCK" immediately before ::: — flow from prose straight into :::metrics on the next line.
 `;
 
 serve(async (req) => {
@@ -70,11 +109,11 @@ ${secondaryLines || "(none — use only primary scope)"}
 ${isGlobalGeo ? "Worldwide / global." : `Mandatory: ${geoContext}. Localize examples, regulators, channels, and sizing to this geography.`}
 
 OUTPUT REQUIREMENTS:
-1. Executive summary anchored on ${hasPrimary ? "PRIMARY" : "the inferred generic basket center"}, with SECONDARY as supporting scan.
-2. Section: "Linkage matrix" — table or bullets: Secondary signal → Mechanism → ${hasPrimary ? "Primary impact" : "Generic basket impact"}.
-3. Multiple structured blocks (metrics, insights, framework, comparison, steps, score).
-4. "What to watch" — 5 concrete monitors across secondary areas tied to primary.
-5. Gaps & market white space from THIS combined lens, in ${isGlobalGeo ? "global" : geoContext} context.
+1. Open with a short executive summary in normal paragraphs (no code fences), then deploy structured blocks — same card pipeline as Deep Dive.
+2. Linkage matrix: MUST be a :::comparison block with columns for signal, mechanism, and ${hasPrimary ? "primary impact" : "basket impact"}. Do not use markdown pipe tables for this.
+3. Include :::metrics (quantified KPIs), :::insights (scored bullets), :::framework (landscape or thesis framing), :::comparison (at least one), :::steps (actionable roadmap), :::score (overall conviction).
+4. "What to watch" — use :::insights or prose + bullets; keep monitors concrete.
+5. Gaps & white space — prose and/or :::insights; stay specific to ${isGlobalGeo ? "global" : geoContext} context.
 
 Be specific. No generic consulting filler.`;
 
