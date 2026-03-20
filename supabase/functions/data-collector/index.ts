@@ -1,3 +1,13 @@
+/**
+ * System-1 data collector — scheduled ingestion into raw_market_data for analyzers / auto-intel.
+ *
+ * SOURCES IN THIS FILE: CoinGecko, forex (open.er-api.com), fear/greed + GDELT tone, GDELT news,
+ * Google News (per-country RSS + global topic queries), Reddit (country subs), YouTube RSS, HN,
+ * dev.to, GitHub search, World Bank indicators, X/Twitter (if TWITTER_BEARER_TOKEN or X_BEARER_TOKEN).
+ *
+ * NOT HERE (by design / policy): LinkedIn has no supported public scrape; use LinkedIn Marketing API.
+ * Industry-keyword X + synthesis lives in social-intel (user-triggered). This job adds broad market X.
+ */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
@@ -11,6 +21,17 @@ async function safeFetch(url: string, timeout = 12000): Promise<any> {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
     const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(id);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
+}
+
+async function safeFetchWithHeaders(url: string, headers: Record<string, string>, timeout = 15000): Promise<any> {
+  try {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    const res = await fetch(url, { signal: controller.signal, headers });
     clearTimeout(id);
     if (!res.ok) return null;
     return await res.json();
@@ -110,6 +131,45 @@ async function collectCrypto(): Promise<any[]> {
     payload: { id: c.id, symbol: c.symbol, name: c.name, price: c.current_price, market_cap: c.market_cap, volume: c.total_volume, change_24h: c.price_change_percentage_24h, change_7d: c.price_change_percentage_7d_in_currency, high_24h: c.high_24h, low_24h: c.low_24h, rank: c.market_cap_rank },
     tags: ["crypto", "market", c.symbol],
   }));
+}
+
+/** Broad English market/macro tweets into raw_market_data (same bearer as social-intel). */
+async function collectTwitter(): Promise<any[]> {
+  const BEARER = Deno.env.get("TWITTER_BEARER_TOKEN") || Deno.env.get("X_BEARER_TOKEN");
+  if (!BEARER) return [];
+
+  const terms = [
+    "stock market", "investing", "earnings", "IPO", "Fed", "economy", "forex", "commodities",
+  ];
+  const query = encodeURIComponent(`(${terms.join(" OR ")}) -is:retweet lang:en`);
+  const data = await safeFetchWithHeaders(
+    `https://api.x.com/2/tweets/search/recent?query=${query}&max_results=100&tweet.fields=created_at,author_id,public_metrics,lang&expansions=author_id&user.fields=name,username,verified,public_metrics`,
+    { Authorization: `Bearer ${BEARER}` },
+    18000,
+  );
+
+  if (!data?.data?.length) return [];
+  const users = new Map((data.includes?.users || []).map((u: any) => [u.id, u]));
+  return data.data.map((tweet: any) => {
+    const author = users.get(tweet.author_id);
+    return {
+      source: "twitter",
+      data_type: "social_signal",
+      geo_scope: "global",
+      payload: {
+        text: tweet.text?.slice(0, 500),
+        author: author?.name,
+        username: author?.username,
+        verified: author?.verified ?? false,
+        likes: tweet.public_metrics?.like_count ?? 0,
+        retweets: tweet.public_metrics?.retweet_count ?? 0,
+        url: `https://x.com/${author?.username}/status/${tweet.id}`,
+        date: tweet.created_at,
+        lang: tweet.lang,
+      },
+      tags: ["social", "twitter", "macro", "markets"],
+    };
+  });
 }
 
 async function collectForex(): Promise<any[]> {
@@ -331,7 +391,10 @@ async function collectDevTo(): Promise<any[]> {
 
 // ── GITHUB TRENDING ──
 async function collectGitHub(): Promise<any[]> {
-  const data = await safeFetch("https://api.github.com/search/repositories?q=created:>2026-03-18&sort=stars&order=desc&per_page=15");
+  const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const data = await safeFetch(
+    `https://api.github.com/search/repositories?q=created:>${since}&sort=stars&order=desc&per_page=15`,
+  );
   if (!data?.items) return [];
   return data.items.map((r: any) => ({
     source: "github", data_type: "tech_signal", geo_scope: "global",
@@ -406,9 +469,9 @@ serve(async (req) => {
       collectCrypto(), collectForex(), collectSentiment(),
     ]);
 
-    // Wave 2: Global news
-    const [gdelt, globalTopicNews, hackerNews, devTo, github] = await Promise.all([
-      collectGDELT(), collectGlobalTopicNews(), collectHackerNews(), collectDevTo(), collectGitHub(),
+    // Wave 2: Global news + macro X + dev signals
+    const [gdelt, globalTopicNews, hackerNews, devTo, github, twitterSignals] = await Promise.all([
+      collectGDELT(), collectGlobalTopicNews(), collectHackerNews(), collectDevTo(), collectGitHub(), collectTwitter(),
     ]);
 
     // Wave 3: Country-specific data (the big one — 45+ country editions)
@@ -421,7 +484,7 @@ serve(async (req) => {
 
     const allRows = [
       ...crypto, ...forex, ...sentiment,
-      ...gdelt, ...globalTopicNews, ...hackerNews, ...devTo, ...github,
+      ...gdelt, ...globalTopicNews, ...hackerNews, ...devTo, ...github, ...twitterSignals,
       ...countryNews, ...countryReddit, ...youtubeSignals,
       ...worldbank,
     ];
@@ -442,6 +505,7 @@ serve(async (req) => {
       crypto: crypto.length, forex: forex.length, sentiment: sentiment.length,
       gdelt: gdelt.length, globalTopicNews: globalTopicNews.length,
       hackerNews: hackerNews.length, devTo: devTo.length, github: github.length,
+      twitter: twitterSignals.length,
       countryNews: countryNews.length, countryReddit: countryReddit.length,
       youtube: youtubeSignals.length, worldbank: worldbank.length,
       countries_covered: COUNTRIES.length,

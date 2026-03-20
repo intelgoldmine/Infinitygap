@@ -11,12 +11,12 @@ import remarkGfm from "remark-gfm";
 
 export function BlockRenderer({ segments }: { segments: ContentSegment[] }) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 min-w-0 max-w-full">
       {segments.map((seg, i) => {
         switch (seg.type) {
           case "text":
             return (
-              <div key={i} className="prose-maverick text-[13px] text-card-foreground leading-relaxed">
+              <div key={i} className="prose-maverick text-[13px] text-card-foreground leading-relaxed min-w-0 max-w-full break-words">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
@@ -41,9 +41,12 @@ export function BlockRenderer({ segments }: { segments: ContentSegment[] }) {
                         <span>{children}</span>
                       </li>
                     ),
-                    p: ({ children }) => <p className="mb-2 leading-relaxed">{children}</p>,
+                    p: ({ children }) => <p className="mb-2 leading-relaxed break-words">{children}</p>,
                     a: ({ children, href }) => <a href={href} className="text-primary hover:underline" target="_blank" rel="noopener">{children}</a>,
                     hr: () => <hr className="my-4 border-border/30" />,
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-2 border-primary/30 pl-3 my-2 text-muted-foreground italic">{children}</blockquote>
+                    ),
                   }}
                 >
                   {normalizeMarkdownInput(seg.content)}

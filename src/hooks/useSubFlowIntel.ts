@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const REFRESH_MS = 180_000;
 
-export function useSubFlowIntel(subFlowName: string, keywords: string[], industryName: string, geoContext?: string) {
+export function useSubFlowIntel(subFlowName: string, keywords: string[], industryName: string, geoContext?: string, geoScopeId?: string) {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +12,14 @@ export function useSubFlowIntel(subFlowName: string, keywords: string[], industr
     setLoading(true);
     try {
       const { data: result, error } = await supabase.functions.invoke("industry-intel", {
-        body: { industry: industryName, subFlow: subFlowName, keywords, detailed: true, geoContext: geoContext || "global" },
+        body: {
+          industry: industryName,
+          subFlow: subFlowName,
+          keywords,
+          detailed: true,
+          geoContext: geoContext || "global",
+          geoScopeId: geoScopeId || "global",
+        },
       });
       if (error) throw error;
       setData(result);
@@ -21,7 +28,7 @@ export function useSubFlowIntel(subFlowName: string, keywords: string[], industr
     } finally {
       setLoading(false);
     }
-  }, [subFlowName, industryName, keywords.join(","), geoContext]);
+  }, [subFlowName, industryName, keywords.join(","), geoContext, geoScopeId]);
 
   useEffect(() => {
     fetch_();

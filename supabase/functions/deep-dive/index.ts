@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -56,7 +57,8 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, context, industryName, subFlowName } = await req.json();
+    const { topic, context, industryName, subFlowName, geoContext, socialIntelContext } = await req.json();
+    const isGlobalGeo = !geoContext || geoContext === "global";
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -79,13 +81,17 @@ CRITICAL RULES:
 - Show the complete value chain: who pays whom at each step, what are the margins
 - Detail what has been tried before, BY WHOM, and specifically WHY it failed
 - Cross-reference with adjacent industries — which players from other sectors are entering?
-- Include regulatory landscape: what laws/policies matter, who's lobbying, what's changing`;
+- Include regulatory landscape: what laws/policies matter, who's lobbying, what's changing
+
+${temporalIntelRules()}`;
 
     const userPrompt = `Generate a COMPREHENSIVE INTELLIGENCE DEEP-DIVE on: "${topic}"
 
 ${industryName ? `Industry: ${industryName}` : ""}
 ${subFlowName ? `Money flow: ${subFlowName}` : ""}
 ${context ? `Context: ${context}` : ""}
+${socialIntelContext && String(socialIntelContext).trim() ? `\nLIVE SIGNAL INTEL (from recent social/news scrape — validate, cross-check, and prioritize leads that align with this; cite local sources where relevant):\n${String(socialIntelContext).trim()}` : ""}
+${!isGlobalGeo ? `\nGEO FOCUS (mandatory): Tailor every section to ${geoContext}. Name local regulators, companies, channels, and market sizes for this geography. Do not default to US/EU-only examples unless relevant to ${geoContext}.` : "\nGEO: Worldwide / global market lens unless the topic or context implies a specific region."}
 
 INTELLIGENCE REQUIREMENTS (answer ALL):
 - WHO are the top 10+ players in this space? (Companies, investors, individuals, government bodies)
@@ -98,12 +104,14 @@ INTELLIGENCE REQUIREMENTS (answer ALL):
 - WHAT technologies are being used/developed? By whom?
 - WHAT talent/skills are needed? Who's hiring? What's the talent gap?
 
-FROM ALL THIS INTELLIGENCE, DERIVE:
+FROM ALL THIS INTELLIGENCE, DERIVE (forward-looking — predictions, scenarios, gaps):
 - What specific gaps exist and WHY (grounded in player activities)
 - What's the minimum viable play vs the full play?
 - Unit economics: CAC, LTV, margins based on comparable players
 - Who are ideal partners and first customers?
 - 12/24/36-month projections based on market trajectory
+
+Do not present old election cycles or dated news hooks as if they were current or upcoming.
 
 Be RUTHLESSLY specific. Name every name. Cite every number. No generic advice.`;
 

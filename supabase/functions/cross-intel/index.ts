@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,7 +13,8 @@ serve(async (req) => {
   }
 
   try {
-    const { industries, geoContext } = await req.json();
+    const { industries, geoContext, geoScopeId: rawGeoScope } = await req.json();
+    const geoScopeId = typeof rawGeoScope === "string" && rawGeoScope.trim() ? rawGeoScope.trim() : "global";
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -37,7 +39,7 @@ serve(async (req) => {
           .order("created_at", { ascending: false })
           .limit(15);
         if (pastInsights?.length) {
-          historicalContext = `\n\nHISTORICAL INTELLIGENCE (build upon these, note what's changed, identify patterns):\n${pastInsights.map(i => `- [${i.insight_type}/${i.source_industry}] ${i.title}: ${i.detail} (${i.estimated_value || 'N/A'}, ${i.created_at})`).join("\n")}`;
+          historicalContext = `\n\nPRIOR STORED INSIGHTS — REFERENCE ONLY (not current; compare to now):\n${pastInsights.map(i => `- [${i.insight_type}/${i.source_industry}] ${i.title}: ${i.detail} (${i.estimated_value || 'N/A'}, ${i.created_at})`).join("\n")}`;
         }
       }
     } catch (e) {
@@ -58,7 +60,9 @@ YOUR PRIMARY MISSION: Provide comprehensive intelligence on cross-industry dynam
 - WHEN did key cross-industry moves happen? What's the timeline?
 - WHO is failing at cross-industry plays and WHY?
 
-FROM this intelligence, THEN identify the gaps and arbitrage opportunities.
+FROM this intelligence, THEN identify the gaps and arbitrage opportunities — emphasize forward-looking cross-sector plays and scenarios (next 6–24 months), not stale election-cycle narratives.
+
+${temporalIntelRules()}
 
 You MUST respond with valid JSON only.${geoSection}
 
@@ -125,7 +129,7 @@ Return JSON:
 
         await sb.from("intel_snapshots").insert({
           scope_type: "cross-industry",
-          scope_key: isGlobal ? "all" : `all::${geoStr}`,
+          scope_key: `all::${geoScopeId}`,
           summary: parsed.summary,
           gaps: parsed.gaps || [],
           connections: parsed.connections || [],
@@ -206,7 +210,7 @@ Return JSON:
           await sb.from("geo_intel_cache").insert({
             geo_scope: geoStr,
             scope_type: "cross-industry",
-            scope_key: "all",
+            scope_key: `all::${geoScopeId}`,
             analysis: parsed.summary,
             gaps: parsed.gaps || [],
             alerts: parsed.alerts || [],

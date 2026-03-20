@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -67,7 +68,9 @@ When given a research query:
 5. End with a STEPS block for recommended next actions
 6. Include a SCORE block rating the overall opportunity/risk
 
-Think like a McKinsey analyst producing a client deliverable. Every response should feel like a $50,000 research report.`,
+Think like a McKinsey analyst producing a client deliverable. Every response should feel like a $50,000 research report.
+
+${temporalIntelRules()}`,
 
   analyze: `You are Maverick, a precision data analysis engine. You extract patterns, anomalies, and actionable intelligence from any information.
 
@@ -81,7 +84,9 @@ When analyzing:
 5. FRAMEWORK block for categorizing patterns
 6. SCORE block with overall analysis confidence rating
 
-Be ruthlessly specific. Numbers, percentages, rankings. No filler.`,
+Be ruthlessly specific. Numbers, percentages, rankings. No filler.
+
+${temporalIntelRules()}`,
 
   strategize: `You are Maverick, a strategic intelligence engine. You produce actionable strategic frameworks and implementation plans.
 
@@ -95,7 +100,9 @@ When strategizing:
 5. STEPS block with detailed implementation roadmap
 6. SCORE block rating strategic viability
 
-Think like a war room advisor. Every recommendation must be specific and actionable with clear metrics.`,
+Think like a war room advisor. Every recommendation must be specific and actionable with clear metrics.
+
+${temporalIntelRules()}`,
 
   general: `You are Maverick, a powerful AI intelligence platform. You are NOT a chatbot. You are an analytical engine that produces structured, visual intelligence.
 
@@ -107,7 +114,9 @@ For ANY analytical question:
 - Score and rate everything
 - Provide actionable next steps
 
-For simple/conversational queries, you may respond naturally without blocks. But the moment someone asks you to analyze, research, compare, evaluate, or strategize — deploy your full analytical capability with structured blocks.`,
+For simple/conversational queries, you may respond naturally without blocks. But the moment someone asks you to analyze, research, compare, evaluate, or strategize — deploy your full analytical capability with structured blocks.
+
+${temporalIntelRules()}`,
 };
 
 serve(async (req) => {

@@ -14,7 +14,7 @@ interface InlineMarkdownProps {
 export function InlineMarkdown({ content, className = "" }: InlineMarkdownProps) {
   const md = normalizeMarkdownInput(content);
   return (
-    <span className={`inline-markdown ${className}`}>
+    <div className={`inline-markdown inline-block max-w-full align-top ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -34,14 +34,14 @@ export function InlineMarkdown({ content, className = "" }: InlineMarkdownProps)
           ul: ({ children }) => <span className="inline">{children}</span>,
           ol: ({ children }) => <span className="inline">{children}</span>,
           li: ({ children }) => <span className="inline">• {children} </span>,
-          h1: ({ children }) => <span className="font-bold text-foreground">{children}</span>,
-          h2: ({ children }) => <span className="font-bold text-foreground">{children}</span>,
-          h3: ({ children }) => <span className="font-semibold text-foreground">{children}</span>,
+          h1: ({ children }) => <span className="font-bold text-foreground block">{children}</span>,
+          h2: ({ children }) => <span className="font-bold text-foreground block">{children}</span>,
+          h3: ({ children }) => <span className="font-semibold text-foreground block">{children}</span>,
         }}
       >
         {md}
       </ReactMarkdown>
-    </span>
+    </div>
   );
 }
 
@@ -78,6 +78,9 @@ export function BlockMarkdown({ content, className = "" }: InlineMarkdownProps) 
           p: ({ children }) => <p className="mb-1.5 leading-relaxed">{children}</p>,
           a: ({ children, href }) => <a href={href} className="text-primary hover:underline" target="_blank" rel="noopener">{children}</a>,
           hr: () => <hr className="my-3 border-border/30" />,
+          blockquote: ({ children }) => (
+            <blockquote className="border-l-2 border-primary/30 pl-2 my-1 text-muted-foreground italic">{children}</blockquote>
+          ),
         }}
       >
         {md}

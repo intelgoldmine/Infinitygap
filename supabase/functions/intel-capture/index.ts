@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -49,7 +50,9 @@ Return JSON:
   "new_insights": [{ "insight_type": "string", "title": "string", "detail": "string", "source_industry": "string", "related_industries": ["string"], "geo_context": ["string"], "estimated_value": "string", "urgency": "string", "score": 0-100, "tags": ["string"] }],
   "enriched_matches": [{ "match_id": "uuid", "new_action_items": [{"step": "string", "priority": "string"}], "new_challenges": [{"challenge": "string", "mitigation": "string"}], "updated_confidence": 0-100 }],
   "stale_insight_ids": ["uuid of insights no longer relevant"]
-}`;
+}
+
+${temporalIntelRules()}`;
 
     const userPrompt = `EXISTING INSIGHTS:\n${JSON.stringify(recentInsights?.slice(0, 20))}\n\nOPEN MATCHES:\n${JSON.stringify(recentMatches)}\n\nFind deeper connections, create action plans, and identify stale insights. Every new insight MUST have dollar values.`;
 

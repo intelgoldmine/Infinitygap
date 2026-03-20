@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -251,11 +252,11 @@ async function generateReport(
         messages: [
           {
             role: "system",
-            content: `You are an autonomous market intelligence engine generating the DEFINITIVE current state report for ${scope}. This report will be stored and used as the reference document for this sector. Be comprehensive, specific, and forward-looking. Include WHO is doing WHAT, market sizes, growth rates, key players and their recent moves, regulatory changes, emerging threats, and opportunities. Always cite time references (today, this week, this month). Return valid JSON.`
+            content: `You are an autonomous market intelligence engine generating the DEFINITIVE forward-looking intelligence snapshot for ${scope}. This report will be stored as the reference document for this sector. Emphasize predictions, scenarios, market gaps, and outlook (6–36 months); recent facts are supporting context only — not recycled "upcoming 20XX election" narratives from stale training data. Include WHO is doing WHAT, where the white space is, regulatory trajectory, and opportunities. ${temporalIntelRules()} Return valid JSON.`
           },
           {
             role: "user",
-            content: `Generate a comprehensive intelligence report for ${scope}.\n\nRecent raw signals:\n${signalSummary || "No recent signals available"}\n\nRecent insights:\n${insightSummary || "No recent insights"}\n\nKeywords: ${keywords.join(", ")}\n\nReturn JSON:\n{"summary":"300-word executive summary of current state","analysis":"500-word deep analysis with specific data points, player moves, and market dynamics","key_players":[{"name":"...","role":"...","recent_activity":"...","outlook":"..."}],"gaps":[{"title":"...","detail":"...","estimated_value":"...","urgency":"critical|high|medium"}],"alerts":[{"title":"...","severity":"critical|warning|info","detail":"...","affected_players":["..."]}],"connections":[{"from_sector":"...","to_sector":"...","mechanism":"...","strength":"strong|moderate|weak"}],"news_highlights":[{"headline":"...","source":"...","impact":"...","date":"..."}],"live_data":{"market_size":"...","growth_rate":"...","key_metrics":{}},"outlook":{"short_term":"...","medium_term":"...","long_term":"..."}}`
+            content: `Generate a comprehensive intelligence report for ${scope}.\n\nRecent raw signals:\n${signalSummary || "No recent signals available"}\n\nRecent insights:\n${insightSummary || "No recent insights"}\n\nKeywords: ${keywords.join(", ")}\n\nReturn JSON:\n{"summary":"250-word executive summary emphasizing forward view + gaps (not old election-cycle filler)","analysis":"500-word analysis: trajectory, scenarios, risks, opportunities — historical only as labeled context","key_players":[{"name":"...","role":"...","recent_activity":"...","outlook":"..."}],"gaps":[{"title":"...","detail":"...","estimated_value":"...","urgency":"critical|high|medium"}],"alerts":[{"title":"...","severity":"critical|warning|info","detail":"...","affected_players":["..."]}],"connections":[{"from_sector":"...","to_sector":"...","mechanism":"...","strength":"strong|moderate|weak"}],"news_highlights":[{"headline":"...","source":"...","impact":"...","date":"..."}],"live_data":{"market_size":"...","growth_rate":"...","key_metrics":{}},"outlook":{"short_term":"...","medium_term":"...","long_term":"..."}}`
           }
         ],
       }),
@@ -307,7 +308,8 @@ serve(async (req) => {
       .limit(1);
 
     let cursor = lastRun?.[0]?.payload?.cursor || 0;
-    const batchSize = 2;
+    // One industry per run keeps Edge Function within typical timeouts (each industry = 1 + N sub-flow AI calls).
+    const batchSize = 1;
     const batch = INDUSTRIES.slice(cursor, cursor + batchSize);
     const nextCursor = (cursor + batchSize) >= INDUSTRIES.length ? 0 : cursor + batchSize;
 
@@ -322,14 +324,14 @@ serve(async (req) => {
     let reportsGenerated = 0;
 
     for (const industry of batch) {
-      // Generate industry-level report
+      // Generate industry-level report (global scope — matches industry-intel geoScopeId "global")
       const allKeywords = industry.subFlows.flatMap(sf => sf.keywords).slice(0, 15);
-      await generateReport(sb, LOVABLE_API_KEY, "industry", industry.name, industry.name, null, allKeywords);
+      await generateReport(sb, LOVABLE_API_KEY, "industry", `${industry.name}::global`, industry.name, null, allKeywords);
       reportsGenerated++;
 
       // Generate sub-flow reports
       for (const sf of industry.subFlows) {
-        await generateReport(sb, LOVABLE_API_KEY, "subflow", `${industry.name}::${sf.name}`, industry.name, sf.name, sf.keywords);
+        await generateReport(sb, LOVABLE_API_KEY, "subflow", `${industry.name}::${sf.name}::global`, industry.name, sf.name, sf.keywords);
         reportsGenerated++;
       }
     }

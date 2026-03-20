@@ -7,11 +7,13 @@ interface ClickableItemProps {
   detail?: string;
   industryName?: string;
   subFlowName?: string;
+  /** Merged into deep-dive so research can cross-check live signals (social, geo). */
+  socialIntelContext?: string;
   children: React.ReactNode;
   className?: string;
 }
 
-export function ClickableItem({ title, detail, industryName, subFlowName, children, className }: ClickableItemProps) {
+export function ClickableItem({ title, detail, industryName, subFlowName, socialIntelContext, children, className }: ClickableItemProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,6 +34,7 @@ export function ClickableItem({ title, detail, industryName, subFlowName, childr
         context={detail}
         industryName={industryName}
         subFlowName={subFlowName}
+        socialIntelContext={socialIntelContext}
       />
     </>
   );

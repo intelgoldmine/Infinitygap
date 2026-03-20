@@ -1,7 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export function useSocialIntel(industry: string, subFlow: string | null, keywords: string[], geoContext?: string) {
+export function useSocialIntel(
+  industry: string,
+  subFlow: string | null,
+  keywords: string[],
+  geoContext?: string,
+  /** ISO-style scope from GeoContext (e.g. KE, KE+NG) — required for correct country-scoped scraping */
+  geoScopeId?: string,
+) {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -10,7 +17,13 @@ export function useSocialIntel(industry: string, subFlow: string | null, keyword
     setLoading(true);
     try {
       const { data: result, error } = await supabase.functions.invoke("social-intel", {
-        body: { industry, subFlow, keywords: keywords.slice(0, 8), geoContext: geoContext || "global" },
+        body: {
+          industry,
+          subFlow,
+          keywords: keywords.slice(0, 8),
+          geoContext: geoContext || "global",
+          geoScopeId: geoScopeId && geoScopeId !== "global" ? geoScopeId : undefined,
+        },
       });
       if (error) throw error;
       setData(result);
@@ -19,7 +32,7 @@ export function useSocialIntel(industry: string, subFlow: string | null, keyword
     } finally {
       setLoading(false);
     }
-  }, [industry, subFlow, keywords.join(","), geoContext]);
+  }, [industry, subFlow, keywords.join(","), geoContext, geoScopeId]);
 
   useEffect(() => {
     fetch_();

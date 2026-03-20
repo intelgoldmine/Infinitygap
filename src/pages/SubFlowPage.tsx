@@ -7,6 +7,7 @@ import { useSocialIntel } from "@/hooks/useSocialIntel";
 import { useSnapshots } from "@/hooks/useSnapshots";
 import { useCachedIntel } from "@/hooks/useCachedIntel";
 import { useGeoContext } from "@/contexts/GeoContext";
+import { getGeoLabel } from "@/lib/geoData";
 import { NewsFeed } from "@/components/intel/NewsFeed";
 import { SocialIntelPanel } from "@/components/intel/SocialIntelPanel";
 import { SnapshotTimeline } from "@/components/intel/SnapshotTimeline";
@@ -16,20 +17,25 @@ import { BlockMarkdown, InlineMarkdown } from "@/components/InlineMarkdown";
 export default function SubFlowPage() {
   const { slug, subFlowId } = useParams<{ slug: string; subFlowId: string }>();
   const result = slug && subFlowId ? getSubFlow(slug, subFlowId) : undefined;
-  const { geoString } = useGeoContext();
+  const { geoString, geoScopeId, selections } = useGeoContext();
   const { data, loading, refresh } = useSubFlowIntel(
     result?.subFlow.name || "",
     result?.subFlow.keywords || [],
     result?.industry.name || "",
-    geoString
+    geoString,
+    geoScopeId
   );
   const { articles, loading: newsLoading } = useIndustryNews(result?.subFlow.keywords || []);
   const { data: socialData, loading: socialLoading } = useSocialIntel(
-    result?.industry.name || "", result?.subFlow.name || null, result?.subFlow.keywords || [], geoString
+    result?.industry.name || "",
+    result?.subFlow.name || null,
+    result?.subFlow.keywords || [],
+    geoString,
+    geoScopeId,
   );
   const scopeKey = result ? `${result.industry.name}::${result.subFlow.name}` : "";
-  const { snapshots, loading: snapsLoading } = useSnapshots("subflow", scopeKey);
-  const { report: cachedReport } = useCachedIntel("subflow", scopeKey);
+  const { snapshots, loading: snapsLoading } = useSnapshots("subflow", scopeKey, geoScopeId);
+  const { report: cachedReport } = useCachedIntel("subflow", scopeKey, geoScopeId);
 
   if (!result) return <Navigate to="/" replace />;
   const { industry, subFlow } = result;
@@ -61,7 +67,7 @@ export default function SubFlowPage() {
         {/* AI Analysis */}
         <ClickableItem
           title={`${subFlow.name} — Full Market Analysis`}
-          detail={cachedReport?.analysis || data?.analysis}
+          detail={data?.analysis || cachedReport?.analysis}
           industryName={industry.name}
           subFlowName={subFlow.name}
           className="glass-panel p-4 hover:glow-border transition-all"
@@ -84,9 +90,9 @@ export default function SubFlowPage() {
               <Loader2 className="w-4 h-4 text-primary animate-spin" />
               <span className="text-xs font-mono text-muted-foreground">Analyzing {subFlow.name}...</span>
             </div>
-          ) : (cachedReport?.summary || data?.analysis) ? (
+          ) : (data?.analysis || cachedReport?.summary) ? (
             <div className="text-[11px] font-mono text-card-foreground leading-relaxed line-clamp-6">
-              <BlockMarkdown content={cachedReport?.summary || data?.analysis || ""} />
+              <BlockMarkdown content={data?.analysis || cachedReport?.summary || ""} />
             </div>
           ) : (
             <p className="text-xs font-mono text-muted-foreground">Auto-intel will generate report on next cycle.</p>
@@ -127,7 +133,13 @@ export default function SubFlowPage() {
         </div>
 
         {/* Social Intelligence */}
-        <SocialIntelPanel data={socialData} loading={socialLoading} industryName={industry.name} subFlowName={subFlow.name} />
+        <SocialIntelPanel
+          data={socialData}
+          loading={socialLoading}
+          industryName={industry.name}
+          subFlowName={subFlow.name}
+          geoLabel={getGeoLabel(selections)}
+        />
 
         {/* Real News Feed */}
         <NewsFeed articles={articles} loading={newsLoading} industryName={industry.name} subFlowName={subFlow.name} />

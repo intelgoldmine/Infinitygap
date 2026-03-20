@@ -1,16 +1,33 @@
-import { useState } from "react";
-import { Loader2, Zap, Users, TrendingUp, AlertTriangle, Radio, Twitter } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Loader2, Zap, Users, TrendingUp, Radio, Twitter, Youtube, MessageSquare } from "lucide-react";
 import { ClickableItem } from "./ClickableItem";
+import { buildSocialIntelResearchContext } from "./socialIntelResearch";
+import { BlockMarkdown, InlineMarkdown } from "@/components/InlineMarkdown";
 
 interface SocialIntelPanelProps {
   data: any;
   loading: boolean;
   industryName?: string;
   subFlowName?: string;
+  /** From geo selector — shows which market’s Reddit/YouTube/news RSS are prioritized */
+  geoLabel?: string;
 }
 
-export function SocialIntelPanel({ data, loading, industryName, subFlowName }: SocialIntelPanelProps) {
+const SOURCE_LABELS: Record<string, string> = {
+  twitter: "X",
+  gdelt: "GDELT",
+  reddit: "Reddit",
+  hackernews: "HN",
+  country_news: "G News",
+  youtube: "YouTube",
+  outlet_rss: "Outlets RSS",
+  gdelt_outlet: "GDELT outlets",
+};
+
+export function SocialIntelPanel({ data, loading, industryName, subFlowName, geoLabel }: SocialIntelPanelProps) {
   const [tab, setTab] = useState<"breaking" | "players" | "opportunities">("breaking");
+
+  const researchContext = useMemo(() => buildSocialIntelResearchContext(data), [data]);
 
   if (loading && !data) {
     return (
@@ -20,7 +37,9 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
         </h2>
         <div className="flex items-center gap-2 py-4">
           <Loader2 className="w-4 h-4 text-primary animate-spin" />
-          <span className="text-[9px] font-mono text-muted-foreground">Scraping X, Reddit, HN, GDELT for real-time signals...</span>
+          <span className="text-[9px] font-mono text-muted-foreground">
+            Scraping X, Google News, outlet RSS, YouTube, local Reddit, GDELT{geoLabel && geoLabel !== "Global (All Markets)" ? ` — scoped to ${geoLabel}` : ""}…
+          </span>
         </div>
       </div>
     );
@@ -61,6 +80,66 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
           </span>
         </div>
       </div>
+
+      {geoLabel && geoLabel !== "Global (All Markets)" && (
+        <p className="text-[8px] font-mono text-primary/80 mb-2">
+          Geo scope: {geoLabel} — local subreddits, national Google News lenses, YouTube channels, and outlet RSS match this selection.
+        </p>
+      )}
+      <p className="text-[8px] font-mono text-muted-foreground mb-3 leading-relaxed">
+        Synthesis below is fed from these sources and is passed into deep-dive research as live intel (not decorative copy).
+      </p>
+
+      {/* Raw previews — proves country Reddit / YouTube / news are connected */}
+      {data?.signal_preview && (
+        <div className="mb-3 space-y-2 rounded border border-border/20 bg-muted/5 p-2">
+          <p className="text-[8px] font-mono font-bold text-foreground uppercase tracking-wider">Signal samples (raw)</p>
+          {(data.signal_preview.reddit_local?.length ?? 0) > 0 && (
+            <div>
+              <div className="flex items-center gap-1 mb-0.5 text-[8px] font-mono text-muted-foreground">
+                <MessageSquare className="w-3 h-3" /> Local Reddit
+              </div>
+              <ul className="text-[8px] font-mono text-muted-foreground space-y-0.5 list-disc list-inside">
+                {data.signal_preview.reddit_local.slice(0, 3).map((r: any, i: number) => (
+                  <li key={i}>
+                    <span className="text-primary/90">r/{r.subreddit}</span>{" "}
+                    <span className="text-foreground/70">[{r.country}]</span> {r.title?.slice(0, 90)}
+                    {r.title?.length > 90 ? "…" : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {(data.signal_preview.youtube?.length ?? 0) > 0 && (
+            <div>
+              <div className="flex items-center gap-1 mb-0.5 text-[8px] font-mono text-muted-foreground">
+                <Youtube className="w-3 h-3" /> YouTube
+              </div>
+              <ul className="text-[8px] font-mono text-muted-foreground space-y-0.5 list-disc list-inside">
+                {data.signal_preview.youtube.slice(0, 3).map((y: any, i: number) => (
+                  <li key={i}>
+                    <span className="text-primary/90">@{y.channel}</span> {y.title?.slice(0, 90)}
+                    {y.title?.length > 90 ? "…" : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {(data.signal_preview.country_news?.length ?? 0) > 0 && (
+            <div>
+              <p className="text-[8px] font-mono text-muted-foreground mb-0.5">Google News by country</p>
+              <ul className="text-[8px] font-mono text-muted-foreground space-y-0.5 list-disc list-inside">
+                {data.signal_preview.country_news.slice(0, 3).map((n: any, i: number) => (
+                  <li key={i}>
+                    <span className="text-foreground/70">[{n.country}]</span> {n.title?.slice(0, 90)}
+                    {n.title?.length > 90 ? "…" : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* X Pulse */}
       {synthesis.x_coverage && (
@@ -130,6 +209,7 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
             detail={item.detail}
             industryName={industryName}
             subFlowName={subFlowName}
+            socialIntelContext={researchContext}
             className="p-2.5 rounded bg-muted/20 border border-border/20 hover:border-primary/20 transition-colors"
           >
             <div className="flex items-start gap-2">
@@ -137,8 +217,12 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
                 item.impact === "high" ? "bg-red-500" : item.impact === "medium" ? "bg-amber-500" : "bg-emerald-500"
               }`} />
               <div className="min-w-0">
-                <p className="text-[10px] font-mono font-bold text-foreground leading-snug">{item.headline}</p>
-                <p className="text-[9px] font-mono text-muted-foreground mt-1">{item.detail}</p>
+                <div className="text-[10px] font-mono font-bold text-foreground leading-snug min-w-0">
+                  <InlineMarkdown content={item.headline || ""} />
+                </div>
+                <div className="text-[9px] font-mono text-muted-foreground mt-1 min-w-0 [&_h1]:text-[10px] [&_h2]:text-[10px] [&_h3]:text-[9px]">
+                  <BlockMarkdown content={item.detail || ""} />
+                </div>
                 <div className="flex items-center gap-2 mt-1">
                   {item.players_involved?.slice(0, 3).map((p: string, j: number) => (
                     <span key={j} className="text-[7px] font-mono px-1 py-0.5 rounded bg-primary/10 text-primary">{p}</span>
@@ -157,11 +241,18 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
             detail={`${item.activity}. ${item.implications}`}
             industryName={industryName}
             subFlowName={subFlowName}
+            socialIntelContext={researchContext}
             className="p-2.5 rounded bg-muted/20 border border-border/20 hover:border-primary/20 transition-colors"
           >
-            <p className="text-[10px] font-mono font-bold text-primary">{item.player}</p>
-            <p className="text-[9px] font-mono text-foreground mt-1">{item.activity}</p>
-            <p className="text-[8px] font-mono text-muted-foreground mt-1 italic">→ {item.implications}</p>
+            <div className="text-[10px] font-mono font-bold text-primary min-w-0">
+              <InlineMarkdown content={item.player || ""} />
+            </div>
+            <div className="text-[9px] font-mono text-foreground mt-1 min-w-0">
+              <BlockMarkdown content={item.activity || ""} />
+            </div>
+            <div className="text-[8px] font-mono text-muted-foreground mt-1 italic min-w-0">
+              → <InlineMarkdown content={item.implications || ""} />
+            </div>
             {item.source && <span className="text-[7px] font-mono text-muted-foreground mt-1 block">Source: {item.source}</span>}
           </ClickableItem>
         ))}
@@ -173,10 +264,13 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
             detail={item.detail}
             industryName={industryName}
             subFlowName={subFlowName}
+            socialIntelContext={researchContext}
             className="p-2.5 rounded bg-muted/20 border border-border/20 hover:border-primary/20 transition-colors"
           >
-            <div className="flex items-start justify-between">
-              <p className="text-[10px] font-mono font-bold text-foreground">{item.title}</p>
+            <div className="flex items-start justify-between gap-2">
+              <div className="text-[10px] font-mono font-bold text-foreground min-w-0 flex-1">
+                <InlineMarkdown content={item.title || ""} />
+              </div>
               <span className={`shrink-0 text-[7px] font-mono px-1.5 py-0.5 rounded ${
                 item.urgency === "act_now" ? "bg-red-500/20 text-red-400" :
                 item.urgency === "this_week" ? "bg-amber-500/20 text-amber-400" :
@@ -185,8 +279,14 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
                 {(item.urgency || "").replace("_", " ").toUpperCase()}
               </span>
             </div>
-            <p className="text-[9px] font-mono text-muted-foreground mt-1">{item.detail}</p>
-            {item.source_signal && <span className="text-[7px] font-mono text-primary/60 mt-1 block">Signal: {item.source_signal}</span>}
+            <div className="text-[9px] font-mono text-muted-foreground mt-1 min-w-0">
+              <BlockMarkdown content={item.detail || ""} />
+            </div>
+            {item.source_signal && (
+              <span className="text-[7px] font-mono text-primary/60 mt-1 block">
+                Signal: <InlineMarkdown content={String(item.source_signal)} />
+              </span>
+            )}
           </ClickableItem>
         ))}
       </div>
@@ -196,7 +296,7 @@ export function SocialIntelPanel({ data, loading, industryName, subFlowName }: S
         <span className="text-[7px] font-mono text-muted-foreground">Sources:</span>
         {data?.sources && Object.entries(data.sources).map(([key, val]) => (
           <span key={key} className="text-[7px] font-mono text-muted-foreground">
-            {key}: {val as number}
+            {SOURCE_LABELS[key] || key}: {val as number}
           </span>
         ))}
         {data?.countries_scraped?.length > 0 && (

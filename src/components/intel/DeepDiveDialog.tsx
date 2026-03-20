@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useGeoContext } from "@/contexts/GeoContext";
 import { parseBlocks } from "@/lib/parseBlocks";
 import { BlockRenderer } from "@/components/BlockRenderer";
-import { Loader2, Search, X } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 
 interface DeepDiveDialogProps {
   open: boolean;
@@ -12,9 +13,12 @@ interface DeepDiveDialogProps {
   context?: string;
   industryName?: string;
   subFlowName?: string;
+  /** Recent live signal summary — woven into the deep-dive prompt for grounded research */
+  socialIntelContext?: string;
 }
 
-export function DeepDiveDialog({ open, onClose, topic, context, industryName, subFlowName }: DeepDiveDialogProps) {
+export function DeepDiveDialog({ open, onClose, topic, context, industryName, subFlowName, socialIntelContext }: DeepDiveDialogProps) {
+  const { geoString } = useGeoContext();
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [started, setStarted] = useState(false);
@@ -32,6 +36,8 @@ export function DeepDiveDialog({ open, onClose, topic, context, industryName, su
           context: context || "",
           industryName: industryName || "",
           subFlowName: subFlowName || "",
+          geoContext: geoString,
+          socialIntelContext: socialIntelContext || "",
         },
       });
       if (error) throw error;
@@ -42,7 +48,7 @@ export function DeepDiveDialog({ open, onClose, topic, context, industryName, su
     } finally {
       setLoading(false);
     }
-  }, [topic, context, industryName, subFlowName, started]);
+  }, [topic, context, industryName, subFlowName, geoString, socialIntelContext, started]);
 
   // Trigger on open
   if (open && !started) {
@@ -59,20 +65,22 @@ export function DeepDiveDialog({ open, onClose, topic, context, industryName, su
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto bg-background border-border">
-        <DialogHeader>
-          <DialogTitle className="text-sm font-mono font-bold text-foreground flex items-center gap-2">
-            <Search className="w-4 h-4 text-primary" />
-            DEEP DIVE: {topic}
-          </DialogTitle>
-          {industryName && (
-            <p className="text-[10px] font-mono text-muted-foreground">
-              {industryName}{subFlowName ? ` → ${subFlowName}` : ""} • Full structured intelligence report
-            </p>
-          )}
-        </DialogHeader>
+      <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col gap-0 overflow-hidden p-0 bg-background border-border">
+        <div className="shrink-0 px-6 pt-6 pb-3 pr-14">
+          <DialogHeader>
+            <DialogTitle className="text-sm font-mono font-bold text-foreground flex items-center gap-2">
+              <Search className="w-4 h-4 text-primary" />
+              DEEP DIVE: {topic}
+            </DialogTitle>
+            {industryName && (
+              <p className="text-[10px] font-mono text-muted-foreground">
+                {industryName}{subFlowName ? ` → ${subFlowName}` : ""} • Full structured intelligence report
+              </p>
+            )}
+          </DialogHeader>
+        </div>
 
-        <div className="mt-4">
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-6 pb-6">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               <Loader2 className="w-8 h-8 text-primary animate-spin" />

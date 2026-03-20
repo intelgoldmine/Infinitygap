@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -92,7 +93,11 @@ Return ONLY valid JSON array. Each object:
   "data_freshness": "hours/minutes old"
 }
 
-Return 15-20 insights. PRIORITIZE freshness — data from the last hour > last day > older.`;
+Return 15-20 insights. PRIORITIZE freshness — data from the last hour > last day > older.
+
+${temporalIntelRules()}
+
+When deriving gaps or regulatory angles, favor forward-looking implications; do not present dated election cycles as current.`;
 
     const userPrompt = `ANALYZE THIS LIVE DATA AND TELL ME EVERYTHING HAPPENING RIGHT NOW:
 

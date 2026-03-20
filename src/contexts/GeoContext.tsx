@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import { GeoOption, getGeoContextString } from "@/lib/geoData";
+import { GeoOption, getGeoContextString, getGeoScopeId } from "@/lib/geoData";
 
 type GeoContextType = {
   selections: GeoOption[];
@@ -8,6 +8,8 @@ type GeoContextType = {
   removeSelection: (value: string) => void;
   clearSelections: () => void;
   geoString: string; // human-readable string for AI prompts
+  /** Stable key for DB/cache scopes (e.g. "KE" or "KE+NG") */
+  geoScopeId: string;
   isGlobal: boolean;
 };
 
@@ -18,6 +20,7 @@ const GeoContext = createContext<GeoContextType>({
   removeSelection: () => {},
   clearSelections: () => {},
   geoString: "global",
+  geoScopeId: "global",
   isGlobal: true,
 });
 
@@ -40,10 +43,11 @@ export function GeoProvider({ children }: { children: ReactNode }) {
   const clearSelections = useCallback(() => setSelectionsRaw([]), []);
 
   const geoString = getGeoContextString(selections);
+  const geoScopeId = getGeoScopeId(selections);
   const isGlobal = selections.length === 0;
 
   return (
-    <GeoContext.Provider value={{ selections, setSelections, addSelection, removeSelection, clearSelections, geoString, isGlobal }}>
+    <GeoContext.Provider value={{ selections, setSelections, addSelection, removeSelection, clearSelections, geoString, geoScopeId, isGlobal }}>
       {children}
     </GeoContext.Provider>
   );

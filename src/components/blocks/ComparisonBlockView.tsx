@@ -4,13 +4,13 @@ import { InlineMarkdown } from "@/components/InlineMarkdown";
 
 export function ComparisonBlockView({ data }: { data: ComparisonBlock["data"] }) {
   return (
-    <div className="my-4 glass-panel overflow-hidden">
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/40">
-        <Scale className="w-4 h-4 text-primary/70" />
-        <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide">{data.title}</h3>
+    <div className="my-4 glass-panel overflow-hidden max-w-full min-w-0">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/40 min-w-0">
+        <Scale className="w-4 h-4 text-primary/70 shrink-0" />
+        <h3 className="text-xs font-mono font-semibold text-foreground tracking-wide min-w-0 truncate">{data.title}</h3>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
+      <div className="max-w-full min-w-0 overflow-x-auto overflow-y-visible overscroll-x-contain touch-pan-x">
+        <table className="w-max min-w-full text-xs border-collapse">
           <thead>
             <tr className="border-b border-border/30">
               {data.headers.map((h, i) => (

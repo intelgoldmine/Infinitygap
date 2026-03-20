@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { buildIntelSnapshotScopeKey } from "@/lib/intelScopeKey";
 
-export function useSnapshots(scopeType: string, scopeKey: string) {
+export function useSnapshots(scopeType: string, scopeKey: string, geoScopeId: string) {
   const [snapshots, setSnapshots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,14 +11,25 @@ export function useSnapshots(scopeType: string, scopeKey: string) {
     const load = async () => {
       setLoading(true);
       try {
-        const { data, error } = await supabase
+        const composite = buildIntelSnapshotScopeKey(scopeKey, geoScopeId || "global");
+        let { data, error } = await supabase
           .from("intel_snapshots")
           .select("id, created_at, analysis, gaps, alerts, live_data, summary")
           .eq("scope_type", scopeType)
-          .eq("scope_key", scopeKey)
+          .eq("scope_key", composite)
           .order("created_at", { ascending: false })
           .limit(20);
         if (error) throw error;
+        if ((!data?.length) && (geoScopeId === "global" || !geoScopeId)) {
+          const res = await supabase
+            .from("intel_snapshots")
+            .select("id, created_at, analysis, gaps, alerts, live_data, summary")
+            .eq("scope_type", scopeType)
+            .eq("scope_key", scopeKey)
+            .order("created_at", { ascending: false })
+            .limit(20);
+          data = res.data;
+        }
         setSnapshots(data || []);
       } catch (e) {
         console.error("Snapshots error:", e);
@@ -26,7 +38,7 @@ export function useSnapshots(scopeType: string, scopeKey: string) {
       }
     };
     load();
-  }, [scopeType, scopeKey]);
+  }, [scopeType, scopeKey, geoScopeId]);
 
   return { snapshots, loading };
 }

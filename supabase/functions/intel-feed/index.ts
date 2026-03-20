@@ -93,7 +93,7 @@ function processMarketSignals(gdeltRaw: any) {
 // Venture/startup funding signals
 function getVCSignals() {
   return [
-    { sector: "AI/ML", trend: "surging", signal: "Record VC funding, $65B+ in 2024", opportunity: "Infrastructure plays" },
+    { sector: "AI/ML", trend: "surging", signal: "Elevated VC deployment in AI (verify latest annual totals)", opportunity: "Infrastructure plays" },
     { sector: "Climate Tech", trend: "growing", signal: "Government subsidies expanding globally", opportunity: "Carbon credit markets" },
     { sector: "Biotech", trend: "recovering", signal: "GLP-1 revolution driving pharma M&A", opportunity: "Supply chain bottlenecks" },
     { sector: "Fintech", trend: "consolidating", signal: "Embedded finance eating banking margins", opportunity: "B2B payments" },

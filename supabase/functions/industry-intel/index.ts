@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { temporalIntelRules } from "../_shared/temporalPrompt.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,7 +13,8 @@ serve(async (req) => {
   }
 
   try {
-    const { industry, subFlow, keywords, detailed, geoContext } = await req.json();
+    const { industry, subFlow, keywords, detailed, geoContext, geoScopeId: rawGeoScope } = await req.json();
+    const geoScopeId = typeof rawGeoScope === "string" && rawGeoScope.trim() ? rawGeoScope.trim() : "global";
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -36,7 +38,7 @@ serve(async (req) => {
           .order("created_at", { ascending: false })
           .limit(10);
         if (pastInsights?.length) {
-          historicalContext = `\n\nHISTORICAL INSIGHTS FROM PREVIOUS ANALYSES (reference these, build on them, note changes):\n${pastInsights.map(i => `- [${i.insight_type}] ${i.title}: ${i.detail} (Value: ${i.estimated_value || 'N/A'}, Date: ${i.created_at})`).join("\n")}`;
+          historicalContext = `\n\nPRIOR STORED INSIGHTS — REFERENCE ONLY (do not treat as live news; use to show change vs today):\n${pastInsights.map(i => `- [${i.insight_type}] ${i.title}: ${i.detail} (Value: ${i.estimated_value || 'N/A'}, Date: ${i.created_at})`).join("\n")}`;
         }
       }
     } catch (e) {
@@ -66,7 +68,9 @@ INTELLIGENCE COMES FIRST. You must paint a complete picture of:
 - TECHNOLOGY & INNOVATION: What new technologies are being adopted? Who's building them? What R&D is happening? What patents were recently filed?
 - TALENT & WORKFORCE: Who's hiring? What skills are in demand? Where are talent gaps? Key C-suite moves?
 
-THEN from all this intelligence, identify the gaps and opportunities that emerge naturally.
+THEN from all this intelligence, identify the gaps and opportunities that emerge naturally — prioritize FORWARD-LOOKING gaps, scenarios, and time-bound opportunities (what could happen next), not rehashed old headlines.
+
+${temporalIntelRules()}
 
 You MUST respond with valid JSON only — no markdown, no explanation outside the JSON.${geoPromptSection}
 
@@ -75,7 +79,9 @@ KEY PRINCIPLES:
 - Every gap must emerge from the intelligence, not be stated in isolation
 - Connect the dots: show WHY a gap exists based on what the players are doing (or not doing)
 - Cross-reference with adjacent industries when relevant
-- Reference and build upon previous analyses when available${historicalContext}`;
+- Reference and build upon previous analyses when available
+
+COMPLIANCE & ACCURACY: This output is intelligence and research synthesis, NOT personalized investment, legal, tax, or trading advice. Do not present buy/sell/hold as certainties — frame as hypotheses tied to cited facts. Encourage users to verify prices, filings, and regulations independently and to consult licensed professionals before allocating capital. When data may be stale or uncertain, say so.${historicalContext}`;
 
     const userPrompt = detailed
       ? `Provide COMPREHENSIVE INTELLIGENCE on ${scope}.${!isGlobal ? ` Focus on the ${geoStr} market specifically.` : ""} Keywords: ${keywordStr}.
@@ -86,7 +92,7 @@ Return JSON with these exact keys:
   "players": [{"name": "Company/Person name", "role": "what they do in this space", "recent_activity": "what they have done recently", "strategy": "their apparent strategy", "partnerships": "who they work with"}] (8-10 key players),
   "news": [{"title": "...", "summary": "40-word summary covering who did what, when, why, and what it means${!isGlobal ? ` for ${geoStr}` : ""}"}] (6 recent developments with full context),
   "deals": [{"type": "funding|M&A|partnership|contract|IPO|regulatory", "parties": "who is involved", "value": "$X", "date": "when", "significance": "why it matters"}] (4-6 recent deals/events),
-  "gaps": [{"title": "...", "detail": "60-word explanation grounded in intelligence above: What specific player activity or market condition creates this gap? Its estimated market value and how to exploit it${!isGlobal ? ` in ${geoStr}` : ""}", "value": "$X estimate", "urgency": "high|medium|low", "capital_needed": "low|medium|high", "related_players": "who is relevant"}] (6 exploitable gaps derived from the intel),
+  "gaps": [{"title": "...", "detail": "60-word explanation: forward-looking market/policy gap or arbitrage (not old news); tie to players/trends; how to exploit${!isGlobal ? ` in ${geoStr}` : ""}", "value": "$X estimate", "urgency": "high|medium|low", "capital_needed": "low|medium|high", "related_players": "who is relevant"}] (6 exploitable gaps derived from the intel),
   "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (4 time-sensitive alerts),
   "liveData": {"metric_name": value} (8 relevant quantitative metrics${!isGlobal ? ` for ${geoStr}` : ""})
 }`
@@ -141,10 +147,14 @@ Return JSON:
         const sb = createClient(supabaseUrl, supabaseKey);
         const geoArray = isGlobal ? [] : geoStr.split(",").map((g: string) => g.trim());
 
-        // Store snapshot
+        const snapshotScopeKey = subFlow
+          ? `${industry}::${subFlow}::${geoScopeId}`
+          : `${industry}::${geoScopeId}`;
+
+        // Store snapshot (per geo — avoids Kenya data showing as "global")
         await sb.from("intel_snapshots").insert({
           scope_type: subFlow ? "subflow" : "industry",
-          scope_key: subFlow ? `${industry}::${subFlow}` : industry,
+          scope_key: snapshotScopeKey,
           analysis: parsed.analysis,
           gaps: parsed.gaps || [],
           alerts: parsed.alerts || [],

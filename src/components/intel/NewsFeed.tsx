@@ -1,5 +1,6 @@
 import { Newspaper, Loader2, ExternalLink } from "lucide-react";
 import { ClickableItem } from "./ClickableItem";
+import { InlineMarkdown } from "@/components/InlineMarkdown";
 
 interface Article {
   title: string;
@@ -51,7 +52,9 @@ export function NewsFeed({ articles, loading, industryName, subFlowName }: NewsF
             className="p-2.5 rounded bg-muted/20 border border-border/20 hover:border-primary/20 transition-colors"
           >
             <div className="flex items-start justify-between gap-2">
-              <p className="text-[10px] font-mono font-bold text-foreground leading-snug">{article.title}</p>
+              <div className="text-[10px] font-mono font-bold text-foreground leading-snug min-w-0">
+                <InlineMarkdown content={article.title} />
+              </div>
               {article.url && (
                 <a
                   href={article.url}
@@ -65,7 +68,9 @@ export function NewsFeed({ articles, loading, industryName, subFlowName }: NewsF
               )}
             </div>
             {article.summary && (
-              <p className="text-[9px] font-mono text-muted-foreground mt-1 leading-relaxed">{article.summary}</p>
+              <div className="text-[9px] font-mono text-muted-foreground mt-1 leading-relaxed min-w-0 [&_p]:mb-0">
+                <InlineMarkdown content={article.summary} />
+              </div>
             )}
             <div className="flex items-center gap-2 mt-1.5">
               {article.source && (

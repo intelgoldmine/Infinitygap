@@ -741,3 +741,12 @@ export function getGeoContextString(selections: GeoOption[]): string {
   if (!selections.length) return "global";
   return selections.map(s => s.label).join(", ");
 }
+
+/** Stable id for cache keys + snapshot scope (ISO-ish codes, sorted). */
+export function getGeoScopeId(selections: GeoOption[]): string {
+  if (!selections.length) return "global";
+  return [...selections]
+    .map(s => s.value)
+    .sort((a, b) => a.localeCompare(b))
+    .join("+");
+}

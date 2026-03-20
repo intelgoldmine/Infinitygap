@@ -7,6 +7,7 @@ import { useSocialIntel } from "@/hooks/useSocialIntel";
 import { useSnapshots } from "@/hooks/useSnapshots";
 import { useCachedIntel } from "@/hooks/useCachedIntel";
 import { useGeoContext } from "@/contexts/GeoContext";
+import { getGeoLabel } from "@/lib/geoData";
 import { NewsFeed } from "@/components/intel/NewsFeed";
 import { SocialIntelPanel } from "@/components/intel/SocialIntelPanel";
 import { SnapshotTimeline } from "@/components/intel/SnapshotTimeline";
@@ -17,12 +18,18 @@ export default function IndustryPage() {
   const { slug } = useParams<{ slug: string }>();
   const industry = slug ? getIndustryBySlug(slug) : undefined;
   const keywords = industry?.subFlows.flatMap(sf => sf.keywords).slice(0, 10) || [];
-  const { geoString } = useGeoContext();
-  const { data, loading } = useIndustryIntel(industry?.name || "", keywords, geoString);
+  const { geoString, geoScopeId, selections } = useGeoContext();
+  const { data, loading } = useIndustryIntel(industry?.name || "", keywords, geoString, geoScopeId);
   const { articles, loading: newsLoading } = useIndustryNews(keywords);
-  const { data: socialData, loading: socialLoading } = useSocialIntel(industry?.name || "", null, keywords, geoString);
-  const { snapshots, loading: snapsLoading } = useSnapshots("industry", industry?.name || "");
-  const { report: cachedReport, loading: cacheLoading } = useCachedIntel("industry", industry?.name || "");
+  const { data: socialData, loading: socialLoading } = useSocialIntel(
+    industry?.name || "",
+    null,
+    keywords,
+    geoString,
+    geoScopeId,
+  );
+  const { snapshots, loading: snapsLoading } = useSnapshots("industry", industry?.name || "", geoScopeId);
+  const { report: cachedReport, loading: cacheLoading } = useCachedIntel("industry", industry?.name || "", geoScopeId);
 
   if (!industry) return <Navigate to="/" replace />;
 
@@ -45,7 +52,7 @@ export default function IndustryPage() {
       {/* AI Industry Brief */}
       <ClickableItem
         title={`${industry.name} — Full Industry Intelligence Report`}
-        detail={cachedReport?.analysis || data?.analysis}
+        detail={data?.analysis || cachedReport?.analysis}
         industryName={industry.name}
         className="glass-panel p-4 hover:glow-border transition-all"
       >
@@ -68,9 +75,9 @@ export default function IndustryPage() {
             <Loader2 className="w-4 h-4 text-primary animate-spin" />
             <span className="text-xs font-mono text-muted-foreground">Analyzing {industry.name} landscape...</span>
           </div>
-        ) : (cachedReport?.summary || data?.analysis) ? (
+        ) : (data?.analysis || cachedReport?.summary) ? (
           <div className="text-xs font-mono text-card-foreground leading-relaxed line-clamp-4">
-            <BlockMarkdown content={cachedReport?.summary || data?.analysis || ""} />
+            <BlockMarkdown content={data?.analysis || cachedReport?.summary || ""} />
           </div>
         ) : (
           <p className="text-xs font-mono text-muted-foreground">Analysis unavailable — auto-intel will generate on next cycle.</p>
@@ -195,7 +202,12 @@ export default function IndustryPage() {
       )}
 
       {/* Social Intelligence */}
-      <SocialIntelPanel data={socialData} loading={socialLoading} industryName={industry.name} />
+      <SocialIntelPanel
+        data={socialData}
+        loading={socialLoading}
+        industryName={industry.name}
+        geoLabel={getGeoLabel(selections)}
+      />
 
       {/* Live News Feed */}
       <NewsFeed articles={articles} loading={newsLoading} industryName={industry.name} />

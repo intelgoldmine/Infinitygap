@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { buildIntelSnapshotScopeKey } from "@/lib/intelScopeKey";
 
 interface CachedReport {
   summary: string | null;
@@ -12,7 +13,7 @@ interface CachedReport {
   created_at: string;
 }
 
-export function useCachedIntel(scopeType: "industry" | "subflow", scopeKey: string) {
+export function useCachedIntel(scopeType: "industry" | "subflow", scopeKey: string, geoScopeId: string) {
   const [report, setReport] = useState<CachedReport | null>(null);
   const [history, setHistory] = useState<CachedReport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,15 +21,28 @@ export function useCachedIntel(scopeType: "industry" | "subflow", scopeKey: stri
   const fetchReport = useCallback(async () => {
     if (!scopeKey) return;
     setLoading(true);
+    setReport(null);
+    setHistory([]);
     try {
-      // Get latest report
-      const { data: latest } = await supabase
-        .from("intel_snapshots")
-        .select("*")
-        .eq("scope_type", scopeType)
-        .eq("scope_key", scopeKey)
-        .order("created_at", { ascending: false })
-        .limit(1);
+      const compositeKey = buildIntelSnapshotScopeKey(scopeKey, geoScopeId || "global");
+
+      const loadLatest = async (key: string) => {
+        return supabase
+          .from("intel_snapshots")
+          .select("*")
+          .eq("scope_type", scopeType)
+          .eq("scope_key", key)
+          .order("created_at", { ascending: false })
+          .limit(1);
+      };
+
+      let { data: latest } = await loadLatest(compositeKey);
+
+      // Legacy rows (no ::geo suffix) only when viewing global
+      if ((!latest?.length) && (geoScopeId === "global" || !geoScopeId)) {
+        const legacy = await loadLatest(scopeKey);
+        latest = legacy.data;
+      }
 
       if (latest?.[0]) {
         setReport({
@@ -41,19 +55,32 @@ export function useCachedIntel(scopeType: "industry" | "subflow", scopeKey: stri
           live_data: latest[0].live_data || {},
           created_at: latest[0].created_at,
         });
+      } else {
+        setReport(null);
       }
 
-      // Get last 10 reports for history
       const { data: hist } = await supabase
         .from("intel_snapshots")
         .select("*")
         .eq("scope_type", scopeType)
-        .eq("scope_key", scopeKey)
+        .eq("scope_key", compositeKey)
         .order("created_at", { ascending: false })
         .limit(10);
 
-      if (hist) {
-        setHistory(hist.map(h => ({
+      let rows = hist;
+      if ((!rows?.length) && (geoScopeId === "global" || !geoScopeId)) {
+        const { data: leg } = await supabase
+          .from("intel_snapshots")
+          .select("*")
+          .eq("scope_type", scopeType)
+          .eq("scope_key", scopeKey)
+          .order("created_at", { ascending: false })
+          .limit(10);
+        rows = leg;
+      }
+
+      if (rows) {
+        setHistory(rows.map(h => ({
           summary: h.summary,
           analysis: h.analysis,
           gaps: (h.gaps as any[]) || [],
@@ -63,13 +90,15 @@ export function useCachedIntel(scopeType: "industry" | "subflow", scopeKey: stri
           live_data: h.live_data || {},
           created_at: h.created_at,
         })));
+      } else {
+        setHistory([]);
       }
     } catch (e) {
       console.error("Cached intel fetch error:", e);
     } finally {
       setLoading(false);
     }
-  }, [scopeType, scopeKey]);
+  }, [scopeType, scopeKey, geoScopeId]);
 
   useEffect(() => {
     fetchReport();

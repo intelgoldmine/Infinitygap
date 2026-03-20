@@ -1,6 +1,7 @@
 import type { FrameworkBlock } from "@/lib/blockTypes";
 import { Layers } from "lucide-react";
 import { BlockMarkdown, InlineMarkdown } from "@/components/InlineMarkdown";
+import { prefersBlockMarkdown } from "@/lib/markdownNormalize";
 
 const colorMap: Record<string, { border: string; bg: string; text: string; dot: string }> = {
   emerald: { border: "border-emerald-500/30", bg: "bg-emerald-500/5", text: "text-emerald-400", dot: "bg-emerald-400" },
@@ -42,7 +43,7 @@ export function FrameworkBlockView({ data }: { data: FrameworkBlock["data"] }) {
                   <li key={j} className="flex items-start gap-2 text-xs text-card-foreground leading-relaxed">
                     <span className={`mt-1.5 w-1 h-1 rounded-full flex-shrink-0 ${colors.dot} opacity-50`} />
                     <div className="min-w-0 flex-1 [&_p:last-child]:mb-0">
-                      {item.includes("\n") ? (
+                      {prefersBlockMarkdown(item) ? (
                         <BlockMarkdown content={item} className="[&_p]:mb-1.5" />
                       ) : (
                         <InlineMarkdown content={item} />
