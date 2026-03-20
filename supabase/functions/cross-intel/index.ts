@@ -134,6 +134,33 @@ Return JSON:
 
         // Persist individual insights
         const insights: any[] = [];
+        // Store cross-industry players
+        for (const player of (parsed.cross_industry_players || [])) {
+          insights.push({
+            insight_type: "player",
+            title: player.name,
+            detail: `Cross-industry: ${player.activity}. Strategy: ${player.strategy}`,
+            source_industry: "cross-industry",
+            related_industries: player.industries || [],
+            geo_context: geoArray,
+            tags: ["player", "cross-industry"],
+            raw_data: player,
+          });
+        }
+        // Store cross-industry deals
+        for (const deal of (parsed.deals || [])) {
+          insights.push({
+            insight_type: "deal",
+            title: `${deal.type}: ${deal.parties}`,
+            detail: deal.significance,
+            source_industry: "cross-industry",
+            related_industries: deal.industries || [],
+            geo_context: geoArray,
+            estimated_value: deal.value || null,
+            tags: ["deal", "cross-industry", deal.type || "unknown"],
+            raw_data: deal,
+          });
+        }
         for (const gap of (parsed.gaps || [])) {
           insights.push({
             insight_type: "gap",
