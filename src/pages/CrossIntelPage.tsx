@@ -10,8 +10,10 @@ import { ClickableItem } from "@/components/intel/ClickableItem";
 import { useGeoContext } from "@/contexts/GeoContext";
 
 type CrossIntel = {
-  gaps: { title: string; detail: string; industries: string[]; estimated_value?: string; urgency?: string }[];
-  connections: { title: string; detail: string; from: string; to: string; opportunity_type?: string }[];
+  cross_industry_players?: { name: string; industries: string[]; activity: string; strategy: string }[];
+  deals?: { type: string; parties: string; industries: string[]; value?: string; significance: string }[];
+  gaps: { title: string; detail: string; industries: string[]; estimated_value?: string; urgency?: string; related_players?: string }[];
+  connections: { title: string; detail: string; from: string; to: string; opportunity_type?: string; key_players?: string }[];
   alerts: { title: string; detail: string; level: string }[];
   summary: string;
 };
