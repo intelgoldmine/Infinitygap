@@ -20,18 +20,29 @@ serve(async (req) => {
       .map((i: any) => `${i.name}: sub-flows=[${i.subFlows.join(", ")}], keywords=[${i.keywords.join(", ")}]`)
       .join("\n");
 
-    const systemPrompt = `You are a cross-industry intelligence analyst. You analyze connections between different industries, identify gaps where one industry's money flow could benefit another, and detect emerging cross-sector opportunities. You MUST respond with valid JSON only.`;
+    const systemPrompt = `You are an elite cross-industry MONEY FLOW analyst. Your ONLY job is finding where money leaks between industries and how to capture that value. You think like a billion-dollar private equity firm scanning for arbitrage across 20 industries simultaneously.
 
-    const userPrompt = `Analyze these 20 industries and their money flows for cross-industry intelligence:
+You MUST respond with valid JSON only.
+
+YOUR MANDATE:
+- Find where Industry A's waste is Industry B's gold mine
+- Identify cross-sector arbitrage where pricing inefficiencies exist between related industries
+- Spot supply chain gaps where middlemen are extracting value that could be captured directly
+- Find regulatory gaps where one industry's rules create opportunity for another
+- Detect technology transfer opportunities — what worked in Industry X that Industry Y hasn't adopted
+- Identify convergence plays where two industries are merging and creating new markets
+- Every gap MUST have an estimated dollar value and a concrete exploitation strategy`;
+
+    const userPrompt = `Scan ALL 20 industries and their money flows for EXPLOITABLE CROSS-INDUSTRY OPPORTUNITIES:
 
 ${industryList}
 
 Return JSON with:
 {
-  "summary": "200-word executive summary of the global cross-industry landscape, key macro trends affecting multiple sectors, and the biggest opportunities at industry intersections.",
-  "gaps": [{"title": "...", "detail": "50-word explanation", "industries": ["Industry A", "Industry B"]}] (6 cross-industry gaps where value is being lost between sectors),
-  "connections": [{"title": "...", "detail": "40-word explanation of the connection", "from": "Industry A", "to": "Industry B"}] (6 strong connections between different industries that create opportunities),
-  "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (5 proactive alerts about cross-industry risks or emerging disruptions)
+  "summary": "250-word executive brief: What are the BIGGEST money-making opportunities at the intersections of these industries RIGHT NOW? Where is capital flowing inefficiently across sectors? Which convergence plays have the highest ROI potential? Be specific with dollar amounts and company names.",
+  "gaps": [{"title": "...", "detail": "60-word explanation of the cross-industry gap, its estimated market value, and how to exploit it", "industries": ["Industry A", "Industry B"], "estimated_value": "$X", "urgency": "high|medium|low"}] (8 cross-industry gaps where money is being lost or left on the table),
+  "connections": [{"title": "...", "detail": "50-word explanation of the money flow connection and how to leverage it for profit", "from": "Industry A", "to": "Industry B", "opportunity_type": "arbitrage|supply_chain|tech_transfer|convergence|regulatory"}] (8 strong cross-industry connections that create exploitable opportunities),
+  "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (6 time-sensitive cross-industry alerts — market windows opening/closing, regulatory changes, demand shifts, competitor moves, funding trends)
 }`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -51,12 +62,8 @@ Return JSON with:
 
     if (!response.ok) {
       const status = response.status;
-      if (status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limited" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
-      if (status === 402) {
-        return new Response(JSON.stringify({ error: "Credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
+      if (status === 429) return new Response(JSON.stringify({ error: "Rate limited" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (status === 402) return new Response(JSON.stringify({ error: "Credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       throw new Error(`AI gateway error: ${status}`);
     }
 

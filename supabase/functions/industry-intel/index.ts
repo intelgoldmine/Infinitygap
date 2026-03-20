@@ -19,26 +19,38 @@ serve(async (req) => {
     const keywordStr = (keywords || []).slice(0, 8).join(", ");
     const scope = subFlow ? `the "${subFlow}" money flow within the ${industry} industry` : `the ${industry} industry broadly`;
 
-    const systemPrompt = `You are a world-class industry intelligence analyst. You analyze global industries, money flows, market dynamics, and identify gaps, opportunities, and emerging trends. You MUST respond with valid JSON only — no markdown, no explanation outside the JSON.`;
+    const systemPrompt = `You are a ruthless market intelligence analyst who finds MONEY-MAKING OPPORTUNITIES. Your job is to identify exploitable gaps in money flows, underserved markets, arbitrage opportunities, and emerging plays that someone with capital could leverage RIGHT NOW.
+
+You think like a private equity analyst, a venture capitalist, and a hedge fund strategist combined. Every gap you find must have a clear path to profit. You cross-reference industries to find where value leaks between sectors.
+
+You MUST respond with valid JSON only — no markdown, no explanation outside the JSON.
+
+KEY PRINCIPLES:
+- Every gap must include estimated addressable market value
+- Rate each opportunity by urgency (window closing), capital required, and expected ROI
+- Identify who's already trying (and failing) and WHY they're failing
+- Connect to adjacent industries that could provide unfair advantages
+- Flag regulatory tailwinds/headwinds that create timing opportunities
+- Note historical parallels — what worked before in similar situations`;
 
     const userPrompt = detailed
-      ? `Analyze ${scope}. Keywords: ${keywordStr}.
+      ? `Analyze ${scope} for EXPLOITABLE MONEY-MAKING OPPORTUNITIES. Keywords: ${keywordStr}.
 
 Return JSON with these exact keys:
 {
-  "analysis": "A 200-word deep analysis of current state, trends, disruptions, key players, and outlook for this specific money flow. Be specific with data points, percentages, and company names where possible.",
-  "news": [{"title": "...", "summary": "30-word summary"}] (5 recent relevant developments),
-  "gaps": [{"title": "...", "detail": "50-word explanation of the gap/opportunity"}] (4 gaps or underserved areas),
-  "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (3 key alerts),
-  "liveData": {"metric_name": value} (6 relevant quantitative metrics with realistic current values — e.g., market_size_usd_billions, growth_rate_pct, top_player_market_share, avg_margin_pct, etc.)
+  "analysis": "250-word deep analysis: Where is money flowing? Where is it STUCK? Where are the biggest inefficiencies? Who is overpaying? Who is underserved? What's about to break open? Be ruthlessly specific with numbers, company names, and dollar amounts.",
+  "news": [{"title": "...", "summary": "30-word summary of why this matters for making money"}] (5 recent developments that create opportunities),
+  "gaps": [{"title": "...", "detail": "60-word explanation: What's the gap, its estimated market value, why it exists, and how to exploit it", "value": "$X estimate", "urgency": "high|medium|low", "capital_needed": "low|medium|high"}] (6 exploitable gaps with profit potential),
+  "alerts": [{"title": "...", "detail": "...", "level": "critical|high|medium|info"}] (4 time-sensitive market alerts — regulations changing, competitors failing, demand spikes, supply disruptions),
+  "liveData": {"metric_name": value} (8 relevant quantitative metrics — market sizes, margins, growth rates, funding rounds, pricing trends, conversion rates, churn rates)
 }`
-      : `Give a high-level industry brief for ${scope}. Keywords: ${keywordStr}.
+      : `Give a money-flow brief for ${scope}. Keywords: ${keywordStr}.
 
 Return JSON:
 {
-  "analysis": "150-word overview of the industry's current state, key trends, and major players.",
-  "news": [{"title": "...", "summary": "..."}] (3 recent developments),
-  "gaps": [{"title": "...", "detail": "..."}] (2 major gaps)
+  "analysis": "150-word overview: Where does money flow in this space? Where are the biggest leaks, inefficiencies, and underserved segments? What's the smartest play right now?",
+  "news": [{"title": "...", "summary": "..."}] (3 developments creating opportunities),
+  "gaps": [{"title": "...", "detail": "...", "value": "$X estimate"}] (3 major exploitable gaps with estimated values)
 }`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -58,12 +70,8 @@ Return JSON:
 
     if (!response.ok) {
       const status = response.status;
-      if (status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limited, please wait" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
-      if (status === 402) {
-        return new Response(JSON.stringify({ error: "Credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
+      if (status === 429) return new Response(JSON.stringify({ error: "Rate limited, please wait" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (status === 402) return new Response(JSON.stringify({ error: "Credits exhausted" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       throw new Error(`AI gateway error: ${status}`);
     }
 
@@ -78,7 +86,7 @@ Return JSON:
       parsed = { analysis: content, news: [], gaps: [], alerts: [], liveData: {} };
     }
 
-    // Store snapshot in database
+    // Store snapshot
     try {
       const supabaseUrl = Deno.env.get("SUPABASE_URL");
       const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
