@@ -9,9 +9,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
+  const { profile } = useAuth();
   const [alertsEnabled, setAlertsEnabled] = useState(true);
   const { requestNotificationPermission } = useAlertNotifications([], alertsEnabled);
   const [dbStats, setDbStats] = useState({ rawData: 0, insights: 0, matches: 0 });
+
+  // Personalize: show user's preferred industries first
+  const sortedIndustries = useMemo(() => {
+    if (!profile?.industries_of_interest?.length) return industries;
+    const preferred = new Set(profile.industries_of_interest);
+    return [
+      ...industries.filter((i) => preferred.has(i.slug)),
+      ...industries.filter((i) => !preferred.has(i.slug)),
+    ];
+  }, [profile]);
 
   useEffect(() => {
     async function fetchStats() {
