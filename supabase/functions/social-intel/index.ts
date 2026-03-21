@@ -279,7 +279,7 @@ async function scrapeTwitter(keywords: string[], countryCodes: string[]): Promis
       10000
     );
     if (countryData?.data) {
-      const users = new Map((countryData.includes?.users || []).map((u: any) => [u.id, u]));
+      const users = new Map<string, any>((countryData.includes?.users || []).map((u: any) => [u.id, u]));
       for (const tweet of countryData.data) {
         const author = users.get(tweet.author_id);
         results.push({

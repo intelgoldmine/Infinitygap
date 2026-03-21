@@ -450,7 +450,7 @@ async function collectIndustryTwitter(): Promise<any[]> {
           { Authorization: `Bearer ${BEARER}` }, 12000,
         );
         if (!data?.data?.length) continue;
-        const users = new Map((data.includes?.users || []).map((u: any) => [u.id, u]));
+        const users = new Map<string, any>((data.includes?.users || []).map((u: any) => [u.id, u]));
         for (const tweet of data.data.slice(0, 10)) {
           const author = users.get(tweet.author_id);
           indRows.push({
