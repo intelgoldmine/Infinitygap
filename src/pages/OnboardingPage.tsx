@@ -108,7 +108,7 @@ export default function OnboardingPage() {
     return true;
   };
 
-  const regions = GEO_OPTIONS.filter((g) => g.type === "country").slice(0, 30);
+  const regions = COUNTRIES.slice(0, 30);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
