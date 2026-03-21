@@ -85,9 +85,16 @@ export default function Dashboard() {
               </span>
             </div>
             <h1 className="text-lg font-bold text-foreground mb-0.5 tracking-tight">
-              World Industry <span className="text-gradient-primary">Money Flows</span> Intelligence
+              {profile?.display_name ? (
+                <>Welcome back, <span className="text-gradient-primary">{profile.display_name}</span></>
+              ) : (
+                <>World Industry <span className="text-gradient-primary">Money Flows</span> Intelligence</>
+              )}
             </h1>
             <p className="text-[11px] text-muted-foreground max-w-xl">
+              {profile?.role && profile.role !== "explorer"
+                ? `Personalized for ${profile.role.replace(/_/g, " ")}${profile.organization ? ` at ${profile.organization}` : ""}. `
+                : ""}
               Autonomous 3-tier intelligence engine. Real-time data from 11+ sources. AI-powered gap detection across {industries.length} industries and {totalFlows}+ money flows.
             </p>
           </div>
