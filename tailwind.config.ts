@@ -17,6 +17,7 @@ export default {
         sans: ["DM Sans", "Inter", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
         brand: ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Playfair Display", "Georgia", "Times New Roman", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +55,7 @@ export default {
         },
         brand: {
           orange: "hsl(var(--brand-orange) / <alpha-value>)",
+          navy: "hsl(var(--brand-navy) / <alpha-value>)",
         },
         signal: {
           amber: "hsl(var(--signal-amber) / <alpha-value>)",

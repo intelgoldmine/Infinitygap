@@ -14,29 +14,29 @@ export function TopBar({ sidebarOpen, toggleSidebar }: { sidebarOpen: boolean; t
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -8 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="min-h-[52px] h-[52px] border-b border-border bg-card/80 backdrop-blur-xl flex items-center px-4 gap-3 shrink-0"
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="min-h-[60px] h-[60px] border-b border-border/40 bg-card/70 backdrop-blur-2xl flex items-center px-5 gap-4 shrink-0"
     >
-      <button onClick={toggleSidebar} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-        {sidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
+      <button onClick={toggleSidebar} className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all">
+        {sidebarOpen ? <PanelLeftClose className="w-[18px] h-[18px]" /> : <PanelLeft className="w-[18px] h-[18px]" />}
       </button>
 
-      <Link to="/dashboard" className="flex items-center gap-2 min-w-0">
+      <Link to="/dashboard" className="flex items-center gap-2.5 min-w-0">
         <BrandHexMark size="sm" />
         <span className="text-sm truncate">
           <BrandWordmark compact />
         </span>
       </Link>
 
-      <span className="text-xs text-muted-foreground hidden md:block">
+      <span className="text-xs text-muted-foreground hidden md:block font-medium">
         {isGlobal ? "Global" : geoString}
       </span>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-3">
         {profile?.display_name && (
-          <span className="text-xs text-muted-foreground hidden sm:block truncate max-w-[140px] font-medium">
+          <span className="text-sm text-muted-foreground hidden sm:block truncate max-w-[160px] font-semibold">
             {profile.display_name}
           </span>
         )}
@@ -44,10 +44,10 @@ export function TopBar({ sidebarOpen, toggleSidebar }: { sidebarOpen: boolean; t
         <GeoSelector />
         <button
           onClick={signOut}
-          className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all"
           title="Sign out"
         >
-          <LogOut className="w-4 h-4" />
+          <LogOut className="w-[18px] h-[18px]" />
         </button>
       </div>
     </motion.header>

@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandHexMark } from "@/components/BrandHexMark";
-import { Loader2, Lock } from "lucide-react";
+import { BrandWordmark } from "@/components/BrandWordmark";
+import { Loader2, Lock, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ResetPasswordPage() {
@@ -43,7 +44,10 @@ export default function ResetPasswordPage() {
   if (!ready) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <p className="text-sm text-muted-foreground text-center max-w-sm">Invalid or expired reset link.</p>
+        <div className="text-center">
+          <BrandHexMark size="lg" className="mx-auto" />
+          <p className="text-base text-muted-foreground mt-6 max-w-sm">Invalid or expired reset link.</p>
+        </div>
       </div>
     );
   }
@@ -51,39 +55,43 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-md"
       >
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-10">
           <BrandHexMark size="lg" />
-          <h1 className="text-xl font-bold text-foreground mt-4 tracking-tight">Set new password</h1>
-          <p className="text-sm text-muted-foreground mt-1.5 text-center">Choose a strong password for your account.</p>
+          <h1 className="font-display text-2xl font-bold text-foreground mt-5 tracking-tight">Set new password</h1>
+          <p className="text-sm text-muted-foreground mt-2 text-center">Choose a strong password for your account.</p>
         </div>
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-lg">
-          <form onSubmit={handleReset} className="space-y-4">
+        <div className="rounded-3xl border border-border/50 bg-card p-8 shadow-xl">
+          <form onSubmit={handleReset} className="space-y-5">
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-foreground">New password</Label>
+              <Label className="text-sm font-semibold text-foreground">New password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-10 h-11 text-sm rounded-xl"
+                  className="pl-11 h-12 text-sm rounded-xl border-border/60"
                   required
                   minLength={6}
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full h-11 text-sm font-semibold rounded-xl" disabled={loading}>
-              {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+            <Button type="submit" className="w-full h-12 text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all" disabled={loading}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShieldCheck className="w-4 h-4 mr-2" />}
               Update Password
             </Button>
           </form>
         </div>
+
+        <p className="text-center mt-6">
+          <BrandWordmark compact />
+        </p>
       </motion.div>
     </div>
   );
