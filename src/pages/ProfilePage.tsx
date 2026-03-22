@@ -102,7 +102,7 @@ export default function ProfilePage() {
               </p>
             )}
             <Button variant="outline" size="sm" onClick={handleDowngrade} className="text-destructive border-destructive/30 hover:bg-destructive/5">
-              Cancel subscription
+              Cancel plan
             </Button>
           </div>
         ) : (
@@ -113,7 +113,7 @@ export default function ProfilePage() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground">
-              Upgrade to Pro to unlock AI-powered intelligence, deep dives, and real-time data across all industries.
+              Upgrade to Pro for full access to AI intelligence, deep dives, and real-time data across all industries.
             </p>
             <UpgradeButton size="default" />
           </div>

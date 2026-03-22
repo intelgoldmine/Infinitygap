@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { Message } from "@/hooks/useMaverickChat";
-import { Bot, User, Atom, Search, BarChart3, Target, ArrowRight, Sparkles } from "lucide-react";
+import { Bot, User, Atom, Search, BarChart3, Target, ArrowRight } from "lucide-react";
 import { parseBlocks } from "@/lib/parseBlocks";
 import { BlockRenderer } from "@/components/BlockRenderer";
 
@@ -31,7 +31,7 @@ export function MessageList({
           <div className="relative w-20 h-20 mx-auto">
             <div className="absolute inset-0 rounded-2xl bg-primary/5 border border-primary/10 animate-pulse-glow" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-primary/80" />
+              <Bot className="w-8 h-8 text-primary/80" />
             </div>
             <div className="absolute inset-0" style={{ animation: "orbit 6s linear infinite" }}>
               <div className="w-1.5 h-1.5 rounded-full bg-primary/60" />

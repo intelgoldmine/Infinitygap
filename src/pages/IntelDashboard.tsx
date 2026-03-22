@@ -33,7 +33,7 @@ export default function IntelDashboard() {
 
       {isFree ? (
         <div className="glass-panel p-6">
-          <ProUpgradePrompt feature="Subscribe to Pro to access real-time market data from 11+ sources including crypto, forex, commodities, VC signals, and supply chain intelligence." />
+          <ProUpgradePrompt feature="Upgrade for full access to real-time market data from 11+ sources including crypto, forex, commodities, VC signals, and supply chain intelligence." />
         </div>
       ) : loading && !feed ? (
         <div className="flex items-center justify-center py-20">

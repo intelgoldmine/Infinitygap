@@ -1,18 +1,16 @@
 import { useSubscription } from "@/hooks/useSubscription";
-import { Shield, Sparkles, Zap, Lock } from "lucide-react";
+import { Zap, Lock, ArrowUpRight } from "lucide-react";
 import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import { BrandHexMark } from "@/components/BrandHexMark";
-import { BrandWordmark } from "@/components/BrandWordmark";
 
 interface SubscriptionGateProps {
   children: React.ReactNode;
   feature?: string;
 }
 
-/** Wraps premium features — shows upgrade prompt if not subscribed. */
+/** Wraps premium features — shows upgrade prompt when the user is not on Pro. */
 export function SubscriptionGate({ children, feature }: SubscriptionGateProps) {
   const { isPro, loading } = useSubscription();
 
@@ -31,9 +29,8 @@ export function SubscriptionGate({ children, feature }: SubscriptionGateProps) {
             Upgrade to Pro
           </h3>
           <p className="text-sm text-muted-foreground mb-4">
-            {feature
-              ? `${feature} requires a Pro subscription.`
-              : "This feature requires a Pro subscription."}
+            {feature ||
+              "This capability is included with Pro. Upgrade for full access across Intel GoldMine."}
           </p>
           <UpgradeButton size="default" />
         </div>
@@ -52,7 +49,7 @@ export function FullPagePaywall() {
           Upgrade to unlock this page
         </h2>
         <p className="text-base text-muted-foreground mb-8 leading-relaxed">
-          This section is available to Pro subscribers. Upgrade now to access all Intel GoldMine features — live feeds, cross-industry scans, custom intel lab, and more.
+          This area is part of the Pro plan. Upgrade for full access to live feeds, cross-industry scans, Intel Lab, and the rest of the platform.
         </p>
         <UpgradeButton size="default" className="mx-auto" />
         <p className="text-xs text-muted-foreground mt-4">Cancel anytime · Instant access</p>
@@ -92,8 +89,8 @@ export function UpgradeButton({
       disabled={loading}
       className={`inline-flex items-center justify-center rounded-lg bg-primary font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors disabled:opacity-50 ${sizeClasses} ${className}`}
     >
-      <Sparkles className={size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4"} />
-      {loading ? "Redirecting…" : `Subscribe — $${SUBSCRIPTION_USD_MONTHLY}/mo`}
+      <ArrowUpRight className={size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4"} />
+      {loading ? "Redirecting…" : `Upgrade — $${SUBSCRIPTION_USD_MONTHLY}/mo`}
     </button>
   );
 }

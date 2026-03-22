@@ -86,7 +86,7 @@ export function DeepDiveDialog({ open, onClose, topic, context, industryName, su
 
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-6 pb-6">
           {!isPro ? (
-            <ProUpgradePrompt feature="Subscribe to Pro to generate deep-dive intelligence reports with structured analysis." />
+            <ProUpgradePrompt feature="Upgrade for full access to generate deep-dive intelligence reports with structured analysis." />
           ) : loading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               <Loader2 className="w-8 h-8 text-primary animate-spin" />

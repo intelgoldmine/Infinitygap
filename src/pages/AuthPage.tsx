@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandHexMark } from "@/components/BrandHexMark";
 import { BrandWordmark } from "@/components/BrandWordmark";
-import { Loader2, Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle2, Sparkles, Shield, Zap } from "lucide-react";
+import { Loader2, Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle2, Shield, Zap, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 
 type Mode = "login" | "signup" | "forgot";
@@ -201,7 +201,7 @@ export default function AuthPage() {
                   Secure sign-in
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 border border-border/50 px-2.5 py-1 font-medium">
-                  <Sparkles className="w-3.5 h-3.5 text-brand-orange" />
+                  <KeyRound className="w-3.5 h-3.5 text-primary" />
                   Supabase Auth
                 </span>
               </div>

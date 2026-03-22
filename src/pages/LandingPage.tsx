@@ -8,6 +8,7 @@ import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { industries } from "@/lib/industryData";
 import { Reveal } from "@/components/motion/Reveal";
 import {
+  Activity,
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -17,10 +18,11 @@ import {
   LayoutGrid,
   Radio,
   Shield,
-  Sparkles,
   TrendingUp,
   Zap,
-  Star,
+  PlayCircle,
+  FlaskConical,
+  BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -100,7 +102,7 @@ export default function LandingPage() {
       <div className="relative z-20 border-b border-border/40 bg-gradient-to-r from-muted/40 via-background to-muted/40">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/[0.04] px-3 py-1 font-medium text-foreground shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-brand-orange shrink-0" />
+            <Activity className="w-3.5 h-3.5 text-primary shrink-0" />
             Maverick AI · live pipelines · geo snapshots
           </span>
           <span className="hidden sm:inline text-border">·</span>
@@ -200,7 +202,7 @@ export default function LandingPage() {
                       asChild
                     >
                       <Link to="/auth" className="gap-2.5">
-                        <Sparkles className="w-4 h-4 text-brand-orange" />
+                        <PlayCircle className="w-4 h-4 text-primary" />
                         See how it works
                       </Link>
                     </Button>
@@ -328,7 +330,7 @@ export default function LandingPage() {
                 {
                   title: "Intel Lab",
                   desc: "Define scope, add context, and run custom research with follow-ups.",
-                  icon: Sparkles,
+                  icon: FlaskConical,
                   accent: "from-brand-orange/15 to-brand-orange/[0.02]",
                   href: "#how-it-works",
                 },
@@ -529,7 +531,7 @@ export default function LandingPage() {
                   step: "02",
                   title: "Get AI insights",
                   body: "Maverick synthesizes data from 11+ sources into clear, structured reports.",
-                  icon: Sparkles,
+                  icon: BarChart3,
                 },
                 {
                   step: "03",
@@ -566,12 +568,10 @@ export default function LandingPage() {
               {TESTIMONIALS.map((t, i) => (
                 <Reveal key={t.name} delay={i * 0.1}>
                   <div className="rounded-3xl border border-border/50 bg-card p-8 shadow-sm h-full flex flex-col">
-                    <div className="flex gap-1 mb-5">
-                      {[...Array(5)].map((_, j) => (
-                        <Star key={j} className="w-4 h-4 fill-brand-orange text-brand-orange" />
-                      ))}
-                    </div>
-                    <p className="text-base text-foreground leading-relaxed flex-1 italic">"{t.text}"</p>
+                    <div className="mb-5 h-px w-12 bg-primary/40 rounded-full" aria-hidden />
+                    <p className="text-base text-foreground leading-relaxed flex-1 border-l-2 border-primary/20 pl-4 italic">
+                      "{t.text}"
+                    </p>
                     <div className="mt-6 pt-5 border-t border-border/50">
                       <p className="text-sm font-bold text-foreground">{t.name}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{t.role}</p>
@@ -591,14 +591,16 @@ export default function LandingPage() {
               <h2 className="font-display text-4xl sm:text-5xl font-bold text-foreground tracking-tight">
                 Simple, transparent pricing
               </h2>
-              <p className="mt-6 text-lg text-muted-foreground">Start free. Upgrade when you need more.</p>
+              <p className="mt-6 text-lg text-muted-foreground">
+                Start on the free tier. Move to Pro when you need full access to every workflow.
+              </p>
             </Reveal>
 
             <Reveal className="max-w-md mx-auto">
               <div className="rounded-3xl border border-border/50 bg-card p-10 sm:p-12 text-center shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-brand-orange to-primary" />
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-orange/10 mb-6">
-                  <Sparkles className="w-8 h-8 text-brand-orange" />
+                  <BadgeCheck className="w-8 h-8 text-brand-orange" />
                 </div>
                 <p className="text-lg font-bold text-foreground mb-6">Pro Plan</p>
                 <div className="flex items-baseline justify-center gap-1">
@@ -631,7 +633,7 @@ export default function LandingPage() {
                   </Link>
                 </Button>
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Already subscribed?{" "}
+                  Already have an account?{" "}
                   <Link to="/auth" className="text-primary hover:underline font-semibold">
                     Sign in
                   </Link>

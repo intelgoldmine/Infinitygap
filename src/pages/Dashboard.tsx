@@ -12,7 +12,7 @@ import {
   Database,
   Radio,
   BarChart3,
-  Sparkles,
+  ArrowUpRight,
   Layers,
   Network,
   Shield,
@@ -163,7 +163,7 @@ export default function Dashboard() {
             <div className="w-full lg:w-[300px] shrink-0">
               <div className="rounded-2xl border border-border/50 bg-gradient-to-br from-card to-muted/20 p-6 shadow-sm">
                 <div className="flex items-center gap-2.5 mb-4">
-                  <Sparkles className="w-5 h-5 text-brand-orange" />
+                  <ArrowUpRight className="w-5 h-5 text-primary" />
                   <span className="text-sm font-bold text-foreground">Upgrade to Pro</span>
                 </div>
                 <div className="flex items-baseline gap-1 mb-3">

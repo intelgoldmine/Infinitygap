@@ -73,7 +73,7 @@ export default function CrossIntelPage() {
 
       {!isPro ? (
         <div className="glass-panel p-6">
-          <ProUpgradePrompt feature="Subscribe to Pro to unlock cross-industry AI analysis — find gaps, connections, and opportunities across all 20 industries." />
+          <ProUpgradePrompt feature="Upgrade for full access to cross-industry AI analysis — gaps, connections, and opportunities across all 20 industries." />
         </div>
       ) : loading && !data ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">

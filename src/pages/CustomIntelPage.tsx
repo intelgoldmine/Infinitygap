@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Sparkles, Shuffle, ArrowRight, Send, RefreshCw, Layers, X } from "lucide-react";
+import { Loader2, Shuffle, ArrowRight, Send, RefreshCw, Layers, X, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -121,7 +121,7 @@ export default function CustomIntelPage() {
 
   const runIntel = useCallback(async () => {
     if (!isPro) {
-      toast.error("Custom Intel Lab requires a Pro subscription. Upgrade to generate reports.");
+      toast.error("Intel Lab requires Pro. Upgrade for full access to generate reports.");
       return;
     }
     const selectedCount = pool.size + primary.size + secondary.size;
@@ -452,7 +452,7 @@ Answer the user's follow-up with the same structured block style when analytical
           </div>
           <div className="flex flex-wrap gap-2">
             <Button className="h-9 text-xs gap-2 px-4" onClick={runIntel} disabled={loading || !isPro} type="button">
-              {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+              {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
               {isPro ? "Run custom intel" : "Pro required"}
             </Button>
             {report && (
@@ -469,7 +469,7 @@ Answer the user's follow-up with the same structured block style when analytical
         )}
 
         {!isPro && (
-          <ProUpgradePrompt feature="Subscribe to Pro to generate custom intelligence reports with AI analysis." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to generate custom intelligence reports with AI analysis." compact />
         )}
       </div>
 
@@ -486,7 +486,7 @@ Answer the user's follow-up with the same structured block style when analytical
       {!loading && segments.length > 0 && (
         <div className="glass-panel p-5 glow-border space-y-3">
           <h2 className="text-xs font-bold text-primary flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> BRIEF
+            <FileText className="w-3.5 h-3.5" /> BRIEF
           </h2>
           <BlockRenderer segments={segments} />
         </div>

@@ -73,7 +73,7 @@ export default function IndustryPage() {
           </div>
         </div>
         {isFree ? (
-          <ProUpgradePrompt feature="Subscribe to Pro to unlock AI-powered industry analysis and reports." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to unlock AI-powered industry analysis and reports." compact />
         ) : (loading && cacheLoading) ? (
           <div className="flex items-center gap-2 py-4">
             <Loader2 className="w-4 h-4 text-primary animate-spin" />
@@ -94,7 +94,7 @@ export default function IndustryPage() {
           <Clock className="w-3.5 h-3.5 text-primary" /> AUTO-DETECTED ALERTS
         </h2>
         {isFree ? (
-          <ProUpgradePrompt feature="Subscribe to Pro to see real-time alerts and critical market signals." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to see real-time alerts and critical market signals." compact />
         ) : cachedReport?.alerts && cachedReport.alerts.length > 0 ? (
           <div className="space-y-2">
             {cachedReport.alerts.map((alert: any, i: number) => (
@@ -121,7 +121,7 @@ export default function IndustryPage() {
           <TrendingUp className="w-3.5 h-3.5 text-primary" /> EXPLOITABLE GAPS
         </h2>
         {isFree ? (
-          <ProUpgradePrompt feature="Subscribe to Pro to discover exploitable market gaps and opportunities." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to discover exploitable market gaps and opportunities." compact />
         ) : cachedReport?.gaps && cachedReport.gaps.length > 0 ? (
           <div className="space-y-2">
             {cachedReport.gaps.map((gap: any, i: number) => (
@@ -160,7 +160,7 @@ export default function IndustryPage() {
           <Users className="w-3.5 h-3.5 text-primary" /> KEY PLAYERS
         </h2>
         {isFree ? (
-          <ProUpgradePrompt feature="Subscribe to Pro to see key industry players and their strategies." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to see key industry players and their strategies." compact />
         ) : data?.players && data.players.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {data.players.map((player: any, i: number) => (
@@ -230,7 +230,7 @@ export default function IndustryPage() {
           <Clock className="w-3.5 h-3.5 text-primary" /> HISTORICAL SNAPSHOTS
         </h2>
         {isFree ? (
-          <ProUpgradePrompt feature="Subscribe to Pro to access historical analysis snapshots." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to access historical analysis snapshots." compact />
         ) : (
           <SnapshotTimeline snapshots={snapshots} loading={snapsLoading} />
         )}

@@ -88,7 +88,7 @@ export default function SubFlowPage() {
             </div>
           </div>
           {isFree ? (
-            <ProUpgradePrompt feature="Subscribe to Pro to unlock AI deep analysis for this money flow." compact />
+            <ProUpgradePrompt feature="Upgrade for full access to unlock AI deep analysis for this money flow." compact />
           ) : loading && !data && !cachedReport ? (
             <div className="flex items-center gap-2 py-6">
               <Loader2 className="w-4 h-4 text-primary animate-spin" />
@@ -109,7 +109,7 @@ export default function SubFlowPage() {
             <Lightbulb className="w-3.5 h-3.5" /> GAPS & OPPORTUNITIES
           </h2>
           {isFree ? (
-            <ProUpgradePrompt feature="Subscribe to Pro to discover gaps and opportunities in this flow." compact />
+            <ProUpgradePrompt feature="Upgrade for full access to discover gaps and opportunities in this flow." compact />
           ) : data?.gaps && data.gaps.length > 0 ? (
             <div className="space-y-2">
               {data.gaps.map((gap: any, i: number) => (
@@ -156,7 +156,7 @@ export default function SubFlowPage() {
             <AlertTriangle className="w-3.5 h-3.5" /> KEY ALERTS
           </h2>
           {isFree ? (
-            <ProUpgradePrompt feature="Subscribe to Pro to receive critical market alerts." compact />
+            <ProUpgradePrompt feature="Upgrade for full access to receive critical market alerts." compact />
           ) : data?.alerts && data.alerts.length > 0 ? (
             <div className="space-y-2">
               {data.alerts.map((alert: any, i: number) => (
@@ -208,7 +208,7 @@ export default function SubFlowPage() {
           <Clock className="w-3.5 h-3.5 text-primary" /> HISTORICAL SNAPSHOTS
         </h2>
         {isFree ? (
-          <ProUpgradePrompt feature="Subscribe to Pro to access historical snapshots and trend analysis." compact />
+          <ProUpgradePrompt feature="Upgrade for full access to access historical snapshots and trend analysis." compact />
         ) : (
           <SnapshotTimeline snapshots={snapshots} loading={snapsLoading} />
         )}

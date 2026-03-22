@@ -1,4 +1,4 @@
-import { Lock, Sparkles } from "lucide-react";
+import { Lock } from "lucide-react";
 import { UpgradeButton } from "@/components/SubscriptionGate";
 import { useSubscription } from "@/hooks/useSubscription";
 
@@ -22,10 +22,11 @@ export function ProUpgradePrompt({ feature, compact, className }: ProUpgradeProm
       </div>
       <div>
         <p className={`font-semibold text-foreground ${compact ? "text-xs" : "text-sm"}`}>
-          Pro feature
+          Full access required
         </p>
         <p className={`text-muted-foreground mt-0.5 max-w-xs ${compact ? "text-[10px]" : "text-xs"}`}>
-          {feature || "Subscribe to Pro to unlock AI-powered analysis and live data."}
+          {feature ||
+            "Upgrade to Pro for full access to AI analysis, live data, and advanced workflows."}
         </p>
       </div>
       <UpgradeButton size="sm" />

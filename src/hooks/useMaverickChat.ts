@@ -24,7 +24,7 @@ export function useMaverickChat() {
     if (!input.trim() || isStreaming) return;
 
     if (!isPro) {
-      toast.error("Maverick AI is available to Pro subscribers. Upgrade to use this feature.");
+      toast.error("Maverick AI is included with Pro. Upgrade for full access to use this feature.");
       return;
     }
 
