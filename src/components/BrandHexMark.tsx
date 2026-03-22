@@ -8,11 +8,19 @@ const sizeMap = {
 
 type Size = keyof typeof sizeMap;
 
-/** Brand logo mark using the generated logo image. */
-export function BrandHexMark({ size = "md", className }: { size?: Size; className?: string }) {
+/** Brand logo mark using the generated logo image. Use `onDark` on navy / dark marketing surfaces. */
+export function BrandHexMark({
+  size = "md",
+  className,
+  variant = "default",
+}: {
+  size?: Size;
+  className?: string;
+  variant?: "default" | "onDark";
+}) {
   return (
     <img
-      src="/logo.png"
+      src={variant === "onDark" ? "/logo-white.png" : "/logo.png"}
       alt="Intel GoldMine"
       className={cn("shrink-0 object-contain", sizeMap[size], className)}
     />

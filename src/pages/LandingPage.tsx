@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { industries } from "@/lib/industryData";
 import { Reveal } from "@/components/motion/Reveal";
-import { LandingBackdrop } from "@/components/motion/LandingBackdrop";
 import {
   Activity,
   ArrowRight,
@@ -24,74 +23,93 @@ import {
   PlayCircle,
   FlaskConical,
   BadgeCheck,
+  Star,
+  Quote,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const totalFlows = industries.reduce((a, i) => a + i.subFlows.length, 0);
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
 };
 
 const stagger = {
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.12 } },
 };
 
 const TESTIMONIALS = [
-  { name: "Sarah K.", role: "Head of Strategy, Fintech", text: "Intel GoldMine replaced three separate tools for us. The cross-industry connections alone justify the cost." },
-  { name: "Marcus T.", role: "VC Partner", text: "I use the Intel Lab before every investment committee. The depth of analysis is remarkable." },
-  { name: "Amara O.", role: "Policy Analyst", text: "Finally, market intelligence that actually understands emerging markets. Geo-scoped analysis is a game-changer." },
+  {
+    name: "Sarah K.",
+    role: "Head of Strategy, Fintech",
+    text: "Intel GoldMine replaced three separate tools for us. The cross-industry connections alone justify the cost.",
+  },
+  {
+    name: "Marcus T.",
+    role: "VC Partner",
+    text: "I use the Intel Lab before every investment committee. The depth of analysis is remarkable.",
+  },
+  {
+    name: "Amara O.",
+    role: "Policy Analyst",
+    text: "Finally, market intelligence that actually understands emerging markets. Geo-scoped analysis is a game-changer.",
+  },
 ];
 
 export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0.15]);
   const marqueeItems = [...industries, ...industries];
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col relative overflow-x-hidden">
-      {/* Nav */}
+    <div className="min-h-screen bg-[hsl(40_18%_98%)] text-foreground flex flex-col relative overflow-x-hidden">
+      {/* Nav — sits on dark hero */}
       <motion.header
-        initial={{ opacity: 0, y: -16 }}
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-30 bg-background/80 backdrop-blur-xl border-b border-border/50 sticky top-0 shadow-sm shadow-black/[0.03]"
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-40 border-b border-white/10 bg-[hsl(226_58%_11%)]/90 backdrop-blur-xl supports-[backdrop-filter]:bg-[hsl(226_58%_11%)]/80"
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-[72px] flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BrandHexMark size="md" />
-            <BrandWordmark className="text-lg" />
-          </div>
-          <nav className="hidden md:flex items-center gap-1.5 text-sm font-medium">
-            <a
-              href="#explore"
-              className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-            >
-              Explore
-            </a>
-            <a href="#features" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors">
-              Features
-            </a>
-            <a href="#how-it-works" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors">
-              How it works
-            </a>
-            <a href="#pricing" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors">
-              Pricing
-            </a>
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-[68px] sm:h-[72px] flex items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <BrandHexMark size="md" variant="onDark" />
+            <BrandWordmark className="text-base sm:text-lg truncate" variant="onDark" />
+          </Link>
+          <nav className="hidden md:flex items-center gap-0.5 text-sm font-medium">
+            {[
+              ["Explore", "#explore"],
+              ["Features", "#features"],
+              ["How it works", "#how-it-works"],
+              ["Pricing", "#pricing"],
+            ].map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                className="rounded-full px-3 py-2 text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                {label}
+              </a>
+            ))}
           </nav>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="hidden lg:inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/30 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-              <span className="text-muted-foreground/70">⌘</span>K
-            </span>
-            <Button variant="ghost" size="sm" className="text-sm font-medium hidden sm:inline-flex" asChild>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-sm font-medium text-white/85 hover:text-white hover:bg-white/10 hidden sm:inline-flex"
+              asChild
+            >
               <Link to="/auth">Sign in</Link>
             </Button>
-            <Button size="sm" className="text-sm font-semibold gap-1.5 rounded-full px-5 sm:px-6 h-10 shadow-md hover:shadow-lg transition-all" asChild>
+            <Button
+              size="sm"
+              className="text-sm font-semibold gap-1.5 rounded-full px-4 sm:px-6 h-9 sm:h-10 bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] shadow-lg shadow-black/25 border border-white/10"
+              asChild
+            >
               <Link to="/auth?mode=signup">
-                Get started free
+                Get started
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </Button>
@@ -99,310 +117,324 @@ export default function LandingPage() {
         </div>
       </motion.header>
 
-      {/* Sub-nav strip — product context */}
-      <div className="relative z-20 border-b border-primary/10 bg-gradient-to-r from-primary/[0.04] via-muted/35 to-brand-orange/[0.05]">
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px]">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/[0.04] px-3 py-1 font-medium text-foreground shadow-sm">
-            <Activity className="w-3.5 h-3.5 text-primary shrink-0" />
-            Maverick AI · live pipelines · geo snapshots
-          </span>
-          <span className="hidden sm:inline text-border">·</span>
-          <span className="text-muted-foreground text-center sm:text-left">
-            Evidence-backed intelligence for people who move fast — not another noise feed.
-          </span>
-        </div>
-      </div>
-
       <main className="relative z-10 flex-1">
-        {/* Hero */}
-        <section ref={heroRef} className="relative overflow-hidden mesh-marketing">
-          <LandingBackdrop />
-          <div className="absolute inset-0 dot-pattern-fine opacity-50 pointer-events-none" />
-          <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(100vw,900px)] h-[600px] rounded-full bg-brand-orange/[0.06] blur-[120px] pointer-events-none" />
+        {/* Hero — full-bleed dark */}
+        <section ref={heroRef} className="relative overflow-hidden bg-[hsl(226_58%_10%)] text-white">
+          <div className="absolute inset-0 landing-hero-glow pointer-events-none" />
+          <div className="absolute inset-0 landing-dot-light opacity-60 pointer-events-none" />
+          <div className="absolute inset-0 landing-hero-vignette pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(140vw,900px)] h-[min(140vw,900px)] rounded-full bg-[hsl(226_65%_35%)]/25 blur-[120px] pointer-events-none" />
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
-            <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-10 sm:pt-16 lg:pt-20 pb-8 lg:pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12 lg:pt-16 pb-0">
+              <p className="text-center lg:text-left text-[13px] sm:text-sm text-white/65 font-medium mb-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-3 gap-y-1">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-white/95 shadow-sm">
+                  <Activity className="w-3.5 h-3.5 text-[hsl(38_90%_58%)]" />
+                  Maverick AI · live pipelines · geo snapshots
+                </span>
+                <span className="hidden sm:inline text-white/25">·</span>
+                <span className="text-white/55 max-w-md sm:max-w-none">
+                  Evidence-backed intelligence — not another noise feed.
+                </span>
+              </p>
+
               <motion.div
                 variants={stagger}
                 initial="hidden"
                 animate="show"
-                className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 xl:gap-16 items-center"
+                className="grid lg:grid-cols-[1.08fr_0.92fr] gap-10 lg:gap-12 xl:gap-16 items-center"
               >
                 <div className="text-center lg:text-left">
-                  <motion.div variants={fadeUp} className="mb-6 sm:mb-8 flex justify-center lg:justify-start">
+                  <motion.div variants={fadeUp} className="mb-5 sm:mb-6 flex justify-center lg:justify-start">
                     <div className="relative">
-                      <div className="absolute inset-0 rounded-3xl bg-primary/20 blur-2xl scale-110" />
-                      <BrandHexMark size="lg" className="relative w-20 h-20 sm:w-24 sm:h-24 drop-shadow-xl" />
+                      <div className="absolute inset-0 rounded-3xl bg-[hsl(38_90%_50%)]/25 blur-3xl scale-125" />
+                      <BrandHexMark size="lg" variant="onDark" className="relative w-[4.5rem] h-[4.5rem] sm:w-24 sm:h-24 drop-shadow-2xl" />
                     </div>
                   </motion.div>
 
                   <motion.div
                     variants={fadeUp}
-                    className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-border/60 bg-card/90 backdrop-blur-md px-4 py-2 text-sm text-muted-foreground mb-6 sm:mb-8 shadow-md"
+                    className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-1.5 text-[13px] sm:text-sm text-white/80 mb-6 shadow-inner"
                   >
                     <span className="relative flex h-2 w-2 shrink-0">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-emerald/50 opacity-75" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-emerald" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/40" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                     </span>
-                    <span className="font-semibold text-foreground">Now live</span>
-                    <span className="text-border">·</span>
-                    <span className="text-brand-orange font-semibold">Maverick AI Research Agent</span>
+                    <span className="font-semibold text-white">Live</span>
+                    <span className="text-white/25">·</span>
+                    <span className="text-[hsl(38_90%_62%)] font-semibold">Research-grade briefs</span>
                   </motion.div>
 
                   <motion.h1
                     variants={fadeUp}
-                    className="font-display text-4xl sm:text-5xl md:text-6xl xl:text-[3.5rem] 2xl:text-7xl font-bold tracking-tight leading-[1.02] text-foreground"
+                    className="font-display text-[2.35rem] sm:text-5xl md:text-6xl xl:text-[3.65rem] font-bold tracking-[-0.03em] leading-[1.05]"
                   >
-                    Market intelligence,{" "}
-                    <span className="text-gradient-gold">simplified</span>
+                    Turn noise into{" "}
+                    <span className="text-gradient-gold bg-clip-text text-transparent">decisions</span>
+                    <span className="text-white">.</span>
                   </motion.h1>
 
                   <motion.p
                     variants={fadeUp}
-                    className="mt-5 sm:mt-6 text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                    className="mt-5 sm:mt-6 text-base sm:text-lg text-white/70 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium"
                   >
-                    Track <span className="font-semibold text-foreground"> {industries.length} industries</span> and{" "}
-                    <span className="font-semibold text-foreground">{totalFlows}+ money flows</span> with AI — structured
-                    outputs, geo scope, and cross-industry scans in one place.
+                    <span className="text-white">{industries.length} industries</span> ·{" "}
+                    <span className="text-white">{totalFlows}+ money flows</span> ·{" "}
+                    <span className="text-white/90">11+ sources</span>
+                    <span className="text-white/65"> — structured intel, geo scope, and cross-industry scans in one
+                    workspace.</span>
                   </motion.p>
 
                   <motion.div
                     variants={fadeUp}
-                    className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-muted-foreground"
+                    className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 text-[13px] sm:text-sm"
                   >
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1 border border-border/50">
-                      <TrendingUp className="w-3.5 h-3.5 text-signal-emerald" />
-                      Live signals
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1 border border-border/50">
-                      <Cpu className="w-3.5 h-3.5 text-primary" />
-                      Intel Lab
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1 border border-border/50">
-                      <Globe2 className="w-3.5 h-3.5 text-brand-orange" />
-                      Geo-scoped
-                    </span>
+                    {[
+                      { icon: TrendingUp, label: "Live signals", c: "text-emerald-300" },
+                      { icon: Cpu, label: "Intel Lab", c: "text-sky-300" },
+                      { icon: Globe2, label: "Geo-scoped", c: "text-amber-300" },
+                    ].map(({ icon: Icon, label, c }) => (
+                      <span
+                        key={label}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-white/85"
+                      >
+                        <Icon className={cn("w-3.5 h-3.5", c)} />
+                        {label}
+                      </span>
+                    ))}
                   </motion.div>
 
-                  <motion.div variants={fadeUp} className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                  <motion.div variants={fadeUp} className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
                     <Button
                       size="lg"
-                      className="h-14 px-10 text-base font-semibold gap-2.5 rounded-full shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+                      className="h-12 sm:h-14 px-8 sm:px-10 text-base font-bold gap-2 rounded-full bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] shadow-xl shadow-black/30 border border-white/15"
                       asChild
                     >
                       <Link to="/auth?mode=signup">
-                        Start for free
+                        Start free
                         <ArrowRight className="w-4 h-4" />
                       </Link>
                     </Button>
                     <Button
                       size="lg"
                       variant="outline"
-                      className="h-14 px-8 text-base rounded-full border-border/70 bg-background/50 hover:bg-muted/50 transition-all duration-300"
+                      className="h-12 sm:h-14 px-6 sm:px-8 text-base rounded-full border-white/25 bg-white/[0.04] text-white hover:bg-white/[0.09] hover:text-white backdrop-blur-sm"
                       asChild
                     >
                       <Link to="/auth" className="gap-2.5">
-                        <PlayCircle className="w-4 h-4 text-primary" />
-                        See how it works
+                        <PlayCircle className="w-4 h-4 text-[hsl(38_90%_58%)]" />
+                        Sign in to explore
                       </Link>
                     </Button>
                   </motion.div>
                 </div>
 
-                {/* Product preview — browser chrome */}
-                <motion.div variants={fadeUp} className="relative hidden lg:block animate-hero-float">
-                  <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/10 via-transparent to-brand-orange/10 blur-2xl opacity-80" />
-                  <div className="shine-border relative rounded-2xl border border-border/40 bg-card shadow-2xl overflow-hidden">
-                    <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50 bg-muted/30">
+                <motion.div variants={fadeUp} className="relative hidden lg:block">
+                  <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-[hsl(38_90%_50%)]/20 via-transparent to-[hsl(226_65%_45%)]/20 blur-2xl" />
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                    className="shine-border relative rounded-2xl border border-white/15 bg-[hsl(226_40%_8%)] shadow-2xl shadow-black/50 overflow-hidden ring-1 ring-white/10"
+                  >
+                    <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/25">
                       <span className="flex gap-1.5">
-                        <span className="h-3 w-3 rounded-full bg-red-400/90" />
-                        <span className="h-3 w-3 rounded-full bg-amber-400/90" />
-                        <span className="h-3 w-3 rounded-full bg-emerald-400/90" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-red-400/90" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-amber-400/90" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/90" />
                       </span>
                       <div className="flex-1 flex justify-center">
-                        <span className="rounded-lg bg-background/80 border border-border/50 px-3 py-1 text-[11px] text-muted-foreground font-medium truncate max-w-[280px]">
-                          intelgoldmine.app · Intel dashboard
+                        <span className="rounded-lg bg-black/30 border border-white/10 px-3 py-1 text-[11px] text-white/60 font-medium truncate max-w-[280px]">
+                          app.intelgoldmine.com
                         </span>
                       </div>
                     </div>
-                    <div className="relative aspect-[16/11] bg-muted/20">
+                    <div className="relative aspect-[16/10.5] bg-black/40">
                       <img
                         src="/hero-visual.png"
                         alt=""
-                        className="w-full h-full object-cover object-top"
+                        className="w-full h-full object-cover object-top opacity-[0.97]"
                         loading="eager"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(226_58%_8%)]/90 via-transparent to-black/20 pointer-events-none" />
                     </div>
-                    <div className="grid grid-cols-3 gap-px border-t border-border/40 bg-border/40 text-[11px]">
-                      <div className="bg-card/95 p-3 text-center">
-                        <p className="font-bold text-primary tabular-nums">{industries.length}</p>
-                        <p className="text-muted-foreground">Industries</p>
+                    <div className="grid grid-cols-3 gap-px border-t border-white/10 bg-white/10 text-[11px]">
+                      <div className="bg-black/35 backdrop-blur-md p-3 text-center">
+                        <p className="font-bold text-[hsl(38_90%_58%)] tabular-nums">{industries.length}</p>
+                        <p className="text-white/45">Industries</p>
                       </div>
-                      <div className="bg-card/95 p-3 text-center">
-                        <p className="font-bold text-brand-orange tabular-nums">{totalFlows}+</p>
-                        <p className="text-muted-foreground">Flows</p>
+                      <div className="bg-black/35 backdrop-blur-md p-3 text-center">
+                        <p className="font-bold text-sky-300 tabular-nums">{totalFlows}+</p>
+                        <p className="text-white/45">Flows</p>
                       </div>
-                      <div className="bg-card/95 p-3 text-center">
-                        <p className="font-bold text-signal-emerald tabular-nums">11+</p>
-                        <p className="text-muted-foreground">Sources</p>
+                      <div className="bg-black/35 backdrop-blur-md p-3 text-center">
+                        <p className="font-bold text-emerald-300 tabular-nums">11+</p>
+                        <p className="text-white/45">Sources</p>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             </div>
 
-            {/* Hero image — mobile / tablet (hidden when side-by-side preview shows) */}
+            {/* Mobile / tablet product shot */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="show"
-              className="max-w-6xl mx-auto px-5 sm:px-8 pb-10 lg:hidden"
+              className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 pb-4 lg:hidden"
             >
-              <div className="shine-border relative rounded-2xl overflow-hidden shadow-2xl border border-border/40 bg-card">
-                <div className="flex items-center gap-2 px-3 py-2 border-b border-border/40 bg-muted/30">
-                  <span className="h-2 w-2 rounded-full bg-red-400/80" />
-                  <span className="h-2 w-2 rounded-full bg-amber-400/80" />
-                  <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
+              <div className="shine-border relative rounded-2xl overflow-hidden border border-white/15 bg-[hsl(226_40%_8%)] shadow-2xl ring-1 ring-white/10">
+                <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10 bg-black/30">
+                  <span className="h-2 w-2 rounded-full bg-red-400/90" />
+                  <span className="h-2 w-2 rounded-full bg-amber-400/90" />
+                  <span className="h-2 w-2 rounded-full bg-emerald-400/90" />
                 </div>
                 <img
                   src="/hero-visual.png"
-                  alt="Intel GoldMine platform — AI-powered market intelligence dashboard"
+                  alt="Intel GoldMine — market intelligence workspace"
                   className="w-full h-auto"
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/35 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(226_58%_10%)]/80 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
-          </motion.div>
 
-          {/* Stats row */}
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 relative z-10 pb-16">
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto"
-            >
-              {[
-                { n: `${industries.length}`, l: "Industries", color: "text-primary", icon: LayoutGrid },
-                { n: `${totalFlows}+`, l: "Money flows", color: "text-brand-orange", icon: BarChart3 },
-                { n: "11+", l: "Data sources", color: "text-signal-emerald", icon: Radio },
-              ].map((s) => (
-                <motion.div
-                  key={s.l}
-                  variants={fadeUp}
-                  className="group text-center p-5 sm:p-6 rounded-2xl bg-card/90 backdrop-blur-sm border border-border/50 shadow-md hover:shadow-lg hover:border-primary/15 transition-all duration-300"
-                >
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-muted/50 border border-border/40 text-muted-foreground group-hover:text-primary transition-colors">
-                    <s.icon className="w-5 h-5" />
-                  </div>
-                  <p className={cn("text-3xl sm:text-4xl md:text-5xl font-bold tabular-nums font-display", s.color)}>{s.n}</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 font-semibold">{s.l}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
+            {/* Stats — part of hero */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10 mt-10 sm:mt-14 border-t border-white/10 pt-8 sm:pt-10 pb-12 sm:pb-16">
+              <motion.div
+                variants={stagger}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-3 gap-3 sm:gap-6 max-w-4xl mx-auto lg:mx-0"
+              >
+                {[
+                  { n: `${industries.length}`, l: "Industries mapped", color: "text-[hsl(38_90%_58%)]", icon: LayoutGrid },
+                  { n: `${totalFlows}+`, l: "Money flows", color: "text-sky-300", icon: BarChart3 },
+                  { n: "11+", l: "Live data sources", color: "text-emerald-300", icon: Radio },
+                ].map((s) => (
+                  <motion.div
+                    key={s.l}
+                    variants={fadeUp}
+                    className="group text-center lg:text-left rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm px-3 py-5 sm:p-6 hover:bg-white/[0.07] transition-colors"
+                  >
+                    <div className="mx-auto lg:mx-0 mb-2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-black/30 border border-white/10 text-white/70 group-hover:text-white transition-colors">
+                      <s.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
+                    <p className={cn("text-2xl sm:text-4xl md:text-5xl font-bold tabular-nums font-display", s.color)}>
+                      {s.n}
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-white/45 mt-1 font-semibold uppercase tracking-wide">
+                      {s.l}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </motion.div>
         </section>
 
-        {/* Explore — quick modules */}
-        <section id="explore" className="border-y border-border/40 bg-muted/15">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
-            <div className="text-center max-w-2xl mx-auto mb-12">
-              <p className="text-sm font-semibold text-primary tracking-widest uppercase mb-3">Explore</p>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
-                One platform, three ways in
+        {/* Explore */}
+        <section id="explore" className="relative border-y border-[hsl(40_12%_88%)] bg-[hsl(40_22%_96%)]">
+          <div className="absolute inset-0 dot-pattern-fine opacity-[0.35] pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 relative">
+            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+              <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">Explore</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-foreground tracking-tight leading-[1.1]">
+                Three entry points. One intelligence stack.
               </h2>
-              <p className="mt-4 text-muted-foreground leading-relaxed">
-                Jump into the workflows teams use — from live dashboards to custom Intel Lab briefs.
+              <p className="mt-4 text-muted-foreground leading-relaxed text-base sm:text-lg">
+                Pick how you work — live pulse, custom lab, or cross-sector sweep.
               </p>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-5 sm:gap-6">
               {[
                 {
                   title: "Live intel feed",
                   desc: "Crypto, FX, commodities, VC & macro — refreshed continuously.",
                   icon: Radio,
-                  accent: "from-primary/15 to-primary/[0.02]",
+                  grad: "bg-gradient-to-br from-primary/30 via-primary/10 to-slate-900/80",
                   href: "#features",
                 },
                 {
                   title: "Intel Lab",
-                  desc: "Define scope, add context, and run custom research with follow-ups.",
+                  desc: "Scope industries & flows, add context, generate briefs + follow-ups.",
                   icon: FlaskConical,
-                  accent: "from-brand-orange/15 to-brand-orange/[0.02]",
+                  grad: "bg-gradient-to-br from-amber-500/35 via-brand-orange/15 to-slate-900/85",
                   href: "#how-it-works",
                 },
                 {
                   title: "Cross-industry scan",
-                  desc: "Spot gaps and bridges across sectors in a single intelligence pass.",
+                  desc: "Gaps, deals, and bridges across all mapped sectors in one pass.",
                   icon: Layers,
-                  accent: "from-signal-violet/15 to-signal-violet/[0.02]",
+                  grad: "bg-gradient-to-br from-violet-500/30 via-signal-violet/15 to-slate-900/85",
                   href: "#features",
                 },
               ].map((item) => (
                 <a
                   key={item.title}
                   href={item.href}
-                  className={cn(
-                    "group relative rounded-3xl border border-border/50 bg-gradient-to-b p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1",
-                    item.accent,
-                  )}
+                  className="group relative flex flex-col rounded-[1.35rem] border border-border/60 bg-card overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-background/80 border border-border/50 shadow-sm group-hover:border-primary/25 transition-colors">
-                    <item.icon className="w-6 h-6 text-primary" />
+                  <div className={cn("relative h-36 sm:h-40 overflow-hidden", item.grad)}
+                  >
+                    <div className="absolute inset-0 bg-[url('/hero-visual.png')] bg-cover bg-center opacity-25 mix-blend-overlay group-hover:opacity-35 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+                    <div className="absolute bottom-3 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-background/90 border border-border/50 shadow-md">
+                      <item.icon className="w-6 h-6 text-primary" />
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                  <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                    Learn more
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                  </span>
+                  <div className="p-6 sm:p-7 flex flex-col flex-1">
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">{item.desc}</p>
+                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+                      Learn more
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
                 </a>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Industry marquee */}
-        <div className="border-y border-border/40 bg-muted/20 overflow-hidden">
-          <div className="flex animate-marquee whitespace-nowrap py-5 gap-10 text-sm text-muted-foreground">
+        {/* Marquee — dark */}
+        <div className="border-y border-white/10 bg-[hsl(226_50%_13%)] overflow-hidden">
+          <div className="flex animate-marquee whitespace-nowrap py-6 gap-12 sm:gap-16 text-sm text-white/55">
             {marqueeItems.map((ind, i) => (
-              <span key={`${ind.slug}-${i}`} className="inline-flex items-center gap-2.5 shrink-0">
-                <span className="text-lg">{ind.icon}</span>
-                <span className="font-medium text-foreground/70">{ind.name}</span>
+              <span key={`${ind.slug}-${i}`} className="inline-flex items-center gap-3 shrink-0">
+                <span className="text-xl grayscale contrast-125 opacity-90">{ind.icon}</span>
+                <span className="font-semibold text-white/75 tracking-tight">{ind.name}</span>
               </span>
             ))}
           </div>
         </div>
 
-        {/* Visual break — product imagery */}
-        <section className="relative border-y border-border/50 bg-gradient-to-br from-muted/30 via-background to-primary/[0.03] overflow-hidden">
-          <div className="absolute inset-0 dot-pattern-fine opacity-40 pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
-            <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center">
+        {/* Showcase */}
+        <section className="relative border-b border-border/50 bg-background overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-brand-orange/[0.05] pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 lg:py-24 relative z-10">
+            <div className="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-14 items-center">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -16 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="text-sm font-semibold text-primary tracking-widest uppercase mb-3">Inside the product</p>
-                <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight">
-                  Rich visuals, structured intel — not a blank spreadsheet
+                <p className="text-sm font-semibold text-brand-orange tracking-[0.18em] uppercase mb-3">Product</p>
+                <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.65rem] font-bold text-foreground tracking-tight leading-[1.12]">
+                  A briefing room — not a spreadsheet with charts taped on.
                 </h2>
-                <p className="mt-4 text-muted-foreground leading-relaxed text-base sm:text-lg">
-                  Every industry and money flow opens into Maverick-powered briefs, live feeds, and snapshots. Your geo and role travel with you across the app.
+                <p className="mt-5 text-muted-foreground leading-relaxed text-base sm:text-lg">
+                  Maverick turns flows, news, and market inputs into structured briefs you can act on. Geo and role follow
+                  you everywhere.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  {["Live dashboards", "Intel Lab", "Cross-industry"].map((label) => (
+                <div className="mt-8 flex flex-wrap gap-2.5">
+                  {["Dashboard", "Intel Lab", "Cross-industry"].map((label) => (
                     <span
                       key={label}
-                      className="inline-flex items-center rounded-full border border-border/60 bg-card/80 px-4 py-2 text-sm font-semibold text-foreground shadow-sm"
+                      className="inline-flex rounded-full border border-border/70 bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm"
                     >
                       {label}
                     </span>
@@ -410,82 +442,87 @@ export default function LandingPage() {
                 </div>
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
                 className="relative"
               >
-                <div className="absolute -inset-3 rounded-[1.75rem] bg-gradient-to-br from-primary/20 via-brand-orange/15 to-transparent blur-2xl opacity-90" />
-                <div className="shine-border relative rounded-2xl border border-border/50 bg-card overflow-hidden shadow-2xl">
+                <div className="absolute -inset-4 rounded-[1.75rem] bg-gradient-to-br from-primary/25 via-brand-orange/15 to-transparent blur-2xl opacity-80" />
+                <div className="shine-border relative rounded-2xl border border-border/50 bg-card overflow-hidden shadow-2xl rotate-[0.5deg] hover:rotate-0 transition-transform duration-500">
                   <img
                     src="/og-image.png"
-                    alt="Intel GoldMine — market intelligence workspace preview"
+                    alt="Intel GoldMine workspace preview"
                     className="w-full h-auto object-cover"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent pointer-events-none" />
                 </div>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Features — bento */}
-        <section id="features" className="bg-gradient-to-b from-background via-muted/10 to-background relative overflow-hidden">
-          <div className="absolute inset-0 dot-pattern-fine opacity-30 pointer-events-none" />
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 sm:py-36 relative">
-            <Reveal className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-              <p className="text-sm font-semibold text-brand-orange tracking-widest uppercase mb-4">Features</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-foreground tracking-tight leading-tight">
-                Everything you need to stay ahead
+        {/* Features */}
+        <section id="features" className="relative bg-[hsl(40_18%_98%)] overflow-hidden">
+          <div className="absolute inset-0 dot-pattern-fine opacity-40 pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 lg:py-28 relative">
+            <Reveal className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+              <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">Features</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-tight">
+                Built for speed readers &amp; deep divers
               </h2>
-              <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-                From live market data to AI-powered deep dives — clarity-first layouts, not noisy dashboards.
+              <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
+                Live inputs, structured AI, and scans that respect your geography — in layouts that stay legible at 11pm.
               </p>
             </Reveal>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
               <motion.div
-                whileHover={{ y: -3 }}
-                transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                className="lg:col-span-7 rounded-[1.75rem] border border-border/50 bg-gradient-to-br from-primary/[0.07] via-card to-card p-8 sm:p-10 shadow-lg hover:shadow-xl transition-shadow shine-border"
+                whileHover={{ y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="lg:col-span-7 rounded-[1.5rem] border border-border/60 bg-card overflow-hidden shadow-xl shine-border group"
               >
-                <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary border border-primary/10">
-                    <Radio className="w-7 h-7" />
+                <div className="relative h-44 sm:h-52 overflow-hidden border-b border-border/50">
+                  <img
+                    src="/hero-visual.png"
+                    alt=""
+                    className="w-full h-full object-cover object-top opacity-90 group-hover:scale-[1.02] transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                  <div className="absolute bottom-4 left-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary border border-primary/20 backdrop-blur-sm">
+                    <Radio className="w-6 h-6" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-foreground">Live market feed</h3>
-                    <p className="mt-3 text-base text-muted-foreground leading-relaxed max-w-xl">
-                      Crypto, FX, commodities, VC & macro signals — refreshed continuously in one dashboard tuned for
-                      decisions, not scrolling.
-                    </p>
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {["Macro", "FX", "Crypto", "VC"].map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-background/80 border border-border/60 px-3 py-1 text-xs font-semibold text-muted-foreground"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                </div>
+                <div className="p-7 sm:p-9">
+                  <h3 className="text-2xl font-bold text-foreground">Live market feed</h3>
+                  <p className="mt-3 text-muted-foreground leading-relaxed max-w-xl text-base">
+                    Crypto, FX, commodities, VC & macro — tuned for decisions, not endless scrolling.
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {["Macro", "FX", "Crypto", "VC"].map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-muted/80 border border-border/60 px-3 py-1 text-xs font-semibold text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </motion.div>
 
               <motion.div
-                whileHover={{ y: -3 }}
-                transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                className="lg:col-span-5 rounded-[1.75rem] border border-border/50 bg-gradient-to-b from-brand-orange/[0.08] to-card p-8 sm:p-10 shadow-lg hover:shadow-xl transition-shadow"
+                whileHover={{ y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="lg:col-span-5 rounded-[1.5rem] border border-border/60 bg-gradient-to-b from-brand-orange/[0.12] to-card p-8 sm:p-10 shadow-lg flex flex-col justify-center"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-orange/12 text-brand-orange mb-6">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-orange/15 text-brand-orange mb-6 border border-brand-orange/15">
                   <Globe2 className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground">Geo-scoped research</h3>
-                <p className="mt-3 text-muted-foreground leading-relaxed">
-                  Analysis tuned to the regions you care about — not generic global takes.
+                <p className="mt-3 text-muted-foreground leading-relaxed text-base">
+                  Stop pretending “global” is useful. Tune intel to the markets you actually operate in.
                 </p>
               </motion.div>
 
@@ -493,43 +530,40 @@ export default function LandingPage() {
                 {
                   icon: BarChart3,
                   title: "Structured AI outputs",
-                  body: "Metrics, frameworks, comparisons, and scores — not walls of text.",
-                  iconBg: "bg-signal-violet/12 text-signal-violet border-signal-violet/10",
+                  body: "Frameworks, scores, and comparisons — not walls of text.",
+                  iconBg: "bg-signal-violet/12 text-signal-violet border-signal-violet/15",
                   span: "lg:col-span-4",
-                  grad: "from-signal-violet/[0.06] to-card",
+                  grad: "from-signal-violet/[0.08] to-card",
                 },
                 {
                   icon: Layers,
                   title: "Intel Lab",
-                  body: "Custom scope, context, and follow-up briefs on demand.",
-                  iconBg: "bg-signal-emerald/12 text-signal-emerald border-signal-emerald/10",
+                  body: "Your scope, your context — briefs and chat on demand.",
+                  iconBg: "bg-signal-emerald/12 text-signal-emerald border-signal-emerald/15",
                   span: "lg:col-span-4",
-                  grad: "from-signal-emerald/[0.06] to-card",
+                  grad: "from-signal-emerald/[0.08] to-card",
                 },
                 {
                   icon: Zap,
                   title: "Cross-industry scans",
-                  body: "Find gaps and bridges across sectors in one pass.",
-                  iconBg: "bg-brand-orange/12 text-brand-orange border-brand-orange/10",
+                  body: "One pass to surface gaps and bridges across sectors.",
+                  iconBg: "bg-brand-orange/12 text-brand-orange border-brand-orange/15",
                   span: "lg:col-span-4",
-                  grad: "from-brand-orange/[0.06] to-card",
+                  grad: "from-brand-orange/[0.08] to-card",
                 },
               ].map((f) => (
                 <motion.div
                   key={f.title}
-                  whileHover={{ y: -3 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                  whileHover={{ y: -2 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   className={cn(
-                    "rounded-[1.75rem] border border-border/50 bg-gradient-to-b p-8 shadow-md hover:shadow-lg transition-shadow",
+                    "rounded-[1.5rem] border border-border/60 bg-gradient-to-b p-8 shadow-md hover:shadow-lg transition-shadow",
                     f.span,
                     f.grad,
                   )}
                 >
                   <div
-                    className={cn(
-                      "mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border",
-                      f.iconBg,
-                    )}
+                    className={cn("mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border", f.iconBg)}
                   >
                     <f.icon className="w-6 h-6" />
                   </div>
@@ -539,21 +573,20 @@ export default function LandingPage() {
               ))}
 
               <motion.div
-                whileHover={{ y: -3 }}
-                transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                className="lg:col-span-12 rounded-[1.75rem] border border-border/50 bg-gradient-to-r from-primary/[0.04] via-muted/20 to-brand-orange/[0.05] p-8 sm:p-10 flex flex-col md:flex-row md:items-center gap-8"
+                whileHover={{ y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="lg:col-span-12 rounded-[1.5rem] border border-border/60 bg-gradient-to-r from-primary/[0.06] via-muted/30 to-brand-orange/[0.06] p-8 sm:p-10 flex flex-col md:flex-row md:items-center gap-8"
               >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/10">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary border border-primary/15">
                   <Shield className="w-7 h-7" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-foreground">Built for decision makers</h3>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold text-foreground">Evidence-first, time-respecting UI</h3>
                   <p className="mt-2 text-muted-foreground max-w-3xl leading-relaxed">
-                    Founders, investors, and analysts who need evidence-backed views fast — with UI that respects your
-                    time.
+                    For founders, investors, and analysts who need a clear view fast — without tab overload.
                   </p>
                 </div>
-                <Button variant="outline" className="rounded-full shrink-0 border-border/60" asChild>
+                <Button className="rounded-full shrink-0 font-bold" asChild>
                   <Link to="/auth?mode=signup">
                     Get started
                     <ArrowRight className="w-4 h-4 ml-1" />
@@ -564,44 +597,48 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* How it works */}
-        <section id="how-it-works" className="bg-card">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 sm:py-36">
-            <Reveal className="text-center max-w-2xl mx-auto mb-20">
-              <p className="text-sm font-semibold text-brand-orange tracking-widest uppercase mb-4">How it works</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-foreground tracking-tight leading-tight">
-                Three steps to clarity
+        {/* How it works — dark */}
+        <section id="how-it-works" className="relative bg-[hsl(226_58%_11%)] text-white overflow-hidden">
+          <div className="absolute inset-0 landing-dot-light opacity-40 pointer-events-none" />
+          <div className="absolute inset-0 landing-hero-vignette opacity-50 pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 relative z-10">
+            <Reveal className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+              <p className="text-sm font-semibold text-[hsl(38_90%_58%)] tracking-[0.2em] uppercase mb-3">How it works</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+                From scope to signal in three moves
               </h2>
             </Reveal>
-            <div className="grid md:grid-cols-3 gap-12">
+
+            <div className="relative grid md:grid-cols-3 gap-10 md:gap-6">
+              <div className="hidden md:block absolute top-[2.35rem] left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
               {[
                 {
                   step: "01",
                   title: "Set your scope",
-                  body: "Pick your industries, regions, and what matters most to you.",
+                  body: "Industries, regions, and what matters — once, then it travels with you.",
                   icon: Globe2,
                 },
                 {
                   step: "02",
-                  title: "Get AI insights",
-                  body: "Maverick synthesizes data from 11+ sources into clear, structured reports.",
+                  title: "Maverick synthesizes",
+                  body: "11+ sources feed structured briefs — not copy-pasted headlines.",
                   icon: BarChart3,
                 },
                 {
                   step: "03",
-                  title: "Make decisions",
-                  body: "Act on evidence-backed intel with scores, risks, and opportunities surfaced upfront.",
+                  title: "Decide with proof",
+                  body: "Risks, scores, and opportunities surfaced where you read — not buried in footnotes.",
                   icon: CheckCircle2,
                 },
               ].map((s, i) => (
-                <Reveal key={s.step} delay={i * 0.15} className="relative">
-                  <div className="flex flex-col items-start text-left">
-                    <span className="text-6xl font-display font-bold text-primary/10 mb-4">{s.step}</span>
-                    <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/8 border border-primary/10">
-                      <s.icon className="w-7 h-7 text-primary" />
+                <Reveal key={s.step} delay={i * 0.12} className="relative text-center md:text-left">
+                  <div className="flex md:block flex-col items-center">
+                    <div className="relative z-10 mx-auto md:mx-0 mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.07] border border-white/15 shadow-lg">
+                      <s.icon className="w-7 h-7 text-[hsl(38_90%_58%)]" />
                     </div>
-                    <h3 className="text-2xl font-bold text-foreground">{s.title}</h3>
-                    <p className="mt-3 text-base text-muted-foreground leading-relaxed">{s.body}</p>
+                    <span className="text-5xl sm:text-6xl font-display font-bold text-white/[0.07] mb-3 block">{s.step}</span>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">{s.title}</h3>
+                    <p className="mt-3 text-base text-white/60 leading-relaxed max-w-sm mx-auto md:mx-0">{s.body}</p>
                   </div>
                 </Reveal>
               ))}
@@ -610,25 +647,28 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials */}
-        <section className="bg-gradient-to-b from-card to-background">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 sm:py-32">
-            <Reveal className="text-center max-w-2xl mx-auto mb-16">
-              <p className="text-sm font-semibold text-brand-orange tracking-widest uppercase mb-4">Trusted by leaders</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-foreground tracking-tight">
-                What our users say
+        <section className="bg-gradient-to-b from-background to-[hsl(40_20%_96%)] border-y border-border/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
+            <Reveal className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
+              <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">Voices</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+                Teams that outrun the news cycle
               </h2>
             </Reveal>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
               {TESTIMONIALS.map((t, i) => (
-                <Reveal key={t.name} delay={i * 0.1}>
-                  <div className="rounded-3xl border border-border/50 bg-card p-8 shadow-sm h-full flex flex-col">
-                    <div className="mb-5 h-px w-12 bg-primary/40 rounded-full" aria-hidden />
-                    <p className="text-base text-foreground leading-relaxed flex-1 border-l-2 border-primary/20 pl-4 italic">
-                      "{t.text}"
-                    </p>
-                    <div className="mt-6 pt-5 border-t border-border/50">
+                <Reveal key={t.name} delay={i * 0.08}>
+                  <div className="relative h-full rounded-[1.35rem] border border-border/60 bg-card p-7 sm:p-8 shadow-lg flex flex-col overflow-hidden group hover:border-primary/20 transition-colors">
+                    <Quote className="absolute top-5 right-5 w-10 h-10 text-primary/[0.08] group-hover:text-primary/15 transition-colors" />
+                    <div className="flex gap-0.5 mb-5">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <Star key={j} className="w-4 h-4 fill-[hsl(38_90%_50%)] text-[hsl(38_90%_50%)]" />
+                      ))}
+                    </div>
+                    <p className="text-base text-foreground leading-relaxed flex-1 font-medium">&ldquo;{t.text}&rdquo;</p>
+                    <div className="mt-8 pt-6 border-t border-border/60">
                       <p className="text-sm font-bold text-foreground">{t.name}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{t.role}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{t.role}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -638,55 +678,57 @@ export default function LandingPage() {
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="bg-muted/20">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 sm:py-36">
-            <Reveal className="text-center max-w-2xl mx-auto mb-16">
-              <p className="text-sm font-semibold text-brand-orange tracking-widest uppercase mb-4">Pricing</p>
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-foreground tracking-tight">
-                Simple, transparent pricing
+        <section id="pricing" className="bg-[hsl(40_18%_97%)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 lg:py-28">
+            <Reveal className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
+              <p className="text-sm font-semibold text-brand-orange tracking-[0.2em] uppercase mb-3">Pricing</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+                One Pro tier. Everything unlocked.
               </h2>
-              <p className="mt-6 text-lg text-muted-foreground">
-                Start on the free tier. Move to Pro when you need full access to every workflow.
+              <p className="mt-5 text-lg text-muted-foreground">
+                Start free. Upgrade when you want full depth across every workflow.
               </p>
             </Reveal>
 
-            <Reveal className="max-w-md mx-auto">
-              <div className="rounded-3xl border border-border/50 bg-card p-10 sm:p-12 text-center shadow-2xl relative overflow-hidden">
+            <Reveal className="max-w-lg mx-auto">
+              <div className="rounded-[1.5rem] border-2 border-primary/20 bg-card p-9 sm:p-11 text-center shadow-2xl relative overflow-hidden ring-4 ring-primary/[0.06]">
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-brand-orange to-primary" />
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-orange/10 mb-6">
-                  <BadgeCheck className="w-8 h-8 text-brand-orange" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-orange/12 mb-5 border border-brand-orange/20">
+                  <BadgeCheck className="w-7 h-7 text-brand-orange" />
                 </div>
-                <p className="text-lg font-bold text-foreground mb-6">Pro Plan</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Pro</p>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="font-display text-6xl sm:text-7xl font-bold tabular-nums text-foreground">${SUBSCRIPTION_USD_MONTHLY}</span>
+                  <span className="font-display text-6xl sm:text-7xl font-bold tabular-nums text-foreground">
+                    ${SUBSCRIPTION_USD_MONTHLY}
+                  </span>
                   <span className="text-xl text-muted-foreground font-medium">/mo</span>
                 </div>
-                <p className="mt-6 text-base text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                  Full access to Intel GoldMine — live feeds, AI deep dives, cross-industry analysis, and Intel Lab.
+                <p className="mt-6 text-muted-foreground leading-relaxed text-base">
+                  Full access — live feeds, AI deep dives, cross-industry analysis, Intel Lab, and geo-scoped snapshots.
                 </p>
 
-                <ul className="mt-8 space-y-4 text-left max-w-xs mx-auto">
+                <ul className="mt-8 space-y-3.5 text-left max-w-sm mx-auto">
                   {[
-                    "AI-powered research & chat",
+                    "AI research & follow-up chat",
                     `${industries.length} industries · ${totalFlows}+ money flows`,
                     "Geo-scoped analysis & snapshots",
                     "Cross-industry intelligence",
-                    "Custom Intel Lab",
+                    "Custom Intel Lab sessions",
                   ].map((line) => (
-                    <li key={line} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-signal-emerald shrink-0" />
-                      <span className="text-sm text-foreground font-medium">{line}</span>
+                    <li key={line} className="flex items-start gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-signal-emerald shrink-0 mt-0.5" />
+                      <span className="text-sm text-foreground font-medium leading-snug">{line}</span>
                     </li>
                   ))}
                 </ul>
 
-                <Button size="lg" className="mt-10 w-full h-14 text-base font-bold rounded-full shadow-lg hover:shadow-xl transition-all" asChild>
+                <Button size="lg" className="mt-10 w-full h-12 sm:h-14 text-base font-bold rounded-full shadow-lg" asChild>
                   <Link to="/auth?mode=signup">
                     Get started
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
-                <p className="mt-4 text-sm text-muted-foreground">
+                <p className="mt-5 text-sm text-muted-foreground">
                   Already have an account?{" "}
                   <Link to="/auth" className="text-primary hover:underline font-semibold">
                     Sign in
@@ -698,26 +740,34 @@ export default function LandingPage() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-24 sm:py-36">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <section className="relative py-16 sm:py-24 overflow-hidden bg-[hsl(226_58%_10%)] text-white">
+          <div className="absolute inset-0 landing-dot-light opacity-50 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-brand-orange/15 pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
             <Reveal>
-              <div className="rounded-[2rem] bg-gradient-to-br from-primary/[0.06] via-card to-brand-orange/[0.06] border border-border/40 p-12 sm:p-20 text-center relative overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.03] blur-[100px]" />
-                <div className="relative z-10">
-                  <h2 className="font-display text-3xl sm:text-5xl font-bold text-foreground tracking-tight leading-tight">
-                    Ready to see your<br />markets clearly?
-                  </h2>
-                  <p className="mt-6 text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
-                    Join thousands of decision makers using Intel GoldMine to stay ahead of the curve.
-                  </p>
-                  <div className="mt-10 flex flex-wrap justify-center gap-4">
-                    <Button size="lg" className="h-14 px-10 text-base font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" asChild>
-                      <Link to="/auth?mode=signup">Create free account</Link>
-                    </Button>
-                    <Button size="lg" variant="outline" className="h-14 px-8 text-base rounded-full" asChild>
-                      <Link to="/auth">Sign in</Link>
-                    </Button>
-                  </div>
+              <div className="text-center max-w-3xl mx-auto">
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.15]">
+                  Your markets won&apos;t wait for a quarterly PDF.
+                </h2>
+                <p className="mt-6 text-lg text-white/65 leading-relaxed max-w-xl mx-auto">
+                  Get a workspace that looks as serious as the decisions you make.
+                </p>
+                <div className="mt-10 flex flex-wrap justify-center gap-4">
+                  <Button
+                    size="lg"
+                    className="h-12 sm:h-14 px-10 text-base font-bold rounded-full bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] shadow-xl border border-white/10"
+                    asChild
+                  >
+                    <Link to="/auth?mode=signup">Create free account</Link>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-12 sm:h-14 px-8 text-base rounded-full border-white/25 bg-white/[0.05] text-white hover:bg-white/[0.1] hover:text-white"
+                    asChild
+                  >
+                    <Link to="/auth">Sign in</Link>
+                  </Button>
                 </div>
               </div>
             </Reveal>
@@ -725,47 +775,47 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-border/50 bg-muted/20 py-14">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+      <footer className="relative z-10 border-t border-white/10 bg-[hsl(226_58%_8%)] text-white py-14 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <BrandHexMark size="sm" />
-              <span className="font-bold text-foreground text-lg">Intel GoldMine</span>
+              <BrandHexMark size="sm" variant="onDark" />
+              <BrandWordmark className="text-lg" variant="onDark" />
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
-              AI-powered market intelligence with geo scope, structured outputs, and Maverick — your research copilot.
+            <p className="text-sm text-white/55 leading-relaxed max-w-sm">
+              Market intelligence with geo scope, structured AI, and Maverick — your research copilot.
             </p>
           </div>
           <div className="md:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Product</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-white/35 mb-4">Product</p>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a href="#explore" className="text-foreground/80 hover:text-primary transition-colors">
+                <a href="#explore" className="text-white/70 hover:text-white transition-colors">
                   Explore
                 </a>
               </li>
               <li>
-                <a href="#features" className="text-foreground/80 hover:text-primary transition-colors">
+                <a href="#features" className="text-white/70 hover:text-white transition-colors">
                   Features
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="text-foreground/80 hover:text-primary transition-colors">
+                <a href="#pricing" className="text-white/70 hover:text-white transition-colors">
                   Pricing
                 </a>
               </li>
             </ul>
           </div>
           <div className="md:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Legal</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-white/35 mb-4">Legal</p>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/privacy-policy" className="text-foreground/80 hover:text-primary transition-colors">
+                <Link to="/privacy-policy" className="text-white/70 hover:text-white transition-colors">
                   Privacy policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms-of-service" className="text-foreground/80 hover:text-primary transition-colors">
+                <Link to="/terms-of-service" className="text-white/70 hover:text-white transition-colors">
                   Terms of service
                 </Link>
               </li>
@@ -773,17 +823,26 @@ export default function LandingPage() {
           </div>
           <div className="md:col-span-4 flex flex-col justify-between gap-6">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Account</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-white/35 mb-4">Account</p>
               <div className="flex flex-wrap gap-3">
-                <Button size="sm" variant="outline" className="rounded-full" asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="rounded-full border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                  asChild
+                >
                   <Link to="/auth">Sign in</Link>
                 </Button>
-                <Button size="sm" className="rounded-full" asChild>
+                <Button
+                  size="sm"
+                  className="rounded-full bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] font-semibold border border-white/10"
+                  asChild
+                >
                   <Link to="/auth?mode=signup">Get started</Link>
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">© 2026 Intel GoldMine · Not financial advice.</p>
+            <p className="text-xs text-white/40">© 2026 Intel GoldMine · Not financial advice.</p>
           </div>
         </div>
       </footer>
