@@ -174,7 +174,7 @@ export default function CustomIntelPage() {
       .filter(Boolean)
       .join("\n");
 
-    const systemPreamble = `You are continuing a custom Maverick intel session.
+    const systemPreamble = `You are Maverick, the AI agent inside Intel GoldMine, continuing a custom intel session.
 
 SCOPE:
 ${scopeSummary}
@@ -278,7 +278,7 @@ Answer the user's follow-up with the same structured block style when analytical
               </p>
               <p className="text-xs font-mono text-muted-foreground mt-2 leading-relaxed max-w-3xl">
                 Pool sub-flows, promote to <span className="text-primary font-semibold">Primary</span>, route context to{" "}
-                <span className="text-accent font-semibold">Secondary</span>, then generate a Maverick brief and follow-ups — same card
+                <span className="text-accent font-semibold">Secondary</span>, then generate a brief and follow-ups from Maverick — same card
                 pipeline as Deep Dive.
               </p>
             </div>

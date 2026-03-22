@@ -41,7 +41,7 @@ export function useAlertNotifications(alerts: any[], enabled: boolean = true) {
     // Browser notification
     if ("Notification" in window && Notification.permission === "granted") {
       const top = criticalAlerts[0];
-      new Notification(`⚠️ Maverick alert`, {
+      new Notification(`⚠️ Intel GoldMine · Maverick`, {
         body: `${top.title}\n${top.detail || ""}`,
         icon: "/favicon.svg",
         tag: "maverick-alert",

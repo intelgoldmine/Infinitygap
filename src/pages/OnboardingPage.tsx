@@ -91,8 +91,8 @@ export default function OnboardingPage() {
         .eq("id", user.id);
       if (error) throw error;
       await refreshProfile();
-      toast.success("Welcome to Maverick! Your experience is now personalized.");
-      navigate("/");
+      toast.success("Welcome to Intel GoldMine! Maverick will personalize your intelligence.");
+      navigate("/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Failed to save profile");
     } finally {
@@ -342,7 +342,7 @@ export default function OnboardingPage() {
                 className="text-[10px] font-mono gap-1 bg-primary"
               >
                 {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                Launch Maverick
+                Launch Intel GoldMine
               </Button>
             )}
           </div>

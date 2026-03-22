@@ -33,9 +33,10 @@ const MaverickDashboard = () => {
           <div className="flex items-center gap-4">
             <BrandHexMark size="md" />
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-[1.85rem]">
+              <h1 className="text-xl sm:text-2xl md:text-[1.85rem] leading-tight">
                 <BrandWordmark />
               </h1>
+              <p className="text-[9px] font-mono text-muted-foreground mt-0.5">Maverick AI</p>
               <p className="text-[10px] font-mono uppercase tracking-widest mt-0.5">
                 <span className="text-primary/90">Money flow</span>
                 <span className="text-muted-foreground/55"> • </span>

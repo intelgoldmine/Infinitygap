@@ -9,9 +9,10 @@ export function TopNav({ onClear, hasMessages }: { onClear: () => void; hasMessa
         <BrandHexMark size="md" />
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="text-xl sm:text-2xl md:text-[1.7rem]">
+            <h1 className="text-xl sm:text-2xl md:text-[1.7rem] leading-tight">
               <BrandWordmark />
             </h1>
+            <span className="text-[9px] font-mono text-muted-foreground">Maverick AI</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-signal-violet/10 text-signal-violet border border-signal-violet/25 tracking-wider">
               v1.0
             </span>

@@ -37,7 +37,7 @@ export default function SubFlowPage() {
   const { snapshots, loading: snapsLoading } = useSnapshots("subflow", scopeKey, geoScopeId);
   const { report: cachedReport } = useCachedIntel("subflow", scopeKey, geoScopeId);
 
-  if (!result) return <Navigate to="/" replace />;
+  if (!result) return <Navigate to="/dashboard" replace />;
   const { industry, subFlow } = result;
 
   return (

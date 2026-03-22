@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 
@@ -16,7 +16,14 @@ type Mode = "login" | "signup" | "forgot";
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<Mode>("login");
+
+  useEffect(() => {
+    const m = searchParams.get("mode");
+    if (m === "signup") setMode("signup");
+    if (m === "login") setMode("login");
+  }, [searchParams]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -41,7 +48,7 @@ export default function AuthPage() {
       } else if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate("/");
+        navigate("/dashboard");
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${PROD_URL}/reset-password`,
@@ -65,6 +72,12 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      <Link
+        to="/"
+        className="absolute top-4 left-4 z-30 text-[11px] font-mono text-muted-foreground hover:text-primary transition-colors"
+      >
+        ← Back to home
+      </Link>
       <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[120px]" />
@@ -75,8 +88,8 @@ export default function AuthPage() {
           <h1 className="text-xl font-mono font-bold text-foreground mt-4">
             <BrandWordmark />
           </h1>
-          <p className="text-xs font-mono text-muted-foreground mt-1">
-            World Industry Intelligence Platform
+          <p className="text-xs font-mono text-muted-foreground mt-1 text-center max-w-xs">
+            Intelligence platform · <span className="text-primary/90">Maverick</span> is your AI research agent
           </p>
         </div>
 

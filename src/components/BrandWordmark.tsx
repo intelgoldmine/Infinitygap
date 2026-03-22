@@ -2,16 +2,25 @@ import { cn } from "@/lib/utils";
 
 type BrandWordmarkProps = {
   className?: string;
+  /** Slightly smaller when space is tight (e.g. sidebar). */
+  compact?: boolean;
 };
 
 /**
- * Visible product name only — capital M, rest lowercase, tech display font.
+ * Platform name: Intel GoldMine — tech display font.
+ * The AI agent is Maverick (see copy / badges elsewhere).
  */
-export function BrandWordmark({ className }: BrandWordmarkProps) {
+export function BrandWordmark({ className, compact }: BrandWordmarkProps) {
   return (
-    <span className={cn("font-brand inline-flex items-baseline select-none leading-none", className)}>
-      <span className="text-foreground font-bold tracking-tight pr-[0.02em] translate-y-px">M</span>
-      <span className="text-primary lowercase font-semibold tracking-[0.02em] -ml-px">averick</span>
+    <span
+      className={cn(
+        "font-brand inline-flex items-baseline select-none leading-none gap-1",
+        compact ? "text-sm" : "text-base sm:text-lg",
+        className,
+      )}
+    >
+      <span className="text-foreground font-bold tracking-tight">Intel</span>
+      <span className="text-gradient-primary font-bold tracking-tight">GoldMine</span>
     </span>
   );
 }

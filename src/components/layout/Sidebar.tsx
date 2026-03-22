@@ -11,7 +11,7 @@ export function Sidebar({ open }: { open: boolean }) {
   if (!open) return null;
 
   const navItems = [
-    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/intel", label: "Live Feed", icon: Radio },
     { to: "/cross-intel", label: "Cross-Intel", icon: Network },
     { to: "/custom-intel", label: "Intel Lab", icon: FlaskConical },

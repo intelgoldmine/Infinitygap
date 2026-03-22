@@ -17,9 +17,26 @@ import AuthPage from "./pages/AuthPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import NotFound from "./pages/NotFound";
+import LandingPage from "./pages/LandingPage";
 import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
+
+/** Public marketing `/` — signed-in users go straight to the app. */
+function HomeGate() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
+  }
+
+  if (user) return <Navigate to="/dashboard" replace />;
+  return <LandingPage />;
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth();
@@ -55,6 +72,7 @@ function OnboardingGuard({ children }: { children: React.ReactNode }) {
 
 const AppRoutes = () => (
   <Routes>
+    <Route path="/" element={<HomeGate />} />
     <Route path="/auth" element={<AuthPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route
@@ -72,7 +90,7 @@ const AppRoutes = () => (
         </ProtectedRoute>
       }
     >
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/intel" element={<IntelDashboard />} />
       <Route path="/cross-intel" element={<CrossIntelPage />} />
       <Route path="/custom-intel" element={<CustomIntelPage />} />

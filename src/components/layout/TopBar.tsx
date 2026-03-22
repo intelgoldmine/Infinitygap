@@ -17,7 +17,7 @@ export function TopBar({ sidebarOpen, toggleSidebar }: { sidebarOpen: boolean; t
         {sidebarOpen ? <PanelLeftClose className="w-3.5 h-3.5" /> : <PanelLeft className="w-3.5 h-3.5" />}
       </button>
 
-      <Link to="/" className="flex items-center gap-2 min-w-0">
+      <Link to="/dashboard" className="flex items-center gap-2 min-w-0">
         <BrandHexMark size="sm" />
         <span className="text-[13px] sm:text-[0.9rem] truncate">
           <BrandWordmark />

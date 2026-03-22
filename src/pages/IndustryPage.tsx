@@ -31,7 +31,7 @@ export default function IndustryPage() {
   const { snapshots, loading: snapsLoading } = useSnapshots("industry", industry?.name || "", geoScopeId);
   const { report: cachedReport, loading: cacheLoading } = useCachedIntel("industry", industry?.name || "", geoScopeId);
 
-  if (!industry) return <Navigate to="/" replace />;
+  if (!industry) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="space-y-5 max-w-6xl mx-auto">
