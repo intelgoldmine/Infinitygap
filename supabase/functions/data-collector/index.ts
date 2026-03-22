@@ -1016,6 +1016,9 @@ serve(async (req) => {
     const sourceStats = calculateSourcesPerIndustry();
 
     const sources = {
+      globalRSS: globalRSS.length,
+      globalRSS_sources: GLOBAL_NEWS_RSS.length,
+      globalRSS_feeds: GLOBAL_NEWS_RSS.reduce((s, r) => s + r.feeds.length, 0),
       crypto: crypto.length, forex: forex.length, sentiment: sentiment.length,
       globalTopicNews: globalTopicNews.length,
       hackerNews: hackerNews.length, devTo: devTo.length, github: github.length,
