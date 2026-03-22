@@ -38,7 +38,7 @@ async function ensurePlan(secretKey: string): Promise<string> {
     },
     body: JSON.stringify({
       name: PLAN_NAME,
-      amount: PLAN_AMOUNT_CENTS * 100, // Paystack uses lowest denomination
+      amount: PLAN_AMOUNT_LOWEST,
       interval: PLAN_INTERVAL,
       currency: PLAN_CURRENCY,
       description:
