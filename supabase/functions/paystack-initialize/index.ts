@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const PLAN_NAME = "Intel GoldMine Pro Monthly";
-const PLAN_AMOUNT_CENTS = 3000; // $30.00
+const PLAN_AMOUNT_LOWEST = 3000; // $30.00 in cents (Paystack lowest denomination)
 const PLAN_CURRENCY = "USD";
 const PLAN_INTERVAL = "monthly";
 
