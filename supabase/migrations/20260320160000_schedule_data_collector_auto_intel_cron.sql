@@ -19,7 +19,7 @@ SET search_path = public, net
 AS $$
 DECLARE
   jwt text;
-  project_ref text := 'uenntkkwkpuorfxznkrq';
+  project_ref text := 'gtyzvmnqifwyccgmirym';
   target_url text;
 BEGIN
   BEGIN

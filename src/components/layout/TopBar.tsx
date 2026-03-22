@@ -1,7 +1,6 @@
 import { PanelLeftClose, PanelLeft, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { GeoSelector } from "@/components/intel/GeoSelector";
 import { useGeoContext } from "@/contexts/GeoContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,7 +39,6 @@ export function TopBar({ sidebarOpen, toggleSidebar }: { sidebarOpen: boolean; t
             {profile.display_name}
           </span>
         )}
-        <ThemeToggle />
         <GeoSelector />
         <button
           onClick={signOut}

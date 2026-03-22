@@ -11,11 +11,14 @@ import {
   ArrowRight,
   BarChart3,
   CheckCircle2,
+  Cpu,
   Globe2,
   Layers,
+  LayoutGrid,
   Radio,
   Shield,
   Sparkles,
+  TrendingUp,
   Zap,
   Star,
 } from "lucide-react";
@@ -52,23 +55,38 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-30 bg-background/70 backdrop-blur-2xl border-b border-border/40 sticky top-0"
+        className="relative z-30 bg-background/80 backdrop-blur-xl border-b border-border/50 sticky top-0 shadow-sm shadow-black/[0.03]"
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-[72px] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <BrandHexMark size="md" />
             <BrandWordmark className="text-lg" />
           </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#features" className="hover:text-foreground transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-foreground transition-colors">How it works</a>
-            <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
+          <nav className="hidden md:flex items-center gap-1.5 text-sm font-medium">
+            <a
+              href="#explore"
+              className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+            >
+              Explore
+            </a>
+            <a href="#features" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors">
+              Features
+            </a>
+            <a href="#how-it-works" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors">
+              How it works
+            </a>
+            <a href="#pricing" className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors">
+              Pricing
+            </a>
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="hidden lg:inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/30 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              <span className="text-muted-foreground/70">⌘</span>K
+            </span>
             <Button variant="ghost" size="sm" className="text-sm font-medium hidden sm:inline-flex" asChild>
               <Link to="/auth">Sign in</Link>
             </Button>
-            <Button size="sm" className="text-sm font-semibold gap-1.5 rounded-full px-6 h-10 shadow-md hover:shadow-lg transition-all" asChild>
+            <Button size="sm" className="text-sm font-semibold gap-1.5 rounded-full px-5 sm:px-6 h-10 shadow-md hover:shadow-lg transition-all" asChild>
               <Link to="/auth?mode=signup">
                 Get started free
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -78,106 +96,270 @@ export default function LandingPage() {
         </div>
       </motion.header>
 
+      {/* Sub-nav strip — product context */}
+      <div className="relative z-20 border-b border-border/40 bg-gradient-to-r from-muted/40 via-background to-muted/40">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/[0.04] px-3 py-1 font-medium text-foreground shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-brand-orange shrink-0" />
+            Maverick AI · live pipelines · geo snapshots
+          </span>
+          <span className="hidden sm:inline text-border">·</span>
+          <span className="text-muted-foreground text-center sm:text-left">
+            Evidence-backed intelligence for people who move fast — not another noise feed.
+          </span>
+        </div>
+      </div>
+
       <main className="relative z-10 flex-1">
         {/* Hero */}
-        <section ref={heroRef} className="relative overflow-hidden">
-          {/* Gradient backdrop */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] via-transparent to-transparent" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-brand-orange/[0.04] blur-[120px]" />
-          
+        <section ref={heroRef} className="relative overflow-hidden mesh-marketing">
+          <div className="absolute inset-0 dot-pattern-fine opacity-50 pointer-events-none" />
+          <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(100vw,900px)] h-[600px] rounded-full bg-brand-orange/[0.06] blur-[120px] pointer-events-none" />
+
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
-            <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-20 sm:pt-32 pb-12">
-              <motion.div variants={stagger} initial="hidden" animate="show" className="text-center max-w-4xl mx-auto">
-                <motion.div variants={fadeUp} className="mb-10">
-                  <BrandHexMark size="lg" className="mx-auto w-20 h-20 sm:w-24 sm:h-24 drop-shadow-xl" />
-                </motion.div>
+            <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-14 sm:pt-20 lg:pt-24 pb-8 lg:pb-12">
+              <motion.div
+                variants={stagger}
+                initial="hidden"
+                animate="show"
+                className="grid xl:grid-cols-[1.05fr_0.95fr] gap-12 xl:gap-16 items-center"
+              >
+                <div className="text-center xl:text-left">
+                  <motion.div variants={fadeUp} className="mb-8 flex justify-center xl:justify-start">
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-3xl bg-primary/20 blur-2xl scale-110" />
+                      <BrandHexMark size="lg" className="relative w-20 h-20 sm:w-24 sm:h-24 drop-shadow-xl" />
+                    </div>
+                  </motion.div>
 
-                <motion.div variants={fadeUp} className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur-sm px-4 py-2 text-sm text-muted-foreground mb-10 shadow-sm">
-                  <span className="relative flex h-2 w-2 shrink-0">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-emerald/50 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-emerald" />
-                  </span>
-                  <span className="font-medium text-foreground">Now live</span>
-                  <span className="mx-1 text-border">·</span>
-                  <span className="text-brand-orange font-semibold">Maverick AI Research Agent</span>
-                </motion.div>
-
-                <motion.h1
-                  variants={fadeUp}
-                  className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] text-foreground"
-                >
-                  Market intelligence,{" "}
-                  <span className="text-gradient-gold">simplified</span>
-                </motion.h1>
-
-                <motion.p
-                  variants={fadeUp}
-                  className="mt-8 text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light"
-                >
-                  Track {industries.length} industries and {totalFlows}+ money flows with AI-powered research.
-                  Get structured insights, not noise.
-                </motion.p>
-
-                <motion.div variants={fadeUp} className="mt-12 flex flex-wrap items-center justify-center gap-4">
-                  <Button size="lg" className="h-14 px-10 text-base font-semibold gap-2.5 rounded-full shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" asChild>
-                    <Link to="/auth?mode=signup">
-                      Start for free
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-14 px-8 text-base rounded-full border-border/60 hover:border-primary/40 hover:bg-primary/[0.03] transition-all duration-300"
-                    asChild
+                  <motion.div
+                    variants={fadeUp}
+                    className="inline-flex flex-wrap items-center justify-center xl:justify-start gap-2 rounded-full border border-border/60 bg-card/90 backdrop-blur-md px-4 py-2 text-sm text-muted-foreground mb-8 shadow-md"
                   >
-                    <Link to="/auth" className="gap-2.5">
-                      <Sparkles className="w-4 h-4 text-brand-orange" />
-                      See how it works
-                    </Link>
-                  </Button>
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-emerald/50 opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-emerald" />
+                    </span>
+                    <span className="font-semibold text-foreground">Now live</span>
+                    <span className="text-border">·</span>
+                    <span className="text-brand-orange font-semibold">Maverick AI Research Agent</span>
+                  </motion.div>
+
+                  <motion.h1
+                    variants={fadeUp}
+                    className="font-display text-4xl sm:text-5xl md:text-6xl xl:text-[3.5rem] 2xl:text-7xl font-bold tracking-tight leading-[1.02] text-foreground"
+                  >
+                    Market intelligence,{" "}
+                    <span className="text-gradient-gold">simplified</span>
+                  </motion.h1>
+
+                  <motion.p
+                    variants={fadeUp}
+                    className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto xl:mx-0 leading-relaxed"
+                  >
+                    Track <span className="font-semibold text-foreground"> {industries.length} industries</span> and{" "}
+                    <span className="font-semibold text-foreground">{totalFlows}+ money flows</span> with AI — structured
+                    outputs, geo scope, and cross-industry scans in one place.
+                  </motion.p>
+
+                  <motion.div
+                    variants={fadeUp}
+                    className="mt-6 flex flex-wrap items-center justify-center xl:justify-start gap-3 text-sm text-muted-foreground"
+                  >
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1 border border-border/50">
+                      <TrendingUp className="w-3.5 h-3.5 text-signal-emerald" />
+                      Live signals
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1 border border-border/50">
+                      <Cpu className="w-3.5 h-3.5 text-primary" />
+                      Intel Lab
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1 border border-border/50">
+                      <Globe2 className="w-3.5 h-3.5 text-brand-orange" />
+                      Geo-scoped
+                    </span>
+                  </motion.div>
+
+                  <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center justify-center xl:justify-start gap-4">
+                    <Button
+                      size="lg"
+                      className="h-14 px-10 text-base font-semibold gap-2.5 rounded-full shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+                      asChild
+                    >
+                      <Link to="/auth?mode=signup">
+                        Start for free
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="h-14 px-8 text-base rounded-full border-border/70 bg-background/50 hover:bg-muted/50 transition-all duration-300"
+                      asChild
+                    >
+                      <Link to="/auth" className="gap-2.5">
+                        <Sparkles className="w-4 h-4 text-brand-orange" />
+                        See how it works
+                      </Link>
+                    </Button>
+                  </motion.div>
+                </div>
+
+                {/* Product preview — browser chrome */}
+                <motion.div variants={fadeUp} className="relative hidden xl:block">
+                  <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/10 via-transparent to-brand-orange/10 blur-2xl opacity-80" />
+                  <div className="shine-border relative rounded-2xl border border-border/40 bg-card shadow-2xl overflow-hidden">
+                    <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50 bg-muted/30">
+                      <span className="flex gap-1.5">
+                        <span className="h-3 w-3 rounded-full bg-red-400/90" />
+                        <span className="h-3 w-3 rounded-full bg-amber-400/90" />
+                        <span className="h-3 w-3 rounded-full bg-emerald-400/90" />
+                      </span>
+                      <div className="flex-1 flex justify-center">
+                        <span className="rounded-lg bg-background/80 border border-border/50 px-3 py-1 text-[11px] text-muted-foreground font-medium truncate max-w-[280px]">
+                          intelgoldmine.app · Intel dashboard
+                        </span>
+                      </div>
+                    </div>
+                    <div className="relative aspect-[16/11] bg-muted/20">
+                      <img
+                        src="/hero-visual.png"
+                        alt=""
+                        className="w-full h-full object-cover object-top"
+                        loading="eager"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent pointer-events-none" />
+                    </div>
+                    <div className="grid grid-cols-3 gap-px border-t border-border/40 bg-border/40 text-[11px]">
+                      <div className="bg-card/95 p-3 text-center">
+                        <p className="font-bold text-primary tabular-nums">{industries.length}</p>
+                        <p className="text-muted-foreground">Industries</p>
+                      </div>
+                      <div className="bg-card/95 p-3 text-center">
+                        <p className="font-bold text-brand-orange tabular-nums">{totalFlows}+</p>
+                        <p className="text-muted-foreground">Flows</p>
+                      </div>
+                      <div className="bg-card/95 p-3 text-center">
+                        <p className="font-bold text-signal-emerald tabular-nums">11+</p>
+                        <p className="text-muted-foreground">Sources</p>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               </motion.div>
             </div>
 
-            {/* Hero image */}
+            {/* Hero image — mobile / tablet */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="show"
-              className="max-w-6xl mx-auto px-5 sm:px-8 pb-20"
+              className="max-w-6xl mx-auto px-5 sm:px-8 pb-12 xl:hidden"
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-border/30">
+              <div className="shine-border relative rounded-2xl overflow-hidden shadow-2xl border border-border/40 bg-card">
+                <div className="flex items-center gap-2 px-3 py-2 border-b border-border/40 bg-muted/30">
+                  <span className="h-2 w-2 rounded-full bg-red-400/80" />
+                  <span className="h-2 w-2 rounded-full bg-amber-400/80" />
+                  <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
+                </div>
                 <img
                   src="/hero-visual.png"
                   alt="Intel GoldMine platform — AI-powered market intelligence dashboard"
                   className="w-full h-auto"
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/35 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
           </motion.div>
 
           {/* Stats row */}
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 -mt-8 relative z-10 pb-16">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 relative z-10 pb-16">
             <motion.div
               variants={stagger}
               initial="hidden"
               animate="show"
-              className="grid grid-cols-3 gap-6 max-w-2xl mx-auto"
+              className="grid grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto"
             >
               {[
-                { n: `${industries.length}`, l: "Industries", color: "text-primary" },
-                { n: `${totalFlows}+`, l: "Money flows", color: "text-brand-orange" },
-                { n: "11+", l: "Data sources", color: "text-primary" },
+                { n: `${industries.length}`, l: "Industries", color: "text-primary", icon: LayoutGrid },
+                { n: `${totalFlows}+`, l: "Money flows", color: "text-brand-orange", icon: BarChart3 },
+                { n: "11+", l: "Data sources", color: "text-signal-emerald", icon: Radio },
               ].map((s) => (
-                <motion.div key={s.l} variants={fadeUp} className="text-center p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/40 shadow-sm">
-                  <p className={cn("text-4xl sm:text-5xl font-bold tabular-nums font-display", s.color)}>{s.n}</p>
-                  <p className="text-sm text-muted-foreground mt-2 font-medium">{s.l}</p>
+                <motion.div
+                  key={s.l}
+                  variants={fadeUp}
+                  className="group text-center p-5 sm:p-6 rounded-2xl bg-card/90 backdrop-blur-sm border border-border/50 shadow-md hover:shadow-lg hover:border-primary/15 transition-all duration-300"
+                >
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-muted/50 border border-border/40 text-muted-foreground group-hover:text-primary transition-colors">
+                    <s.icon className="w-5 h-5" />
+                  </div>
+                  <p className={cn("text-3xl sm:text-4xl md:text-5xl font-bold tabular-nums font-display", s.color)}>{s.n}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 font-semibold">{s.l}</p>
                 </motion.div>
               ))}
             </motion.div>
+          </div>
+        </section>
+
+        {/* Explore — quick modules */}
+        <section id="explore" className="border-y border-border/40 bg-muted/15">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <p className="text-sm font-semibold text-primary tracking-widest uppercase mb-3">Explore</p>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
+                One platform, three ways in
+              </h2>
+              <p className="mt-4 text-muted-foreground leading-relaxed">
+                Jump into the workflows teams use — from live dashboards to custom Intel Lab briefs.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Live intel feed",
+                  desc: "Crypto, FX, commodities, VC & macro — refreshed continuously.",
+                  icon: Radio,
+                  accent: "from-primary/15 to-primary/[0.02]",
+                  href: "#features",
+                },
+                {
+                  title: "Intel Lab",
+                  desc: "Define scope, add context, and run custom research with follow-ups.",
+                  icon: Sparkles,
+                  accent: "from-brand-orange/15 to-brand-orange/[0.02]",
+                  href: "#how-it-works",
+                },
+                {
+                  title: "Cross-industry scan",
+                  desc: "Spot gaps and bridges across sectors in a single intelligence pass.",
+                  icon: Layers,
+                  accent: "from-signal-violet/15 to-signal-violet/[0.02]",
+                  href: "#features",
+                },
+              ].map((item) => (
+                <a
+                  key={item.title}
+                  href={item.href}
+                  className={cn(
+                    "group relative rounded-3xl border border-border/50 bg-gradient-to-b p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1",
+                    item.accent,
+                  )}
+                >
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-background/80 border border-border/50 shadow-sm group-hover:border-primary/25 transition-colors">
+                    <item.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{item.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                    Learn more
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -193,80 +375,135 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Features */}
-        <section id="features" className="bg-gradient-to-b from-background to-muted/20">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 sm:py-36">
-            <Reveal className="text-center max-w-3xl mx-auto mb-20">
+        {/* Features — bento */}
+        <section id="features" className="bg-gradient-to-b from-background via-muted/10 to-background relative overflow-hidden">
+          <div className="absolute inset-0 dot-pattern-fine opacity-30 pointer-events-none" />
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 sm:py-36 relative">
+            <Reveal className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
               <p className="text-sm font-semibold text-brand-orange tracking-widest uppercase mb-4">Features</p>
               <h2 className="font-display text-4xl sm:text-5xl font-bold text-foreground tracking-tight leading-tight">
                 Everything you need to stay ahead
               </h2>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-                From live market data to AI-powered deep dives — all in one elegant interface designed for clarity.
+                From live market data to AI-powered deep dives — clarity-first layouts, not noisy dashboards.
               </p>
             </Reveal>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+              <motion.div
+                whileHover={{ y: -3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                className="lg:col-span-7 rounded-[1.75rem] border border-border/50 bg-gradient-to-br from-primary/[0.07] via-card to-card p-8 sm:p-10 shadow-lg hover:shadow-xl transition-shadow shine-border"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary border border-primary/10">
+                    <Radio className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground">Live market feed</h3>
+                    <p className="mt-3 text-base text-muted-foreground leading-relaxed max-w-xl">
+                      Crypto, FX, commodities, VC & macro signals — refreshed continuously in one dashboard tuned for
+                      decisions, not scrolling.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {["Macro", "FX", "Crypto", "VC"].map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-background/80 border border-border/60 px-3 py-1 text-xs font-semibold text-muted-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ y: -3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                className="lg:col-span-5 rounded-[1.75rem] border border-border/50 bg-gradient-to-b from-brand-orange/[0.08] to-card p-8 sm:p-10 shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-orange/12 text-brand-orange mb-6">
+                  <Globe2 className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Geo-scoped research</h3>
+                <p className="mt-3 text-muted-foreground leading-relaxed">
+                  Analysis tuned to the regions you care about — not generic global takes.
+                </p>
+              </motion.div>
+
               {[
-                {
-                  icon: Radio,
-                  title: "Live market feed",
-                  body: "Crypto, FX, commodities, VC & macro signals — refreshed continuously in one dashboard.",
-                  gradient: "from-primary/10 to-primary/[0.02]",
-                  iconBg: "bg-primary/10 text-primary",
-                },
-                {
-                  icon: Globe2,
-                  title: "Geo-scoped research",
-                  body: "Get analysis tuned to the regions you care about — not generic global takes.",
-                  gradient: "from-brand-orange/10 to-brand-orange/[0.02]",
-                  iconBg: "bg-brand-orange/10 text-brand-orange",
-                },
                 {
                   icon: BarChart3,
                   title: "Structured AI outputs",
-                  body: "Metrics, frameworks, comparisons, and scores — not walls of unstructured text.",
-                  gradient: "from-signal-violet/10 to-signal-violet/[0.02]",
-                  iconBg: "bg-signal-violet/10 text-signal-violet",
+                  body: "Metrics, frameworks, comparisons, and scores — not walls of text.",
+                  iconBg: "bg-signal-violet/12 text-signal-violet border-signal-violet/10",
+                  span: "lg:col-span-4",
+                  grad: "from-signal-violet/[0.06] to-card",
                 },
                 {
                   icon: Layers,
                   title: "Intel Lab",
-                  body: "Define your own research scope, add context, and run custom briefs with follow-ups.",
-                  gradient: "from-signal-emerald/10 to-signal-emerald/[0.02]",
-                  iconBg: "bg-signal-emerald/10 text-signal-emerald",
+                  body: "Custom scope, context, and follow-up briefs on demand.",
+                  iconBg: "bg-signal-emerald/12 text-signal-emerald border-signal-emerald/10",
+                  span: "lg:col-span-4",
+                  grad: "from-signal-emerald/[0.06] to-card",
                 },
                 {
                   icon: Zap,
                   title: "Cross-industry scans",
-                  body: "Find gaps, deals, and bridges across all sectors in a single intelligence pass.",
-                  gradient: "from-brand-orange/10 to-brand-orange/[0.02]",
-                  iconBg: "bg-brand-orange/10 text-brand-orange",
-                },
-                {
-                  icon: Shield,
-                  title: "Built for decision makers",
-                  body: "For founders, investors, and analysts who need evidence-backed views fast.",
-                  gradient: "from-primary/10 to-primary/[0.02]",
-                  iconBg: "bg-primary/10 text-primary",
+                  body: "Find gaps and bridges across sectors in one pass.",
+                  iconBg: "bg-brand-orange/12 text-brand-orange border-brand-orange/10",
+                  span: "lg:col-span-4",
+                  grad: "from-brand-orange/[0.06] to-card",
                 },
               ].map((f) => (
                 <motion.div
                   key={f.title}
-                  whileHover={{ y: -4, scale: 1.01 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  whileHover={{ y: -3 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
                   className={cn(
-                    "group rounded-3xl border border-border/50 bg-gradient-to-b p-8 shadow-sm hover:shadow-xl transition-all duration-500",
-                    f.gradient
+                    "rounded-[1.75rem] border border-border/50 bg-gradient-to-b p-8 shadow-md hover:shadow-lg transition-shadow",
+                    f.span,
+                    f.grad,
                   )}
                 >
-                  <div className={cn("mb-6 flex h-14 w-14 items-center justify-center rounded-2xl", f.iconBg)}>
+                  <div
+                    className={cn(
+                      "mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border",
+                      f.iconBg,
+                    )}
+                  >
                     <f.icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground">{f.title}</h3>
-                  <p className="mt-3 text-base text-muted-foreground leading-relaxed">{f.body}</p>
+                  <h3 className="text-lg font-bold text-foreground">{f.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{f.body}</p>
                 </motion.div>
               ))}
+
+              <motion.div
+                whileHover={{ y: -3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                className="lg:col-span-12 rounded-[1.75rem] border border-border/50 bg-gradient-to-r from-primary/[0.04] via-muted/20 to-brand-orange/[0.05] p-8 sm:p-10 flex flex-col md:flex-row md:items-center gap-8"
+              >
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/10">
+                  <Shield className="w-7 h-7" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-foreground">Built for decision makers</h3>
+                  <p className="mt-2 text-muted-foreground max-w-3xl leading-relaxed">
+                    Founders, investors, and analysts who need evidence-backed views fast — with UI that respects your
+                    time.
+                  </p>
+                </div>
+                <Button variant="outline" className="rounded-full shrink-0 border-border/60" asChild>
+                  <Link to="/auth?mode=signup">
+                    Get started
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Link>
+                </Button>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -432,13 +669,51 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-border/40 py-12">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <BrandHexMark size="sm" />
-            <span className="font-bold text-foreground text-lg">Intel GoldMine</span>
+      <footer className="relative z-10 border-t border-border/50 bg-muted/20 py-14">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+          <div className="md:col-span-5 space-y-4">
+            <div className="flex items-center gap-3">
+              <BrandHexMark size="sm" />
+              <span className="font-bold text-foreground text-lg">Intel GoldMine</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
+              AI-powered market intelligence with geo scope, structured outputs, and Maverick — your research copilot.
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">© 2026 Intel GoldMine · Not financial advice.</p>
+          <div className="md:col-span-3">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Product</p>
+            <ul className="space-y-2.5 text-sm">
+              <li>
+                <a href="#explore" className="text-foreground/80 hover:text-primary transition-colors">
+                  Explore
+                </a>
+              </li>
+              <li>
+                <a href="#features" className="text-foreground/80 hover:text-primary transition-colors">
+                  Features
+                </a>
+              </li>
+              <li>
+                <a href="#pricing" className="text-foreground/80 hover:text-primary transition-colors">
+                  Pricing
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="md:col-span-4 flex flex-col justify-between gap-6">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Account</p>
+              <div className="flex flex-wrap gap-3">
+                <Button size="sm" variant="outline" className="rounded-full" asChild>
+                  <Link to="/auth">Sign in</Link>
+                </Button>
+                <Button size="sm" className="rounded-full" asChild>
+                  <Link to="/auth?mode=signup">Get started</Link>
+                </Button>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">© 2026 Intel GoldMine · Not financial advice.</p>
+          </div>
         </div>
       </footer>
     </div>

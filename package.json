@@ -12,8 +12,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "supabase:link": "supabase link --project-ref uenntkkwkpuorfxznkrq",
-    "supabase:functions:deploy": "supabase functions deploy --project-ref uenntkkwkpuorfxznkrq"
+    "supabase:link": "supabase link --project-ref gtyzvmnqifwyccgmirym",
+    "supabase:functions:deploy": "supabase functions deploy --project-ref gtyzvmnqifwyccgmirym"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BrandHexMark } from "@/components/BrandHexMark";
 import { BrandWordmark } from "@/components/BrandWordmark";
-import { Loader2, Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
+import { Loader2, Mail, Lock, User, Eye, EyeOff, ArrowLeft, CheckCircle2, Sparkles, Shield, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 type Mode = "login" | "signup" | "forgot";
@@ -78,60 +78,90 @@ export default function AuthPage() {
       return;
     }
     if (data?.url) {
+      const url = data.url;
+      // OAuth must not run inside an iframe (browser blocks it). Top-level tab only.
+      if (window.self === window.top) {
+        window.location.assign(url);
+        return;
+      }
       try {
-        window.top!.location.href = data.url;
+        window.top!.location.assign(url);
       } catch {
-        window.location.href = data.url;
+        // Cross-origin iframe: cannot navigate parent; same-tab iframe nav is blocked for OAuth.
+        const opened = window.open(url, "_blank", "noopener,noreferrer");
+        if (!opened) {
+          toast.error(
+            "Sign-in could not open. Allow popups for this site, or open Intel GoldMine in a normal browser tab (not an embedded preview).",
+          );
+        }
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex relative overflow-hidden">
+    <div className="min-h-screen bg-background flex relative overflow-hidden mesh-marketing">
+      <div className="absolute inset-0 dot-pattern-fine opacity-40 pointer-events-none" />
+      <div className="absolute top-[-20%] right-[-10%] w-[min(80vw,480px)] h-[min(80vw,480px)] rounded-full bg-primary/12 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-15%] left-[-5%] w-[min(70vw,400px)] h-[min(70vw,400px)] rounded-full bg-brand-orange/10 blur-[90px] pointer-events-none" />
+
       <Link
         to="/"
-        className="absolute top-6 left-6 z-30 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+        className="absolute top-5 left-5 sm:top-6 sm:left-6 z-30 inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/80 backdrop-blur-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors font-medium shadow-sm"
       >
         <ArrowLeft className="w-4 h-4" />
         Back
       </Link>
 
       {/* Left panel — cinematic */}
-      <div className="hidden lg:flex lg:w-[48%] relative min-h-screen flex-col justify-between overflow-hidden">
-        {/* Background image */}
+      <div className="hidden lg:flex lg:w-[46%] xl:w-[48%] relative min-h-screen flex-col justify-between overflow-hidden border-r border-white/10">
         <div className="absolute inset-0">
-          <img src="/hero-visual.png" alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-brand-navy/90 mix-blend-multiply" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          <img src="/hero-visual.png" alt="" className="w-full h-full object-cover scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/88 via-primary/75 to-brand-navy/92" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+          <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]" />
+        </div>
+
+        {/* Floating stat cards */}
+        <div className="absolute top-28 right-8 xl:right-12 z-[5] w-56 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl p-4 shadow-2xl hidden xl:block">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Live snapshot</p>
+          <p className="mt-2 font-display text-2xl font-bold text-white tabular-nums">20+</p>
+          <p className="text-xs text-white/70">Industries tracked</p>
+        </div>
+        <div className="absolute bottom-32 right-10 z-[5] w-52 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl p-4 shadow-2xl hidden xl:block animate-float">
+          <div className="flex items-center gap-2 text-amber-200">
+            <Zap className="w-4 h-4" />
+            <span className="text-xs font-semibold">Maverick AI</span>
+          </div>
+          <p className="mt-2 text-sm text-white/85 leading-snug">Structured briefs & follow-ups on demand.</p>
         </div>
 
         <div className="relative z-10 flex flex-col h-full p-12 xl:p-16">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-md border border-white/10">
+            <div className="rounded-2xl bg-white/12 p-3 backdrop-blur-md border border-white/15 shadow-lg">
               <BrandHexMark size="sm" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-white leading-tight tracking-tight">
                 Intel <span className="text-amber-200">GoldMine</span>
               </h2>
-              <p className="text-xs text-white/60 font-medium">Powered by Maverick AI</p>
+              <p className="text-xs text-white/65 font-medium">Powered by Maverick AI</p>
             </div>
           </div>
 
           <div className="mt-auto space-y-10 max-w-lg">
             <div>
-              <p className="font-display text-4xl xl:text-5xl font-bold text-white tracking-tight leading-[1.1]">
-                Intelligence that helps you make better decisions, faster.
+              <p className="font-display text-4xl xl:text-[2.75rem] font-bold text-white tracking-tight leading-[1.08]">
+                Intelligence that helps you decide faster.
               </p>
-              <p className="mt-5 text-base text-white/70 leading-relaxed">
-                Join decision makers who use Intel GoldMine to track markets, spot opportunities, and stay ahead.
+              <p className="mt-5 text-base text-white/75 leading-relaxed">
+                Track markets, spot opportunities, and stay ahead — with evidence-backed intel, not noise.
               </p>
             </div>
 
-            <div className="space-y-4">
-              {["20 industries tracked live", "AI-powered research reports", "Personalized to your needs"].map((t) => (
-                <div key={t} className="flex items-center gap-3 text-sm text-white/85">
-                  <CheckCircle2 className="w-5 h-5 text-amber-300 shrink-0" />
+            <div className="space-y-3.5">
+              {["20 industries tracked live", "AI-powered research reports", "Personalized to your regions"].map((t) => (
+                <div key={t} className="flex items-center gap-3 text-sm text-white/90">
+                  <CheckCircle2 className="w-5 h-5 text-amber-300/95 shrink-0" />
                   <span className="font-medium">{t}</span>
                 </div>
               ))}
@@ -141,24 +171,34 @@ export default function AuthPage() {
       </div>
 
       {/* Form column */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-16 relative min-h-screen">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-12 xl:p-16 relative min-h-screen">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 w-full max-w-[440px]"
         >
-          <div className="flex flex-col items-center mb-10 lg:hidden">
-            <BrandHexMark size="lg" />
-            <h1 className="text-2xl font-bold text-foreground mt-5">
+          <div className="lg:hidden mb-8 rounded-2xl border border-border/50 bg-gradient-to-br from-primary/[0.06] to-brand-orange/[0.04] p-6 text-center shadow-sm">
+            <BrandHexMark size="lg" className="mx-auto" />
+            <h1 className="text-2xl font-bold text-foreground mt-4">
               <BrandWordmark />
             </h1>
-            <p className="text-sm text-muted-foreground mt-2 text-center">
-              Your AI-powered intelligence platform
-            </p>
+            <p className="text-sm text-muted-foreground mt-2">AI-powered market intelligence</p>
           </div>
 
-          <div className="rounded-3xl border border-border/50 bg-card p-8 sm:p-10 shadow-xl space-y-7">
+          <div className="relative rounded-3xl border border-border/50 bg-card/95 backdrop-blur-sm shadow-2xl shadow-black/[0.06] overflow-hidden">
+            <div className="h-1.5 w-full bg-gradient-to-r from-primary via-brand-orange to-primary" />
+            <div className="p-8 sm:p-10 space-y-7">
+              <div className="flex flex-wrap items-center justify-center gap-3 text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 border border-border/50 px-2.5 py-1 font-medium">
+                  <Shield className="w-3.5 h-3.5 text-signal-emerald" />
+                  Secure sign-in
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/50 border border-border/50 px-2.5 py-1 font-medium">
+                  <Sparkles className="w-3.5 h-3.5 text-brand-orange" />
+                  Supabase Auth
+                </span>
+              </div>
             <AnimatePresence mode="wait">
               <motion.div
                 key={mode}
@@ -300,6 +340,7 @@ export default function AuthPage() {
                   </button>
                 </p>
               )}
+            </div>
             </div>
           </div>
         </motion.div>
