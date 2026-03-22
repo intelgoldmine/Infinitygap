@@ -43,12 +43,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
-      .single();
-    if (data) setProfile(data as Profile);
+      .maybeSingle();
+    if (error) {
+      console.error("Profile fetch error:", error.message);
+      return;
+    }
+    if (data) {
+      setProfile(data as Profile);
+    } else {
+      // Profile doesn't exist yet — create one
+      const { data: userData } = await supabase.auth.getUser();
+      const meta = userData?.user?.user_metadata;
+      const { data: newProfile } = await supabase
+        .from("profiles")
+        .insert({
+          id: userId,
+          full_name: meta?.full_name || meta?.name || "",
+          avatar_url: meta?.avatar_url || "",
+        })
+        .select("*")
+        .single();
+      if (newProfile) setProfile(newProfile as Profile);
+    }
   };
 
   const refreshProfile = async () => {
