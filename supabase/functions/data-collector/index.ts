@@ -958,6 +958,9 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const sb = createClient(supabaseUrl, serviceKey);
 
+    // Wave 0: Global Tier-1 news RSS (BBC, CNN, Al Jazeera, Reuters, etc.)
+    const [globalRSS] = await Promise.all([collectGlobalNewsRSS()]);
+
     // Wave 1: Fast financial data
     const [crypto, forex, sentiment] = await Promise.all([
       collectCrypto(), collectForex(), collectSentiment(),
@@ -988,6 +991,7 @@ serve(async (req) => {
     const [worldbank] = await Promise.all([collectWorldBank()]);
 
     const allRows = [
+      ...globalRSS,
       ...crypto, ...forex, ...sentiment,
       ...globalTopicNews, ...hackerNews, ...devTo, ...github, ...twitterSignals,
       ...industryGDELT, ...industryYT, ...industryReddit,
