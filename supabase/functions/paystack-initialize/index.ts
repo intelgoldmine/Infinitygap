@@ -23,7 +23,7 @@ async function ensurePlan(secretKey: string): Promise<string> {
     const existing = listData.data.find(
       (p: any) =>
         p.name === PLAN_NAME &&
-        p.amount === PLAN_AMOUNT_CENTS * 100 &&
+        p.amount === PLAN_AMOUNT_LOWEST &&
         p.interval === PLAN_INTERVAL
     );
     if (existing) return existing.plan_code;
