@@ -60,17 +60,17 @@ export default function LandingPage() {
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="sticky top-0 z-50 overflow-visible border-b border-border/40 bg-background/75 backdrop-blur-xl supports-[backdrop-filter]:bg-background/65"
       >
-        <div className="mx-auto flex h-14 max-w-7xl flex-wrap items-center justify-between gap-x-2 gap-y-2 px-3 sm:h-16 sm:gap-3 sm:px-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-2 gap-y-2 px-3 py-2 sm:px-8 md:min-h-16 md:flex-nowrap md:items-center md:gap-6 md:py-0">
           <Link
             to="/"
-            className="relative z-[1] flex min-w-0 shrink items-center gap-2 sm:gap-2.5 group"
+            className="order-1 group relative z-[1] flex min-w-0 max-w-[min(100%,calc(100%-11rem))] items-center gap-2 sm:max-w-none sm:gap-2.5 md:shrink-0"
           >
             <span className="relative flex shrink-0 items-center justify-center overflow-visible">
               <BrandHexMark size="header" className="transition-transform group-hover:scale-[1.03]" />
             </span>
-            <BrandWordmark className="text-base sm:text-lg md:text-xl truncate leading-none" />
+            <BrandWordmark className="truncate text-base leading-none sm:text-lg md:text-xl" />
           </Link>
-          <nav className="order-3 flex w-full min-w-0 items-center justify-center gap-0.5 text-[12px] font-semibold text-muted-foreground sm:order-none sm:w-auto sm:justify-start sm:text-[13px] md:flex-1 md:justify-center">
+          <nav className="order-3 flex w-full basis-full items-center justify-start gap-0.5 border-t border-border/35 pt-2 text-[12px] font-semibold text-muted-foreground sm:text-[13px] md:order-2 md:basis-auto md:w-auto md:flex-1 md:justify-center md:border-t-0 md:pt-0">
             <Popover>
               <PopoverTrigger asChild>
                 <button
@@ -279,8 +279,8 @@ export default function LandingPage() {
               </PopoverContent>
             </Popover>
           </nav>
-          <div className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0 sm:gap-2">
-            <ThemeToggle />
+          <div className="order-2 flex shrink-0 items-center gap-1 sm:gap-2 md:order-3">
+            <ThemeToggle size="sm" />
             <Button variant="ghost" size="sm" className="hidden text-sm font-semibold sm:inline-flex" asChild>
               <Link to="/auth">Sign in</Link>
             </Button>
@@ -308,7 +308,7 @@ export default function LandingPage() {
             className="relative z-10 flex min-h-0 flex-1 flex-col justify-center py-6 sm:py-8"
           >
             <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-4 sm:pt-6 lg:pt-8 pb-0">
-              <p className="mb-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center text-[13px] font-medium text-muted-foreground sm:mb-4 sm:text-sm lg:justify-start lg:text-left">
+              <p className="mb-3 flex flex-wrap items-start justify-start gap-x-3 gap-y-1.5 text-left text-[13px] font-medium text-muted-foreground sm:mb-4 sm:text-sm">
                 <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card/90 px-3 py-1.5 text-foreground shadow-sm backdrop-blur-sm">
                   <Activity className="h-3.5 w-3.5 text-primary" />
                   Private intelligence layer · global pipelines · live geo
@@ -325,8 +325,8 @@ export default function LandingPage() {
                 animate="show"
                 className="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 xl:gap-12 lg:items-stretch"
               >
-                <div className="text-center lg:text-left lg:flex lg:flex-col lg:justify-center">
-                  <motion.div variants={fadeUp} className="mb-3 sm:mb-4 flex justify-center lg:justify-start">
+                <div className="text-left lg:flex lg:flex-col lg:justify-center">
+                  <motion.div variants={fadeUp} className="mb-3 sm:mb-4 flex justify-start">
                     <div className="relative">
                       <div className="absolute inset-0 rounded-[2rem] bg-primary/16 blur-2xl scale-[1.25] sm:scale-[1.2]" />
                       <BrandHexMark size="hero" className="relative drop-shadow-md" />
@@ -335,7 +335,7 @@ export default function LandingPage() {
 
                   <motion.div
                     variants={fadeUp}
-                    className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur-md px-3.5 py-1.5 text-[13px] sm:text-sm text-muted-foreground mb-5 sm:mb-6 shadow-sm"
+                    className="inline-flex flex-wrap items-center justify-start gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur-md px-3.5 py-1.5 text-[13px] sm:text-sm text-muted-foreground mb-5 sm:mb-6 shadow-sm"
                   >
                     <span className="relative flex h-2 w-2 shrink-0">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-emerald/40" />
@@ -357,7 +357,7 @@ export default function LandingPage() {
 
                   <motion.p
                     variants={fadeUp}
-                    className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg lg:mx-0"
+                    className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg"
                   >
                     <span className="font-semibold text-foreground">{industries.length} sectors</span> ·{" "}
                     <span className="font-semibold text-foreground">{FLOW_LANES_LABEL} capital lanes</span> ·{" "}
@@ -371,7 +371,7 @@ export default function LandingPage() {
 
                   <motion.div
                     variants={fadeUp}
-                    className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-[13px] sm:text-sm lg:justify-start"
+                    className="mt-5 flex flex-wrap items-center justify-start gap-2.5 text-[13px] sm:text-sm"
                   >
                     {[
                       { icon: Globe2, label: "Worldwide signal mesh", c: "text-brand-orange" },
@@ -388,7 +388,7 @@ export default function LandingPage() {
                     ))}
                   </motion.div>
 
-                  <motion.div variants={fadeUp} className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
+                  <motion.div variants={fadeUp} className="mt-8 sm:mt-10 flex flex-wrap items-center justify-start gap-3 sm:gap-4">
                     <Button
                       size="lg"
                       className="h-12 sm:h-14 px-8 sm:px-10 text-base font-bold gap-2 rounded-full shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all"
@@ -493,7 +493,7 @@ export default function LandingPage() {
         >
           <div className="absolute inset-0 dot-pattern-fine opacity-[0.28] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 relative">
-            <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-14">
+            <div className="mb-10 max-w-2xl text-left sm:mb-14 md:mx-auto md:text-center">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">Choose your lane</p>
               <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-[2.75rem]">
                 Three ways in. One global brain.

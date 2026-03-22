@@ -19,7 +19,11 @@ export function ThemeToggle({ className, size = "default" }: Props) {
   if (!mounted) {
     return (
       <div
-        className={cn(size === "sm" ? "h-8 w-8 shrink-0" : "h-9 w-9 shrink-0", className)}
+        className={cn(
+          "shrink-0 rounded-full border border-border/40 bg-muted/20",
+          size === "sm" ? "h-9 w-9" : "h-10 w-10",
+          className,
+        )}
         aria-hidden
       />
     );
@@ -30,11 +34,11 @@ export function ThemeToggle({ className, size = "default" }: Props) {
   return (
     <Button
       type="button"
-      variant="ghost"
+      variant="outline"
       size="icon"
       className={cn(
-        "rounded-full shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted/60",
-        size === "sm" && "h-8 w-8",
+        "touch-manipulation rounded-full border-border/60 bg-background/80 shadow-sm shrink-0 text-muted-foreground hover:bg-muted/70 hover:text-foreground",
+        size === "sm" ? "h-9 w-9 min-h-9 min-w-9" : "h-10 w-10 min-h-10 min-w-10",
         className,
       )}
       onClick={() => setTheme(isDark ? "light" : "dark")}
