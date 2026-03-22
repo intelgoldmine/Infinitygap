@@ -224,6 +224,37 @@
     background: radial-gradient(ellipse 80% 50% at 50% -10%, hsl(var(--brand-orange) / 0.22), transparent 55%);
   }
 
+  /* Homepage — multi-stop “aurora” (not flat navy) */
+  .landing-aurora {
+    background-color: hsl(42 38% 97%);
+    background-image:
+      radial-gradient(ellipse 130% 75% at 0% -25%, hsl(38 90% 82% / 0.55), transparent 52%),
+      radial-gradient(ellipse 95% 55% at 100% 5%, hsl(205 75% 82% / 0.35), transparent 48%),
+      radial-gradient(ellipse 60% 50% at 92% 88%, hsl(262 55% 88% / 0.28), transparent 52%),
+      radial-gradient(ellipse 90% 45% at 35% 105%, hsl(226 50% 85% / 0.3), transparent 55%);
+  }
+
+  .landing-band-sand {
+    background: linear-gradient(180deg, hsl(38 42% 95%) 0%, hsl(42 32% 98%) 100%);
+  }
+
+  .landing-band-sky {
+    background: linear-gradient(165deg, hsl(205 45% 96%) 0%, hsl(210 35% 98.5%) 45%, hsl(45 35% 98%) 100%);
+  }
+
+  .landing-band-mauve {
+    background: linear-gradient(180deg, hsl(270 32% 97%) 0%, hsl(280 22% 99%) 100%);
+  }
+
+  .landing-band-warm-quote {
+    background: linear-gradient(180deg, hsl(25 40% 97%) 0%, hsl(38 30% 98%) 100%);
+  }
+
+  /* One strong closing gradient — use once (not repeated as page bg) */
+  .landing-band-cta {
+    background: linear-gradient(125deg, hsl(226 58% 34%) 0%, hsl(262 42% 32%) 42%, hsl(32 72% 42%) 100%);
+  }
+
   .shine-border {
     position: relative;
   }

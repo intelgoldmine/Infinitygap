@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { industries } from "@/lib/industryData";
 import { Reveal } from "@/components/motion/Reveal";
+import { LandingBackdrop } from "@/components/motion/LandingBackdrop";
 import {
   Activity,
   ArrowRight,
@@ -65,20 +66,19 @@ export default function LandingPage() {
   const marqueeItems = [...industries, ...industries];
 
   return (
-    <div className="min-h-screen bg-[hsl(40_18%_98%)] text-foreground flex flex-col relative overflow-x-hidden">
-      {/* Nav — sits on dark hero */}
+    <div className="min-h-screen bg-background text-foreground flex flex-col relative overflow-x-hidden">
       <motion.header
-        initial={{ opacity: 0, y: -12 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-40 border-b border-white/10 bg-[hsl(226_58%_11%)]/90 backdrop-blur-xl supports-[backdrop-filter]:bg-[hsl(226_58%_11%)]/80"
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="sticky top-0 z-50 border-b border-border/40 bg-background/75 backdrop-blur-xl supports-[backdrop-filter]:bg-background/65"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-[68px] sm:h-[72px] flex items-center justify-between gap-3">
-          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <BrandHexMark size="md" variant="onDark" />
-            <BrandWordmark className="text-base sm:text-lg truncate" variant="onDark" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-[64px] sm:h-[70px] flex items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 min-w-0 group">
+            <BrandHexMark size="md" className="transition-transform group-hover:scale-[1.03]" />
+            <BrandWordmark className="text-base sm:text-lg truncate" />
           </Link>
-          <nav className="hidden md:flex items-center gap-0.5 text-sm font-medium">
+          <nav className="hidden md:flex items-center gap-1 text-[13px] sm:text-sm font-semibold">
             {[
               ["Explore", "#explore"],
               ["Features", "#features"],
@@ -88,26 +88,17 @@ export default function LandingPage() {
               <a
                 key={href}
                 href={href}
-                className="rounded-full px-3 py-2 text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                className="rounded-full px-3.5 py-2 text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-colors"
               >
                 {label}
               </a>
             ))}
           </nav>
           <div className="flex items-center gap-2 shrink-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-sm font-medium text-white/85 hover:text-white hover:bg-white/10 hidden sm:inline-flex"
-              asChild
-            >
+            <Button variant="ghost" size="sm" className="text-sm font-semibold hidden sm:inline-flex" asChild>
               <Link to="/auth">Sign in</Link>
             </Button>
-            <Button
-              size="sm"
-              className="text-sm font-semibold gap-1.5 rounded-full px-4 sm:px-6 h-9 sm:h-10 bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] shadow-lg shadow-black/25 border border-white/10"
-              asChild
-            >
+            <Button size="sm" className="text-sm font-bold gap-1.5 rounded-full px-4 sm:px-5 h-9 shadow-md" asChild>
               <Link to="/auth?mode=signup">
                 Get started
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -118,22 +109,21 @@ export default function LandingPage() {
       </motion.header>
 
       <main className="relative z-10 flex-1">
-        {/* Hero — full-bleed dark */}
-        <section ref={heroRef} className="relative overflow-hidden bg-[hsl(226_58%_10%)] text-white">
-          <div className="absolute inset-0 landing-hero-glow pointer-events-none" />
-          <div className="absolute inset-0 landing-dot-light opacity-60 pointer-events-none" />
-          <div className="absolute inset-0 landing-hero-vignette pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(140vw,900px)] h-[min(140vw,900px)] rounded-full bg-[hsl(226_65%_35%)]/25 blur-[120px] pointer-events-none" />
+        {/* Hero — layered aurora + mesh (not flat navy) */}
+        <section ref={heroRef} className="relative overflow-hidden mesh-marketing landing-aurora text-foreground">
+          <LandingBackdrop />
+          <div className="absolute inset-0 dot-pattern-fine opacity-[0.45] pointer-events-none" />
+          <div className="absolute inset-0 grid-bg opacity-25 pointer-events-none" />
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12 lg:pt-16 pb-0">
-              <p className="text-center lg:text-left text-[13px] sm:text-sm text-white/65 font-medium mb-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-3 gap-y-1">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-white/95 shadow-sm">
-                  <Activity className="w-3.5 h-3.5 text-[hsl(38_90%_58%)]" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12 lg:pt-14 pb-0">
+              <p className="text-center lg:text-left text-[13px] sm:text-sm text-muted-foreground font-medium mb-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-3 gap-y-1.5">
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card/90 backdrop-blur-sm px-3 py-1.5 text-foreground shadow-sm">
+                  <Activity className="w-3.5 h-3.5 text-primary" />
                   Maverick AI · live pipelines · geo snapshots
                 </span>
-                <span className="hidden sm:inline text-white/25">·</span>
-                <span className="text-white/55 max-w-md sm:max-w-none">
+                <span className="hidden sm:inline text-border">·</span>
+                <span className="text-muted-foreground max-w-md sm:max-w-none">
                   Evidence-backed intelligence — not another noise feed.
                 </span>
               </p>
@@ -147,42 +137,41 @@ export default function LandingPage() {
                 <div className="text-center lg:text-left">
                   <motion.div variants={fadeUp} className="mb-5 sm:mb-6 flex justify-center lg:justify-start">
                     <div className="relative">
-                      <div className="absolute inset-0 rounded-3xl bg-[hsl(38_90%_50%)]/25 blur-3xl scale-125" />
-                      <BrandHexMark size="lg" variant="onDark" className="relative w-[4.5rem] h-[4.5rem] sm:w-24 sm:h-24 drop-shadow-2xl" />
+                      <div className="absolute inset-0 rounded-3xl bg-primary/15 blur-3xl scale-125" />
+                      <BrandHexMark size="lg" className="relative w-[4.5rem] h-[4.5rem] sm:w-24 sm:h-24 drop-shadow-lg" />
                     </div>
                   </motion.div>
 
                   <motion.div
                     variants={fadeUp}
-                    className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-1.5 text-[13px] sm:text-sm text-white/80 mb-6 shadow-inner"
+                    className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur-md px-3.5 py-1.5 text-[13px] sm:text-sm text-muted-foreground mb-6 shadow-sm"
                   >
                     <span className="relative flex h-2 w-2 shrink-0">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/40" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-emerald/40" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-emerald" />
                     </span>
-                    <span className="font-semibold text-white">Live</span>
-                    <span className="text-white/25">·</span>
-                    <span className="text-[hsl(38_90%_62%)] font-semibold">Research-grade briefs</span>
+                    <span className="font-semibold text-foreground">Now live</span>
+                    <span className="text-border">·</span>
+                    <span className="text-brand-orange font-semibold">Research-grade briefs</span>
                   </motion.div>
 
                   <motion.h1
                     variants={fadeUp}
-                    className="font-display text-[2.35rem] sm:text-5xl md:text-6xl xl:text-[3.65rem] font-bold tracking-[-0.03em] leading-[1.05]"
+                    className="font-display text-[2.35rem] sm:text-5xl md:text-6xl xl:text-[3.5rem] font-bold tracking-[-0.03em] leading-[1.05] text-foreground"
                   >
                     Turn noise into{" "}
                     <span className="text-gradient-gold bg-clip-text text-transparent">decisions</span>
-                    <span className="text-white">.</span>
+                    <span className="text-foreground">.</span>
                   </motion.h1>
 
                   <motion.p
                     variants={fadeUp}
-                    className="mt-5 sm:mt-6 text-base sm:text-lg text-white/70 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium"
+                    className="mt-5 sm:mt-6 text-base sm:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed"
                   >
-                    <span className="text-white">{industries.length} industries</span> ·{" "}
-                    <span className="text-white">{totalFlows}+ money flows</span> ·{" "}
-                    <span className="text-white/90">11+ sources</span>
-                    <span className="text-white/65"> — structured intel, geo scope, and cross-industry scans in one
-                    workspace.</span>
+                    <span className="font-semibold text-foreground">{industries.length} industries</span> ·{" "}
+                    <span className="font-semibold text-foreground">{totalFlows}+ money flows</span> ·{" "}
+                    <span className="font-semibold text-foreground">11+ sources</span>
+                    <span> — structured intel, geo scope, and cross-industry scans in one workspace.</span>
                   </motion.p>
 
                   <motion.div
@@ -190,13 +179,13 @@ export default function LandingPage() {
                     className="mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 text-[13px] sm:text-sm"
                   >
                     {[
-                      { icon: TrendingUp, label: "Live signals", c: "text-emerald-300" },
-                      { icon: Cpu, label: "Intel Lab", c: "text-sky-300" },
-                      { icon: Globe2, label: "Geo-scoped", c: "text-amber-300" },
+                      { icon: TrendingUp, label: "Live signals", c: "text-signal-emerald" },
+                      { icon: Cpu, label: "Intel Lab", c: "text-primary" },
+                      { icon: Globe2, label: "Geo-scoped", c: "text-brand-orange" },
                     ].map(({ icon: Icon, label, c }) => (
                       <span
                         key={label}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-white/85"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-3 py-1.5 text-foreground/90"
                       >
                         <Icon className={cn("w-3.5 h-3.5", c)} />
                         {label}
@@ -207,7 +196,7 @@ export default function LandingPage() {
                   <motion.div variants={fadeUp} className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
                     <Button
                       size="lg"
-                      className="h-12 sm:h-14 px-8 sm:px-10 text-base font-bold gap-2 rounded-full bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] shadow-xl shadow-black/30 border border-white/15"
+                      className="h-12 sm:h-14 px-8 sm:px-10 text-base font-bold gap-2 rounded-full shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all"
                       asChild
                     >
                       <Link to="/auth?mode=signup">
@@ -218,11 +207,11 @@ export default function LandingPage() {
                     <Button
                       size="lg"
                       variant="outline"
-                      className="h-12 sm:h-14 px-6 sm:px-8 text-base rounded-full border-white/25 bg-white/[0.04] text-white hover:bg-white/[0.09] hover:text-white backdrop-blur-sm"
+                      className="h-12 sm:h-14 px-6 sm:px-8 text-base rounded-full border-border/70 bg-card/60 hover:bg-card"
                       asChild
                     >
                       <Link to="/auth" className="gap-2.5">
-                        <PlayCircle className="w-4 h-4 text-[hsl(38_90%_58%)]" />
+                        <PlayCircle className="w-4 h-4 text-primary" />
                         Sign in to explore
                       </Link>
                     </Button>
@@ -230,45 +219,45 @@ export default function LandingPage() {
                 </div>
 
                 <motion.div variants={fadeUp} className="relative hidden lg:block">
-                  <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-[hsl(38_90%_50%)]/20 via-transparent to-[hsl(226_65%_45%)]/20 blur-2xl" />
+                  <div className="absolute -inset-5 rounded-[2rem] bg-gradient-to-br from-primary/15 via-transparent to-brand-orange/15 blur-2xl" />
                   <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="shine-border relative rounded-2xl border border-white/15 bg-[hsl(226_40%_8%)] shadow-2xl shadow-black/50 overflow-hidden ring-1 ring-white/10"
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                    className="shine-border relative rounded-2xl border border-border/40 bg-card shadow-2xl overflow-hidden"
                   >
-                    <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/25">
+                    <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50 bg-muted/40">
                       <span className="flex gap-1.5">
                         <span className="h-2.5 w-2.5 rounded-full bg-red-400/90" />
                         <span className="h-2.5 w-2.5 rounded-full bg-amber-400/90" />
                         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/90" />
                       </span>
                       <div className="flex-1 flex justify-center">
-                        <span className="rounded-lg bg-black/30 border border-white/10 px-3 py-1 text-[11px] text-white/60 font-medium truncate max-w-[280px]">
-                          app.intelgoldmine.com
+                        <span className="rounded-lg bg-background/80 border border-border/50 px-3 py-1 text-[11px] text-muted-foreground font-medium truncate max-w-[280px]">
+                          intelgoldmine.app · dashboard
                         </span>
                       </div>
                     </div>
-                    <div className="relative aspect-[16/10.5] bg-black/40">
+                    <div className="relative aspect-[16/10.5] bg-muted/30">
                       <img
                         src="/hero-visual.png"
                         alt=""
-                        className="w-full h-full object-cover object-top opacity-[0.97]"
+                        className="w-full h-full object-cover object-top"
                         loading="eager"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(226_58%_8%)]/90 via-transparent to-black/20 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/35 via-transparent to-transparent pointer-events-none" />
                     </div>
-                    <div className="grid grid-cols-3 gap-px border-t border-white/10 bg-white/10 text-[11px]">
-                      <div className="bg-black/35 backdrop-blur-md p-3 text-center">
-                        <p className="font-bold text-[hsl(38_90%_58%)] tabular-nums">{industries.length}</p>
-                        <p className="text-white/45">Industries</p>
+                    <div className="grid grid-cols-3 gap-px border-t border-border/40 bg-border/30 text-[11px]">
+                      <div className="bg-card/95 p-3 text-center backdrop-blur-sm">
+                        <p className="font-bold text-primary tabular-nums">{industries.length}</p>
+                        <p className="text-muted-foreground">Industries</p>
                       </div>
-                      <div className="bg-black/35 backdrop-blur-md p-3 text-center">
-                        <p className="font-bold text-sky-300 tabular-nums">{totalFlows}+</p>
-                        <p className="text-white/45">Flows</p>
+                      <div className="bg-card/95 p-3 text-center backdrop-blur-sm">
+                        <p className="font-bold text-brand-orange tabular-nums">{totalFlows}+</p>
+                        <p className="text-muted-foreground">Flows</p>
                       </div>
-                      <div className="bg-black/35 backdrop-blur-md p-3 text-center">
-                        <p className="font-bold text-emerald-300 tabular-nums">11+</p>
-                        <p className="text-white/45">Sources</p>
+                      <div className="bg-card/95 p-3 text-center backdrop-blur-sm">
+                        <p className="font-bold text-signal-emerald tabular-nums">11+</p>
+                        <p className="text-muted-foreground">Sources</p>
                       </div>
                     </div>
                   </motion.div>
@@ -276,15 +265,14 @@ export default function LandingPage() {
               </motion.div>
             </div>
 
-            {/* Mobile / tablet product shot */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="show"
               className="max-w-6xl mx-auto px-4 sm:px-8 pt-10 pb-4 lg:hidden"
             >
-              <div className="shine-border relative rounded-2xl overflow-hidden border border-white/15 bg-[hsl(226_40%_8%)] shadow-2xl ring-1 ring-white/10">
-                <div className="flex items-center gap-2 px-3 py-2 border-b border-white/10 bg-black/30">
+              <div className="shine-border relative rounded-2xl overflow-hidden border border-border/40 bg-card shadow-2xl">
+                <div className="flex items-center gap-2 px-3 py-2 border-b border-border/40 bg-muted/30">
                   <span className="h-2 w-2 rounded-full bg-red-400/90" />
                   <span className="h-2 w-2 rounded-full bg-amber-400/90" />
                   <span className="h-2 w-2 rounded-full bg-emerald-400/90" />
@@ -295,35 +283,34 @@ export default function LandingPage() {
                   className="w-full h-auto"
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(226_58%_10%)]/80 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
 
-            {/* Stats — part of hero */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10 mt-10 sm:mt-14 border-t border-white/10 pt-8 sm:pt-10 pb-12 sm:pb-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10 mt-10 sm:mt-12 border-t border-border/40 pt-8 sm:pt-10 pb-12 sm:pb-14">
               <motion.div
                 variants={stagger}
                 initial="hidden"
                 animate="show"
-                className="grid grid-cols-3 gap-3 sm:gap-6 max-w-4xl mx-auto lg:mx-0"
+                className="grid grid-cols-3 gap-3 sm:gap-5 max-w-4xl mx-auto lg:mx-0"
               >
                 {[
-                  { n: `${industries.length}`, l: "Industries mapped", color: "text-[hsl(38_90%_58%)]", icon: LayoutGrid },
-                  { n: `${totalFlows}+`, l: "Money flows", color: "text-sky-300", icon: BarChart3 },
-                  { n: "11+", l: "Live data sources", color: "text-emerald-300", icon: Radio },
+                  { n: `${industries.length}`, l: "Industries mapped", color: "text-primary", icon: LayoutGrid },
+                  { n: `${totalFlows}+`, l: "Money flows", color: "text-brand-orange", icon: BarChart3 },
+                  { n: "11+", l: "Live data sources", color: "text-signal-emerald", icon: Radio },
                 ].map((s) => (
                   <motion.div
                     key={s.l}
                     variants={fadeUp}
-                    className="group text-center lg:text-left rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm px-3 py-5 sm:p-6 hover:bg-white/[0.07] transition-colors"
+                    className="group text-center lg:text-left rounded-2xl border border-border/50 bg-card/90 backdrop-blur-sm px-3 py-5 sm:p-6 shadow-sm hover:shadow-md hover:border-primary/15 transition-all"
                   >
-                    <div className="mx-auto lg:mx-0 mb-2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-black/30 border border-white/10 text-white/70 group-hover:text-white transition-colors">
+                    <div className="mx-auto lg:mx-0 mb-2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-muted/60 border border-border/50 text-muted-foreground group-hover:text-primary transition-colors">
                       <s.icon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <p className={cn("text-2xl sm:text-4xl md:text-5xl font-bold tabular-nums font-display", s.color)}>
                       {s.n}
                     </p>
-                    <p className="text-[10px] sm:text-xs text-white/45 mt-1 font-semibold uppercase tracking-wide">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-semibold uppercase tracking-wide">
                       {s.l}
                     </p>
                   </motion.div>
@@ -333,9 +320,9 @@ export default function LandingPage() {
           </motion.div>
         </section>
 
-        {/* Explore */}
-        <section id="explore" className="relative border-y border-[hsl(40_12%_88%)] bg-[hsl(40_22%_96%)]">
-          <div className="absolute inset-0 dot-pattern-fine opacity-[0.35] pointer-events-none" />
+        {/* Explore — warm sand band */}
+        <section id="explore" className="relative border-y border-amber-200/30 landing-band-sand">
+          <div className="absolute inset-0 dot-pattern-fine opacity-[0.28] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 relative">
             <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
               <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">Explore</p>
@@ -399,21 +386,21 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Marquee — dark */}
-        <div className="border-y border-white/10 bg-[hsl(226_50%_13%)] overflow-hidden">
-          <div className="flex animate-marquee whitespace-nowrap py-6 gap-12 sm:gap-16 text-sm text-white/55">
+        {/* Marquee — amber ribbon (distinct from hero + footer) */}
+        <div className="border-y border-amber-300/35 bg-gradient-to-r from-amber-100/90 via-amber-50/95 to-orange-50/90 overflow-hidden">
+          <div className="flex animate-marquee whitespace-nowrap py-5 sm:py-6 gap-12 sm:gap-16 text-sm text-amber-950/70">
             {marqueeItems.map((ind, i) => (
               <span key={`${ind.slug}-${i}`} className="inline-flex items-center gap-3 shrink-0">
-                <span className="text-xl grayscale contrast-125 opacity-90">{ind.icon}</span>
-                <span className="font-semibold text-white/75 tracking-tight">{ind.name}</span>
+                <span className="text-xl">{ind.icon}</span>
+                <span className="font-semibold text-amber-950/85 tracking-tight">{ind.name}</span>
               </span>
             ))}
           </div>
         </div>
 
-        {/* Showcase */}
-        <section className="relative border-b border-border/50 bg-background overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-brand-orange/[0.05] pointer-events-none" />
+        {/* Showcase — cool sky wash */}
+        <section className="relative border-b border-border/50 landing-band-sky overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-sky-200/20 via-transparent to-primary/[0.04] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 lg:py-24 relative z-10">
             <div className="grid lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-14 items-center">
               <motion.div
@@ -463,9 +450,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features */}
-        <section id="features" className="relative bg-[hsl(40_18%_98%)] overflow-hidden">
-          <div className="absolute inset-0 dot-pattern-fine opacity-40 pointer-events-none" />
+        {/* Features — mint wash + dots */}
+        <section id="features" className="relative overflow-hidden bg-gradient-to-b from-emerald-50/35 via-background to-background">
+          <div className="absolute inset-0 dot-pattern-fine opacity-35 pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 lg:py-28 relative">
             <Reveal className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
               <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">Features</p>
@@ -597,20 +584,19 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* How it works — dark */}
-        <section id="how-it-works" className="relative bg-[hsl(226_58%_11%)] text-white overflow-hidden">
-          <div className="absolute inset-0 landing-dot-light opacity-40 pointer-events-none" />
-          <div className="absolute inset-0 landing-hero-vignette opacity-50 pointer-events-none" />
+        {/* How it works — soft mauve band + light cards */}
+        <section id="how-it-works" className="relative landing-band-mauve text-foreground overflow-hidden border-y border-violet-200/25">
+          <div className="absolute inset-0 dot-pattern-fine opacity-[0.2] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 relative z-10">
             <Reveal className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-              <p className="text-sm font-semibold text-[hsl(38_90%_58%)] tracking-[0.2em] uppercase mb-3">How it works</p>
+              <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">How it works</p>
               <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">
                 From scope to signal in three moves
               </h2>
             </Reveal>
 
-            <div className="relative grid md:grid-cols-3 gap-10 md:gap-6">
-              <div className="hidden md:block absolute top-[2.35rem] left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+            <div className="relative grid md:grid-cols-3 gap-6 md:gap-8">
+              <div className="hidden md:block absolute top-9 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent pointer-events-none" />
               {[
                 {
                   step: "01",
@@ -632,13 +618,13 @@ export default function LandingPage() {
                 },
               ].map((s, i) => (
                 <Reveal key={s.step} delay={i * 0.12} className="relative text-center md:text-left">
-                  <div className="flex md:block flex-col items-center">
-                    <div className="relative z-10 mx-auto md:mx-0 mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.07] border border-white/15 shadow-lg">
-                      <s.icon className="w-7 h-7 text-[hsl(38_90%_58%)]" />
+                  <div className="rounded-2xl border border-border/60 bg-card p-7 sm:p-8 shadow-lg hover:shadow-xl hover:border-primary/15 transition-all h-full">
+                    <div className="mx-auto md:mx-0 mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/[0.08] border border-primary/10 text-primary">
+                      <s.icon className="w-7 h-7" />
                     </div>
-                    <span className="text-5xl sm:text-6xl font-display font-bold text-white/[0.07] mb-3 block">{s.step}</span>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white">{s.title}</h3>
-                    <p className="mt-3 text-base text-white/60 leading-relaxed max-w-sm mx-auto md:mx-0">{s.body}</p>
+                    <span className="text-4xl font-display font-bold text-primary/15 mb-2 block">{s.step}</span>
+                    <h3 className="text-xl sm:text-2xl font-bold text-foreground">{s.title}</h3>
+                    <p className="mt-3 text-base text-muted-foreground leading-relaxed">{s.body}</p>
                   </div>
                 </Reveal>
               ))}
@@ -646,8 +632,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="bg-gradient-to-b from-background to-[hsl(40_20%_96%)] border-y border-border/50">
+        {/* Testimonials — warm paper */}
+        <section className="landing-band-warm-quote border-y border-border/40">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
             <Reveal className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
               <p className="text-sm font-semibold text-primary tracking-[0.2em] uppercase mb-3">Voices</p>
@@ -677,8 +663,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Pricing */}
-        <section id="pricing" className="bg-[hsl(40_18%_97%)]">
+        {/* Pricing — neutral slate strip */}
+        <section id="pricing" className="bg-slate-50/90 border-y border-slate-200/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-24 lg:py-28">
             <Reveal className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
               <p className="text-sm font-semibold text-brand-orange tracking-[0.2em] uppercase mb-3">Pricing</p>
@@ -739,23 +725,23 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="relative py-16 sm:py-24 overflow-hidden bg-[hsl(226_58%_10%)] text-white">
-          <div className="absolute inset-0 landing-dot-light opacity-50 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-brand-orange/15 pointer-events-none" />
+        {/* Final CTA — single rich gradient (navy → violet → amber), not repeated elsewhere */}
+        <section className="relative py-16 sm:py-24 overflow-hidden landing-band-cta text-white">
+          <div className="absolute inset-0 landing-dot-light opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_80%_20%,rgba(255,255,255,0.12),transparent)] pointer-events-none" />
           <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
             <Reveal>
               <div className="text-center max-w-3xl mx-auto">
-                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.15]">
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.15] text-white drop-shadow-sm">
                   Your markets won&apos;t wait for a quarterly PDF.
                 </h2>
-                <p className="mt-6 text-lg text-white/65 leading-relaxed max-w-xl mx-auto">
+                <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl mx-auto">
                   Get a workspace that looks as serious as the decisions you make.
                 </p>
                 <div className="mt-10 flex flex-wrap justify-center gap-4">
                   <Button
                     size="lg"
-                    className="h-12 sm:h-14 px-10 text-base font-bold rounded-full bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] shadow-xl border border-white/10"
+                    className="h-12 sm:h-14 px-10 text-base font-bold rounded-full bg-amber-400 text-amber-950 hover:bg-amber-300 shadow-xl border border-white/20"
                     asChild
                   >
                     <Link to="/auth?mode=signup">Create free account</Link>
@@ -763,7 +749,7 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-12 sm:h-14 px-8 text-base rounded-full border-white/25 bg-white/[0.05] text-white hover:bg-white/[0.1] hover:text-white"
+                    className="h-12 sm:h-14 px-8 text-base rounded-full border-white/40 bg-white/[0.08] text-white hover:bg-white/[0.15] hover:text-white"
                     asChild
                   >
                     <Link to="/auth">Sign in</Link>
@@ -775,47 +761,47 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/10 bg-[hsl(226_58%_8%)] text-white py-14 sm:py-16">
+      <footer className="relative z-10 border-t border-zinc-800 bg-zinc-950 text-zinc-300 py-14 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
               <BrandHexMark size="sm" variant="onDark" />
               <BrandWordmark className="text-lg" variant="onDark" />
             </div>
-            <p className="text-sm text-white/55 leading-relaxed max-w-sm">
+            <p className="text-sm text-zinc-500 leading-relaxed max-w-sm">
               Market intelligence with geo scope, structured AI, and Maverick — your research copilot.
             </p>
           </div>
           <div className="md:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-white/35 mb-4">Product</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-zinc-600 mb-4">Product</p>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a href="#explore" className="text-white/70 hover:text-white transition-colors">
+                <a href="#explore" className="text-zinc-400 hover:text-white transition-colors">
                   Explore
                 </a>
               </li>
               <li>
-                <a href="#features" className="text-white/70 hover:text-white transition-colors">
+                <a href="#features" className="text-zinc-400 hover:text-white transition-colors">
                   Features
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="text-white/70 hover:text-white transition-colors">
+                <a href="#pricing" className="text-zinc-400 hover:text-white transition-colors">
                   Pricing
                 </a>
               </li>
             </ul>
           </div>
           <div className="md:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-white/35 mb-4">Legal</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-zinc-600 mb-4">Legal</p>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/privacy-policy" className="text-white/70 hover:text-white transition-colors">
+                <Link to="/privacy-policy" className="text-zinc-400 hover:text-white transition-colors">
                   Privacy policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms-of-service" className="text-white/70 hover:text-white transition-colors">
+                <Link to="/terms-of-service" className="text-zinc-400 hover:text-white transition-colors">
                   Terms of service
                 </Link>
               </li>
@@ -823,26 +809,26 @@ export default function LandingPage() {
           </div>
           <div className="md:col-span-4 flex flex-col justify-between gap-6">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white/35 mb-4">Account</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-zinc-600 mb-4">Account</p>
               <div className="flex flex-wrap gap-3">
                 <Button
                   size="sm"
                   variant="outline"
-                  className="rounded-full border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                  className="rounded-full border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-white"
                   asChild
                 >
                   <Link to="/auth">Sign in</Link>
                 </Button>
                 <Button
                   size="sm"
-                  className="rounded-full bg-[hsl(38_92%_50%)] text-[hsl(226_58%_12%)] hover:bg-[hsl(38_92%_46%)] font-semibold border border-white/10"
+                  className="rounded-full bg-amber-400 text-amber-950 hover:bg-amber-300 font-semibold"
                   asChild
                 >
                   <Link to="/auth?mode=signup">Get started</Link>
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-white/40">© 2026 Intel GoldMine · Not financial advice.</p>
+            <p className="text-xs text-zinc-600">© 2026 Intel GoldMine · Not financial advice.</p>
           </div>
         </div>
       </footer>
