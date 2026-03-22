@@ -7,13 +7,13 @@
           var t = localStorage.getItem("maverick-ui-theme");
           var d = document.documentElement;
           d.classList.remove("light", "dark");
-          if (t === "light") {
-            d.classList.add("light");
-          } else {
+          if (t === "dark") {
             d.classList.add("dark");
+          } else {
+            d.classList.add("light");
           }
         } catch (e) {
-          document.documentElement.classList.add("dark");
+          document.documentElement.classList.add("light");
         }
       })();
     </script>
