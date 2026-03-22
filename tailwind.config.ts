@@ -55,6 +55,7 @@ export default {
         },
         brand: {
           orange: "hsl(var(--brand-orange) / <alpha-value>)",
+          navy: "hsl(var(--brand-navy) / <alpha-value>)",
         },
         signal: {
           amber: "hsl(var(--signal-amber) / <alpha-value>)",
