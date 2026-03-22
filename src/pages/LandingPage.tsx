@@ -15,13 +15,13 @@ import { industries } from "@/lib/industryData";
 import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { LandingBackdrop } from "@/components/motion/LandingBackdrop";
 import {
-  Activity,
   ArrowRight,
   CheckCircle2,
   ChevronDown,
   Cpu,
   Globe2,
   Layers,
+  Radar,
   Radio,
   PlayCircle,
   FlaskConical,
@@ -484,9 +484,9 @@ export default function LandingPage() {
             <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-4 sm:pt-6 lg:pt-8 pb-0">
               <p className="mb-3 text-left sm:mb-4">
                 <span className="inline-flex max-w-full items-start gap-2 rounded-2xl border border-primary/15 bg-card/90 px-3.5 py-2.5 text-foreground shadow-sm backdrop-blur-sm sm:max-w-4xl">
-                  <Activity className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                  <Radar className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                   <span className="min-w-0 text-[13px] font-medium leading-snug text-foreground sm:text-sm">
-                    Intel GoldMine is an intelligence agent that continuously gathers news and intel from hundreds of sources, maps how money moves, surfaces business gaps, research angles, and the relationships analysts and researchers need for cross-reading, and delivers high-signal updates to you proactively across every industry, 24/7—not scattered headlines.
+                    Intel GoldMine is an intelligence agent that continuously gathers news and intel from hundreds of sources, maps how money moves, surfaces business gaps, research angles, and the relationships analysts, investors, and researchers need for cross-reading, and delivers high-signal updates to you proactively across every industry, 24/7—not scattered headlines.
                   </span>
                 </span>
               </p>

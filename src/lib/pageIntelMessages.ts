@@ -1,5 +1,6 @@
 import type { Industry, SubFlow } from "@/lib/industryData";
 import { industries } from "@/lib/industryData";
+import { SUBFLOW_INTEL_COPY } from "@/lib/subFlowIntelCopy";
 
 /** Value copy for PageIntro-style blocks: eyebrow, title, body (use \\n\\n for paragraph breaks). */
 export type PageValueBlock = {
@@ -87,10 +88,19 @@ function describeApis(apis: string[]): string {
 }
 
 /**
- * Composes a unique message per money-flow lane using sector voice + flow metadata.
- * Each page gets different wording because name, description, keywords, and APIs differ.
+ * Per money-flow lane: primary copy is hand-written in `subFlowIntelCopy.ts` (170 lanes).
+ * Falls back to composed template if a lane id is ever missing.
  */
 export function buildSubFlowIntelCopy(industry: Industry, subFlow: SubFlow): PageValueBlock {
+  const hand = SUBFLOW_INTEL_COPY[subFlow.id];
+  if (hand) {
+    return {
+      eyebrow: `${subFlow.shortName} · ${industry.icon}`,
+      title: hand.title,
+      body: hand.body,
+    };
+  }
+
   const voice = INDUSTRY_VOICE[industry.id] ?? `${industry.name} is a mapped sector in Intel GoldMine’s global mesh.`;
   const desc = subFlow.description.trim();
   const descSentence = desc.endsWith(".") ? desc : `${desc}.`;
