@@ -46,7 +46,7 @@ function moveKey(key: string, scope: Scope, to: "pool" | "primary" | "secondary"
 
 export default function CustomIntelPage() {
   const { geoString, geoScopeId, isGlobal } = useGeoContext();
-
+  const { isPro } = useSubscription();
   const options = useMemo(() => allPickedOptions(), []);
   const byIndustry = useMemo(() => {
     const m = new Map<string, PickedSubFlow[]>();
