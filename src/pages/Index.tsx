@@ -28,9 +28,9 @@ const MaverickDashboard = () => {
       <div className="relative z-10 flex flex-col h-full">
         <header className="flex items-center justify-between px-4 py-3 border-b border-border/50 glass-panel-strong">
           <div className="flex items-center gap-4">
-            <BrandHexMark size="md" />
+            <BrandHexMark size="lg" />
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-[1.85rem] leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-[2.25rem] leading-tight">
                 <BrandWordmark />
               </h1>
               <p className="text-[9px] text-muted-foreground mt-0.5">Maverick AI</p>

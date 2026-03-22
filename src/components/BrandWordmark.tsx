@@ -11,8 +11,8 @@ export function BrandWordmark({ className, compact, variant = "default" }: Brand
   return (
     <span
       className={cn(
-        "inline-flex items-baseline select-none leading-none gap-1.5 font-sans",
-        compact ? "text-sm" : "text-base sm:text-lg",
+        "inline-flex items-baseline select-none leading-none gap-2 font-sans",
+        compact ? "text-base sm:text-lg" : "text-lg sm:text-xl md:text-2xl",
         className,
       )}
     >

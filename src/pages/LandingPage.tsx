@@ -63,12 +63,12 @@ export default function LandingPage() {
         <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-2 gap-y-2 px-3 py-2 sm:px-8 md:min-h-16 md:flex-nowrap md:items-center md:gap-6 md:py-0">
           <Link
             to="/"
-            className="order-1 group relative z-[1] flex min-w-0 max-w-[min(100%,calc(100%-11rem))] items-center gap-2 sm:max-w-none sm:gap-2.5 md:shrink-0"
+            className="order-1 group relative z-[1] flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2.5 md:max-w-none md:flex-initial md:shrink-0"
           >
             <span className="relative flex shrink-0 items-center justify-center overflow-visible">
               <BrandHexMark size="header" className="transition-transform group-hover:scale-[1.03]" />
             </span>
-            <BrandWordmark className="truncate text-base leading-none sm:text-lg md:text-xl" />
+            <BrandWordmark className="shrink-0 text-base leading-tight sm:text-xl sm:leading-none md:text-2xl" />
           </Link>
           <nav className="order-3 grid w-full grid-cols-2 gap-2 border-t border-border/35 pt-2 text-[12px] font-semibold text-muted-foreground sm:gap-2.5 sm:text-[13px] md:order-2 md:flex md:w-auto md:basis-auto md:flex-1 md:items-center md:justify-center md:gap-2 md:border-t-0 md:pt-0">
             <Popover>
@@ -329,13 +329,6 @@ export default function LandingPage() {
                 className="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 xl:gap-12 lg:items-stretch"
               >
                 <div className="text-left lg:flex lg:flex-col lg:justify-center">
-                  <motion.div variants={fadeUp} className="mb-3 sm:mb-4 flex justify-start">
-                    <div className="relative">
-                      <div className="absolute inset-0 rounded-[2rem] bg-primary/16 blur-2xl scale-[1.25] sm:scale-[1.2]" />
-                      <BrandHexMark size="hero" className="relative drop-shadow-md" />
-                    </div>
-                  </motion.div>
-
                   <motion.div
                     variants={fadeUp}
                     className="inline-flex flex-wrap items-center justify-start gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur-md px-3.5 py-1.5 text-[13px] sm:text-sm text-muted-foreground mb-5 sm:mb-6 shadow-sm"
@@ -503,7 +496,14 @@ export default function LandingPage() {
                 same truth bar.
               </p>
             </div>
-            <div className="grid gap-5 sm:gap-6 md:grid-cols-3">
+            <div
+              className={cn(
+                "flex gap-4 overflow-x-auto overscroll-x-contain scroll-smooth scroll-pl-4 scroll-pr-4 pb-3 pt-1",
+                "snap-x snap-mandatory [-webkit-overflow-scrolling:touch]",
+                "-mx-4 px-4 sm:-mx-8 sm:px-8",
+                "[scrollbar-width:thin]",
+              )}
+            >
               {[
                 {
                   title: "Live intel feed",
@@ -527,9 +527,9 @@ export default function LandingPage() {
                 <Link
                   key={item.title}
                   to="/auth?mode=signup"
-                  className="group relative flex flex-col rounded-[1.35rem] border border-border/60 bg-card overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                  className="group relative flex w-[min(85vw,22rem)] shrink-0 snap-start flex-col rounded-[1.35rem] border border-border/60 bg-card overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 sm:w-[20rem]"
                 >
-                  <div className={cn("relative h-36 sm:h-40 overflow-hidden", item.grad)}
+                  <div className={cn("relative h-32 overflow-hidden sm:h-36", item.grad)}
                   >
                     <div className="absolute inset-0 bg-[url('/hero-visual.png')] bg-cover bg-center opacity-25 mix-blend-overlay group-hover:opacity-35 transition-opacity" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
@@ -537,12 +537,14 @@ export default function LandingPage() {
                       <item.icon className="w-6 h-6 text-primary" />
                     </div>
                   </div>
-                  <div className="p-6 sm:p-7 flex flex-col flex-1">
-                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors sm:text-lg">
                       {item.title}
                     </h3>
-                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">{item.desc}</p>
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+                    <p className="mt-2 line-clamp-4 text-sm text-muted-foreground leading-relaxed flex-1 sm:line-clamp-none">
+                      {item.desc}
+                    </p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary sm:mt-5">
                       Get started
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
@@ -569,9 +571,12 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-zinc-800 dark:border-zinc-900 bg-zinc-950 dark:bg-black text-zinc-300 py-14 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
           <div className="md:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-5 md:gap-6">
               <BrandHexMark size="footer" variant="onDark" />
-              <BrandWordmark className="text-lg" variant="onDark" />
+              <BrandWordmark
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl !leading-[1.05] tracking-tight"
+                variant="onDark"
+              />
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-zinc-500">
               A private intelligence layer for people who read across markets — global ingestion, structured synthesis,

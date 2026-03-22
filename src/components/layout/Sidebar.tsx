@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { industries } from "@/lib/industryData";
-import { LayoutDashboard, Radio, Network, ChevronDown, ChevronRight, FlaskConical, UserCircle } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -20,14 +20,6 @@ export function Sidebar({ open, overlay, onNavigate }: SidebarProps) {
 
   const nav = () => onNavigate?.();
 
-  const navItems = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/intel", label: "Live Feed", icon: Radio },
-    { to: "/cross-intel", label: "Cross-Intel", icon: Network },
-    { to: "/custom-intel", label: "Intel Lab", icon: FlaskConical },
-    { to: "/profile", label: "My Profile", icon: UserCircle },
-  ];
-
   return (
     <aside
       className={cn(
@@ -37,26 +29,7 @@ export function Sidebar({ open, overlay, onNavigate }: SidebarProps) {
           : "w-60 shrink-0",
       )}
     >
-      <div className="space-y-1 p-3">
-        {navItems.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            onClick={nav}
-            className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-2xl text-sm transition-all duration-200",
-              location.pathname === item.to
-                ? "bg-primary/[0.06] text-foreground font-bold shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
-            )}
-          >
-            <item.icon className={cn("w-[18px] h-[18px] shrink-0", location.pathname === item.to ? "text-primary" : "")} />
-            {item.label}
-          </Link>
-        ))}
-      </div>
-
-      <div className="px-4 py-3">
+      <div className="px-4 py-3 pt-4">
         <p className="px-1 text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70">Industries</p>
       </div>
 

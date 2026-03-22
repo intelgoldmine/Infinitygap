@@ -122,8 +122,8 @@ export default function Dashboard() {
         <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="space-y-5 max-w-2xl">
             <div className="flex items-center gap-3 flex-wrap">
-              <BrandHexMark size="md" />
-              <BrandWordmark className="text-lg" />
+              <BrandHexMark size="lg" />
+              <BrandWordmark className="text-xl sm:text-2xl" />
               <SubscriptionBadge />
             </div>
 

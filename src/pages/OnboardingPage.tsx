@@ -128,8 +128,8 @@ export default function OnboardingPage() {
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="flex flex-col items-center mb-10">
-          <BrandHexMark size="lg" />
-          <h1 className="font-display text-2xl font-bold text-foreground mt-5">
+          <BrandHexMark size="xl" />
+          <h1 className="font-display text-3xl font-bold text-foreground mt-5 sm:text-4xl">
             <BrandWordmark />
           </h1>
           <p className="text-sm text-muted-foreground mt-2">

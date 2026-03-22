@@ -3,24 +3,25 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 const sizeMap = {
-  sm: "w-7 h-7",
-  /** Marketing footer / dark surfaces — larger than sm */
-  footer: "w-10 h-10 sm:w-11 sm:h-11",
-  md: "w-9 h-9",
-  lg: "w-11 h-11",
-  /** Compact nav bars (tooling) */
-  xl: "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16",
+  /** Compact rails (TopBar, legal shell) — readable at a glance */
+  sm: "w-9 h-9 sm:w-10 sm:h-10",
+  /** Marketing footer / dark surfaces — large lockup */
+  footer:
+    "w-[5.5rem] h-[5.5rem] sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36",
+  md: "w-11 h-11 sm:w-12 sm:h-12",
+  lg: "w-14 h-14 sm:w-[3.75rem] sm:h-[3.75rem]",
+  /** Marketing / dashboard hero emphasis */
+  xl: "w-[3.75rem] h-[3.75rem] sm:w-16 sm:h-16 md:w-[4.25rem] md:h-[4.25rem] lg:w-[4.5rem] lg:h-[4.5rem]",
   /**
-   * Top bar mark — sized independently of header height (header uses overflow-visible + fixed h-12/h-14).
-   * Tune without changing the bar: set `--brand-header-mark-size` on the header (e.g. `5.75rem`).
+   * Marketing + auth headers — tune with `--brand-header-mark-size` on the mark.
    */
   header:
-    "w-[clamp(3.5rem,var(--brand-header-mark-size,5.25rem),7rem)] h-[clamp(3.5rem,var(--brand-header-mark-size,5.25rem),7rem)]",
-  /** Landing hero — compact, less vertical footprint than 2xl */
-  hero: "w-[5.5rem] h-[5.5rem] sm:w-24 sm:h-24 md:w-[6.5rem] md:h-[6.5rem] lg:w-28 lg:h-28 xl:w-[7.5rem] xl:h-[7.5rem]",
+    "w-[clamp(3.75rem,var(--brand-header-mark-size,5.75rem),8rem)] h-[clamp(3.75rem,var(--brand-header-mark-size,5.75rem),8rem)]",
+  /** Landing hero */
+  hero: "w-[6.25rem] h-[6.25rem] sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 xl:w-[9.5rem] xl:h-[9.5rem]",
   /** Auth / reset spotlight */
   "2xl":
-    "w-[7.25rem] h-[7.25rem] sm:w-36 sm:h-36 md:w-44 md:h-44 lg:w-[13rem] lg:h-[13rem] xl:w-[14.5rem] xl:h-[14.5rem]",
+    "w-[8rem] h-[8rem] sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-[13.5rem] lg:h-[13.5rem] xl:w-[15.5rem] xl:h-[15.5rem]",
 } as const;
 
 type Size = keyof typeof sizeMap;

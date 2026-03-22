@@ -44,7 +44,7 @@ export function FullPagePaywall() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="text-center p-8 max-w-lg">
-        <BrandHexMark size="lg" className="mx-auto mb-6" />
+        <BrandHexMark size="xl" className="mx-auto mb-6" />
         <h2 className="text-2xl font-bold text-foreground mb-2 font-display">
           Upgrade to unlock this page
         </h2>

@@ -131,7 +131,7 @@ export default function AuthPage() {
             <span className="relative flex shrink-0 items-center justify-center overflow-visible">
               <BrandHexMark size="header" className="transition-transform group-hover:scale-[1.02]" />
             </span>
-            <BrandWordmark className="truncate text-base sm:text-lg md:text-xl leading-none" />
+            <BrandWordmark className="truncate text-lg sm:text-xl md:text-2xl leading-none" />
           </Link>
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <ThemeToggle size="sm" />
@@ -160,10 +160,10 @@ export default function AuthPage() {
           >
             <div className="relative mb-4 flex justify-center">
               <div className="pointer-events-none absolute inset-0 left-1/2 top-1/2 h-[min(100%,18rem)] w-[min(100%,18rem)] -translate-x-1/2 -translate-y-1/2 scale-110 rounded-[2rem] bg-primary/12 blur-3xl" />
-              <BrandHexMark size="2xl" className="relative mx-auto h-auto max-h-[9rem] w-auto max-w-[12rem] object-contain drop-shadow-lg sm:max-h-none sm:max-w-none" />
+              <BrandHexMark size="2xl" className="relative mx-auto h-auto max-h-[11rem] w-auto max-w-[15rem] object-contain drop-shadow-lg sm:max-h-none sm:max-w-none" />
             </div>
             <h1 className="font-bold text-foreground">
-              <BrandWordmark className="text-xl sm:text-3xl" />
+              <BrandWordmark className="text-2xl sm:text-4xl" />
             </h1>
             <p className="text-sm text-muted-foreground mt-2">Evidence-backed market intelligence</p>
           </motion.div>

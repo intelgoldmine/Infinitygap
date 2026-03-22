@@ -22,7 +22,7 @@ export function LegalPageShell({ title, lastUpdated = "March 22, 2026", children
             Home
           </Link>
           <div className="flex items-center gap-2 min-w-0 justify-center max-w-[min(100%,14rem)] sm:max-w-md">
-            <BrandHexMark size="sm" />
+            <BrandHexMark size="md" />
             <span className="font-semibold text-foreground truncate text-sm sm:text-base">{title}</span>
           </div>
           <div className="justify-self-end flex items-center justify-end">
