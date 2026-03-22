@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { BrandHexMark } from "@/components/BrandHexMark";
 import { industries } from "@/lib/industryData";
@@ -17,6 +17,7 @@ import {
   Network,
   Shield,
   MapPin,
+  CheckCircle2,
 } from "lucide-react";
 import { WorldMap } from "@/components/intel/WorldMap";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
@@ -25,9 +26,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
+import { useSubscription } from "@/hooks/useSubscription";
+import { UpgradeButton, SubscriptionBadge } from "@/components/SubscriptionGate";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const { profile } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { isPro, verifyPayment, loading: subLoading, subscription } = useSubscription();
   const [alertsEnabled, setAlertsEnabled] = useState(true);
   const { requestNotificationPermission } = useAlertNotifications([], alertsEnabled);
   const [dbStats, setDbStats] = useState({ rawData: 0, insights: 0, matches: 0 });
