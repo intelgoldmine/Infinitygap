@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { motion, AnimatePresence } from "framer-motion";
 
 const PROD_URL = "https://intelgoldmine.onrender.com";
