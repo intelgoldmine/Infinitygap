@@ -16,7 +16,6 @@ import {
   Cpu,
   Globe2,
   Layers,
-  LayoutGrid,
   Radio,
   Shield,
   TrendingUp,
@@ -115,7 +114,7 @@ export default function LandingPage() {
           <div className="absolute inset-0 dot-pattern-fine opacity-[0.45] pointer-events-none" />
           <div className="absolute inset-0 grid-bg opacity-25 pointer-events-none" />
 
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pb-10 sm:pb-14">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12 lg:pt-14 pb-0">
               <p className="text-center lg:text-left text-[13px] sm:text-sm text-muted-foreground font-medium mb-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-3 gap-y-1.5">
                 <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-card/90 backdrop-blur-sm px-3 py-1.5 text-foreground shadow-sm">
@@ -286,37 +285,6 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10 mt-10 sm:mt-12 border-t border-border/40 pt-8 sm:pt-10 pb-12 sm:pb-14">
-              <motion.div
-                variants={stagger}
-                initial="hidden"
-                animate="show"
-                className="grid grid-cols-3 gap-3 sm:gap-5 max-w-4xl mx-auto lg:mx-0"
-              >
-                {[
-                  { n: `${industries.length}`, l: "Industries mapped", color: "text-primary", icon: LayoutGrid },
-                  { n: `${totalFlows}+`, l: "Money flows", color: "text-brand-orange", icon: BarChart3 },
-                  { n: "11+", l: "Live data sources", color: "text-signal-emerald", icon: Radio },
-                ].map((s) => (
-                  <motion.div
-                    key={s.l}
-                    variants={fadeUp}
-                    className="group text-center lg:text-left rounded-2xl border border-border/50 bg-card/90 backdrop-blur-sm px-3 py-5 sm:p-6 shadow-sm hover:shadow-md hover:border-primary/15 transition-all"
-                  >
-                    <div className="mx-auto lg:mx-0 mb-2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-muted/60 border border-border/50 text-muted-foreground group-hover:text-primary transition-colors">
-                      <s.icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-                    <p className={cn("text-2xl sm:text-4xl md:text-5xl font-bold tabular-nums font-display", s.color)}>
-                      {s.n}
-                    </p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-semibold uppercase tracking-wide">
-                      {s.l}
-                    </p>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
           </motion.div>
         </section>
 
