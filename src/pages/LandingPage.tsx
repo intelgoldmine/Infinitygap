@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BrandHexMark } from "@/components/BrandHexMark";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,179 @@ const fadeUp = {
 const stagger = {
   show: { transition: { staggerChildren: 0.1, delayChildren: 0.12 } },
 };
+
+const CHOOSE_LANE_CARDS = [
+  {
+    title: "Live intel feed",
+    desc: "A continuous global pulse — markets, macro, commodities, funding, and socials where configured. Built for operators who need rhythm without noise.",
+    icon: Radio,
+    grad: "bg-gradient-to-br from-primary/30 via-primary/10 to-slate-900/80",
+  },
+  {
+    title: "Intel Lab",
+    desc: "Scope industries & money flows, add context, and let Maverick generate research-grade briefs you can challenge line by line — your private lab.",
+    icon: FlaskConical,
+    grad: "bg-gradient-to-br from-amber-500/35 via-brand-orange/15 to-slate-900/85",
+  },
+  {
+    title: "Cross-industry scan",
+    desc: "See bridges, gaps, and knock-on effects across all mapped sectors — for analysts who think in systems, not single tickers.",
+    icon: Layers,
+    grad: "bg-gradient-to-br from-violet-500/30 via-signal-violet/15 to-slate-900/85",
+  },
+] as const;
+
+type LaneCardMotion = { focus: number; yaw: number; lift: number };
+
+function ChooseLaneCarousel() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [motionByIndex, setMotionByIndex] = useState<LaneCardMotion[]>(() =>
+    CHOOSE_LANE_CARDS.map(() => ({ focus: 1, yaw: 0, lift: 0 })),
+  );
+
+  const updateScrollMotion = useCallback(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const cards = container.querySelectorAll<HTMLElement>("[data-lane-card]");
+    if (cards.length === 0) return;
+
+    const cr = container.getBoundingClientRect();
+    const centerX = cr.left + cr.width / 2;
+    const halfW = cr.width / 2;
+
+    const next: LaneCardMotion[] = [];
+    cards.forEach((card) => {
+      const r = card.getBoundingClientRect();
+      const cardCenter = r.left + r.width / 2;
+      const dist = Math.abs(cardCenter - centerX);
+      const falloff = halfW + r.width * 0.35;
+      const raw = Math.max(0, 1 - dist / falloff);
+      const focus = Math.min(1, raw * raw);
+
+      const offsetNorm = (cardCenter - centerX) / Math.max(1, halfW);
+      const yaw = Math.max(-1, Math.min(1, offsetNorm)) * -14;
+      const lift = (1 - focus) * 10;
+
+      next.push({ focus, yaw, lift });
+    });
+    setMotionByIndex(next);
+  }, []);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    let raf = 0;
+    const onScrollOrResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(updateScrollMotion);
+    };
+
+    onScrollOrResize();
+    container.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    const ro = new ResizeObserver(onScrollOrResize);
+    ro.observe(container);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      container.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+      ro.disconnect();
+    };
+  }, [updateScrollMotion]);
+
+  return (
+    <div className="relative [perspective:1400px]">
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-[2] w-10 bg-gradient-to-r from-amber-50/95 via-amber-50/40 to-transparent dark:from-amber-950/50 dark:via-amber-950/20 sm:w-14"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 z-[2] w-10 bg-gradient-to-l from-amber-50/95 via-amber-50/40 to-transparent dark:from-amber-950/50 dark:via-amber-950/20 sm:w-14"
+        aria-hidden
+      />
+
+      <div
+        ref={scrollRef}
+        className={cn(
+          "flex gap-4 overflow-x-auto overscroll-x-contain scroll-smooth scroll-pl-4 scroll-pr-4 pb-3 pt-1",
+          "snap-x snap-mandatory [-webkit-overflow-scrolling:touch]",
+          "-mx-4 px-4 sm:-mx-8 sm:px-8",
+          "[scrollbar-width:thin]",
+        )}
+      >
+        {CHOOSE_LANE_CARDS.map((item, i) => {
+          const m = motionByIndex[i] ?? { focus: 1, yaw: 0, lift: 0 };
+          const scale = 0.88 + 0.12 * m.focus;
+          const opacity = 0.58 + 0.42 * m.focus;
+          const Icon = item.icon;
+
+          return (
+            <motion.div
+              key={item.title}
+              data-lane-card
+              className="shrink-0 snap-start [transform-style:preserve-3d] will-change-transform"
+              initial={false}
+              animate={{
+                scale,
+                opacity,
+                rotateY: m.yaw,
+                y: m.lift,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 380,
+                damping: 34,
+                mass: 0.55,
+              }}
+            >
+              <Link
+                to="/auth?mode=signup"
+                className="group relative flex h-full w-[min(85vw,22rem)] flex-col overflow-hidden rounded-[1.35rem] border border-border/60 bg-card shadow-lg transition-[box-shadow,transform] duration-300 sm:w-[20rem] hover:shadow-2xl hover:-translate-y-0.5"
+                style={{
+                  boxShadow:
+                    m.focus > 0.65
+                      ? "0 22px 50px -18px hsl(var(--primary) / 0.22), 0 0 0 1px hsl(var(--primary) / 0.12)"
+                      : undefined,
+                }}
+              >
+                <div className={cn("relative h-32 overflow-hidden sm:h-36", item.grad)}>
+                  <motion.div
+                    className="absolute inset-0 bg-[url('/hero-visual.png')] bg-cover bg-center mix-blend-overlay"
+                    animate={{ opacity: 0.2 + 0.2 * m.focus }}
+                    transition={{ type: "spring", stiffness: 300, damping: 35 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+                  <motion.div
+                    className="absolute bottom-3 left-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-border/50 bg-background/90 shadow-md"
+                    animate={{ scale: 0.95 + 0.05 * m.focus }}
+                    transition={{ type: "spring", stiffness: 420, damping: 28 }}
+                  >
+                    <Icon className="h-6 w-6 text-primary" />
+                  </motion.div>
+                </div>
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                  <h3 className="text-base font-bold text-foreground transition-colors group-hover:text-primary sm:text-lg">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-4 flex-1 text-sm leading-relaxed text-muted-foreground sm:line-clamp-none">
+                    {item.desc}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary sm:mt-5">
+                    Get started
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -309,16 +482,12 @@ export default function LandingPage() {
             className="relative z-10 flex min-h-0 flex-1 flex-col justify-center py-6 sm:py-8"
           >
             <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-4 sm:pt-6 lg:pt-8 pb-0">
-              <p className="mb-3 flex flex-wrap items-start justify-start gap-x-3 gap-y-1.5 text-left text-[13px] font-medium text-muted-foreground sm:mb-4 sm:text-sm">
+              <p className="mb-3 text-left sm:mb-4">
                 <span className="inline-flex max-w-full items-start gap-2 rounded-2xl border border-primary/15 bg-card/90 px-3.5 py-2.5 text-foreground shadow-sm backdrop-blur-sm sm:max-w-4xl">
                   <Activity className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                  <span className="min-w-0 text-[13px] font-medium leading-snug sm:text-sm">
-                    An AI agent that continuously gathers news and intel from hundreds of sources, surfaces business gaps, research angles, and high-signal updates, then delivers them to you proactively—across every industry, 24/7.
+                  <span className="min-w-0 text-[13px] font-medium leading-snug text-foreground sm:text-sm">
+                    Maverick is an AI agent that continuously gathers news and intel from hundreds of sources, maps how money moves, surfaces business gaps, research angles, and the relationships analysts and researchers need for cross-reading, and delivers high-signal updates to you proactively across every industry, 24/7—not scattered headlines.
                   </span>
-                </span>
-                <span className="hidden text-border sm:inline">·</span>
-                <span className="max-w-md text-muted-foreground sm:max-w-none">
-                  Built for people who connect dots across markets — not for scrolling another feed.
                 </span>
               </p>
 
@@ -329,19 +498,6 @@ export default function LandingPage() {
                 className="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-10 xl:gap-12 lg:items-stretch"
               >
                 <div className="text-left lg:flex lg:flex-col lg:justify-center">
-                  <motion.div
-                    variants={fadeUp}
-                    className="inline-flex flex-wrap items-center justify-start gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur-md px-3.5 py-1.5 text-[13px] sm:text-sm text-muted-foreground mb-5 sm:mb-6 shadow-sm"
-                  >
-                    <span className="relative flex h-2 w-2 shrink-0">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-emerald/40" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-signal-emerald" />
-                    </span>
-                    <span className="font-semibold text-foreground">Live desk</span>
-                    <span className="text-border">·</span>
-                    <span className="font-semibold text-brand-orange">Maverick synthesis</span>
-                  </motion.div>
-
                   <motion.h1
                     variants={fadeUp}
                     className="font-display text-[2.35rem] font-bold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-5xl md:text-6xl xl:text-[3.5rem]"
@@ -357,11 +513,8 @@ export default function LandingPage() {
                   >
                     <span className="font-semibold text-foreground">{industries.length} sectors</span> ·{" "}
                     <span className="font-semibold text-foreground">{FLOW_LANES_LABEL} capital lanes</span> ·{" "}
-                    <span className="font-semibold text-foreground">{SOURCE_INTEGRATIONS_LABEL} feed integrations</span>
-                    <span>
-                      {" "}
-                      — Maverick ingests sources from around the world, maps how money moves, and surfaces the
-                      relationships analysts and researchers need for cross-reading — not scattered headlines.
+                    <span className="font-semibold text-foreground">
+                      {SOURCE_INTEGRATIONS_LABEL} feed integrations.
                     </span>
                   </motion.p>
 
@@ -496,62 +649,7 @@ export default function LandingPage() {
                 same truth bar.
               </p>
             </div>
-            <div
-              className={cn(
-                "flex gap-4 overflow-x-auto overscroll-x-contain scroll-smooth scroll-pl-4 scroll-pr-4 pb-3 pt-1",
-                "snap-x snap-mandatory [-webkit-overflow-scrolling:touch]",
-                "-mx-4 px-4 sm:-mx-8 sm:px-8",
-                "[scrollbar-width:thin]",
-              )}
-            >
-              {[
-                {
-                  title: "Live intel feed",
-                  desc: "A continuous global pulse — markets, macro, commodities, funding, and socials where configured. Built for operators who need rhythm without noise.",
-                  icon: Radio,
-                  grad: "bg-gradient-to-br from-primary/30 via-primary/10 to-slate-900/80",
-                },
-                {
-                  title: "Intel Lab",
-                  desc: "Scope industries & money flows, add context, and let Maverick generate research-grade briefs you can challenge line by line — your private lab.",
-                  icon: FlaskConical,
-                  grad: "bg-gradient-to-br from-amber-500/35 via-brand-orange/15 to-slate-900/85",
-                },
-                {
-                  title: "Cross-industry scan",
-                  desc: "See bridges, gaps, and knock-on effects across all mapped sectors — for analysts who think in systems, not single tickers.",
-                  icon: Layers,
-                  grad: "bg-gradient-to-br from-violet-500/30 via-signal-violet/15 to-slate-900/85",
-                },
-              ].map((item) => (
-                <Link
-                  key={item.title}
-                  to="/auth?mode=signup"
-                  className="group relative flex w-[min(85vw,22rem)] shrink-0 snap-start flex-col rounded-[1.35rem] border border-border/60 bg-card overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 sm:w-[20rem]"
-                >
-                  <div className={cn("relative h-32 overflow-hidden sm:h-36", item.grad)}
-                  >
-                    <div className="absolute inset-0 bg-[url('/hero-visual.png')] bg-cover bg-center opacity-25 mix-blend-overlay group-hover:opacity-35 transition-opacity" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
-                    <div className="absolute bottom-3 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-background/90 border border-border/50 shadow-md">
-                      <item.icon className="w-6 h-6 text-primary" />
-                    </div>
-                  </div>
-                  <div className="flex flex-1 flex-col p-5 sm:p-6">
-                    <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors sm:text-lg">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 line-clamp-4 text-sm text-muted-foreground leading-relaxed flex-1 sm:line-clamp-none">
-                      {item.desc}
-                    </p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary sm:mt-5">
-                      Get started
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <ChooseLaneCarousel />
           </div>
         </section>
 

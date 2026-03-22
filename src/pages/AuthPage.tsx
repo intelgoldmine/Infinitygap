@@ -126,13 +126,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col relative">
       <header className="sticky top-0 z-40 w-full shrink-0 overflow-visible border-b border-border/40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/90">
-        <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-          <Link to="/" className="relative z-[1] flex min-w-0 items-center gap-2 sm:gap-2.5 group">
-            <span className="relative flex shrink-0 items-center justify-center overflow-visible">
-              <BrandHexMark size="header" className="transition-transform group-hover:scale-[1.02]" />
-            </span>
-            <BrandWordmark className="truncate text-lg sm:text-xl md:text-2xl leading-none" />
-          </Link>
+        <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-end gap-3 px-4 sm:px-6">
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <ThemeToggle size="sm" />
             <Link
