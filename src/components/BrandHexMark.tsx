@@ -8,7 +8,7 @@ const sizeMap = {
 
 type Size = keyof typeof sizeMap;
 
-/** Brand logo mark using the generated logo image. Use `onDark` on navy / dark marketing surfaces. */
+/** Brand mark — canonical asset is `/logo-white.png` site-wide (light + dark surfaces). */
 export function BrandHexMark({
   size = "md",
   className,
@@ -16,13 +16,19 @@ export function BrandHexMark({
 }: {
   size?: Size;
   className?: string;
+  /** Reserved for future contrast tweaks; both variants use the same asset. */
   variant?: "default" | "onDark";
 }) {
   return (
     <img
-      src={variant === "onDark" ? "/logo-white.png" : "/logo.png"}
+      src="/logo-white.png"
       alt="Intel GoldMine"
-      className={cn("shrink-0 object-contain", sizeMap[size], className)}
+      className={cn(
+        "shrink-0 object-contain",
+        variant === "default" && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.08)]",
+        sizeMap[size],
+        className,
+      )}
     />
   );
 }
