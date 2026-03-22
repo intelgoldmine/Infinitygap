@@ -165,7 +165,7 @@ export default function CustomIntelPage() {
     } finally {
       setLoading(false);
     }
-  }, [freeText, freeTextMode, pool, primary, secondary, geoString, geoScopeId, isGlobal]);
+  }, [freeText, freeTextMode, pool, primary, secondary, geoString, geoScopeId, isGlobal, isPro]);
 
   const sendFollowUp = useCallback(() => {
     const q = chatInput.trim();
