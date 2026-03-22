@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 
-const PROD_URL = "https://intelgoldmine.onrender.com";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,23 +34,30 @@ export default function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const origin = window.location.origin;
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { full_name: fullName },
-            emailRedirectTo: PROD_URL,
+            // Must be listed under Supabase → Auth → URL configuration → Redirect URLs
+            emailRedirectTo: origin,
           },
         });
         if (error) throw error;
-        toast.success("Check your email for a verification link!");
+        if (data.session) {
+          toast.success("Account created — you're signed in.");
+          navigate("/dashboard");
+        } else {
+          toast.success("Check your email for the confirmation link (and spam/junk).");
+        }
       } else if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         navigate("/dashboard");
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${PROD_URL}/reset-password`,
+          redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
         toast.success("Password reset link sent to your email!");
