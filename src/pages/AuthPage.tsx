@@ -347,6 +347,16 @@ export default function AuthPage() {
                 </p>
               )}
             </div>
+
+            <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground pt-1">
+              <Link to="/privacy-policy" className="hover:text-foreground underline-offset-2 hover:underline">
+                Privacy policy
+              </Link>
+              <span className="text-border select-none">·</span>
+              <Link to="/terms-of-service" className="hover:text-foreground underline-offset-2 hover:underline">
+                Terms of service
+              </Link>
+            </div>
             </div>
           </div>
         </motion.div>

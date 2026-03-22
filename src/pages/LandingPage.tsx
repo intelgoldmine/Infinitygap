@@ -671,7 +671,7 @@ export default function LandingPage() {
 
       <footer className="relative z-10 border-t border-border/50 bg-muted/20 py-14">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
-          <div className="md:col-span-5 space-y-4">
+          <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
               <BrandHexMark size="sm" />
               <span className="font-bold text-foreground text-lg">Intel GoldMine</span>
@@ -680,7 +680,7 @@ export default function LandingPage() {
               AI-powered market intelligence with geo scope, structured outputs, and Maverick — your research copilot.
             </p>
           </div>
-          <div className="md:col-span-3">
+          <div className="md:col-span-2">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Product</p>
             <ul className="space-y-2.5 text-sm">
               <li>
@@ -697,6 +697,21 @@ export default function LandingPage() {
                 <a href="#pricing" className="text-foreground/80 hover:text-primary transition-colors">
                   Pricing
                 </a>
+              </li>
+            </ul>
+          </div>
+          <div className="md:col-span-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Legal</p>
+            <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link to="/privacy-policy" className="text-foreground/80 hover:text-primary transition-colors">
+                  Privacy policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms-of-service" className="text-foreground/80 hover:text-primary transition-colors">
+                  Terms of service
+                </Link>
               </li>
             </ul>
           </div>
