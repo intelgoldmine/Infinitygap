@@ -58,7 +58,7 @@ export default function AuthPage() {
 
   const handleGoogleLogin = async () => {
     const { error } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: PROD_URL,
     });
     if (error) toast.error("Google sign-in failed");
   };
