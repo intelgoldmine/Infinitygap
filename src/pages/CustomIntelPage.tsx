@@ -120,6 +120,10 @@ export default function CustomIntelPage() {
   }, [pool, primary, secondary]);
 
   const runIntel = useCallback(async () => {
+    if (!isPro) {
+      toast.error("Custom Intel Lab requires a Pro subscription. Upgrade to generate reports.");
+      return;
+    }
     const selectedCount = pool.size + primary.size + secondary.size;
     if (!freeText.trim() && selectedCount === 0) {
       setError("Add subcategories to pool/primary/secondary or enter text context.");
