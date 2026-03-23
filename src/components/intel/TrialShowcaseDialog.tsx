@@ -210,7 +210,7 @@ export function TrialShowcaseDialog({ open, onOpenChange }: Props) {
               Try Infinitygap — free showcase
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm leading-relaxed">
-              Three guided questions on us. We calibrate to who you are, where you care about, and what you want tested — then
+              One guided question on us. We calibrate to who you are, where you care about, and what you want tested — then
               return the same structured brief style as Pro (metrics, cards, frameworks).
             </DialogDescription>
             <p className="text-[11px] font-semibold text-muted-foreground pt-1">
