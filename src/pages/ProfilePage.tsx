@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { BrandHexMark } from "@/components/BrandHexMark";
 import { UpgradeButton } from "@/components/SubscriptionGate";
-import { User, Crown, Mail, Building2, Briefcase, MapPin, Save, Loader2 } from "lucide-react";
+import { User, Crown, Mail, Building2, Briefcase, MapPin, Save, Loader2, CreditCard, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,7 +66,6 @@ export default function ProfilePage() {
   };
 
   const handleDowngrade = async () => {
-    // For now, show a message — full cancel requires Paystack API integration
     toast.info("To cancel your subscription, please contact support at support@infinitygap.app. We'll process your request within 24 hours.");
   };
 
@@ -146,6 +145,44 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+
+      {/* Billing / Card Management — only for Pro users */}
+      {isPro && (
+        <div className="rounded-2xl border border-border bg-card p-5 sm:p-8">
+          <div className="mb-6 flex items-center gap-3">
+            <CreditCard className="h-5 w-5 shrink-0 text-primary" />
+            <h2 className="text-lg font-bold text-foreground">Billing & Payment</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div className="rounded-xl border border-border/60 bg-muted/30 p-4 space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Payment method</span>
+                <span className="font-medium text-foreground flex items-center gap-1.5">
+                  <CreditCard className="h-3.5 w-3.5" />
+                  Card on file via Paystack
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Billing email</span>
+                <span className="font-medium text-foreground truncate max-w-[200px]">{user?.email}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Monthly charge</span>
+                <span className="font-bold text-foreground">${SUBSCRIPTION_USD_MONTHLY}.00 USD</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+              <Shield className="h-3.5 w-3.5 shrink-0" />
+              <span>
+                Card details are securely managed by Paystack (PCI-DSS compliant). 
+                To update your card, contact support at support@infinitygap.app.
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Profile Details */}
       <div className="rounded-2xl border border-border bg-card p-5 sm:p-8">
