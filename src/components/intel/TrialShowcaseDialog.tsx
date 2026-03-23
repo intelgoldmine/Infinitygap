@@ -27,7 +27,7 @@ import {
 } from "@/lib/trialIntelStorage";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Loader2, Presentation, ChevronRight, ChevronLeft, Globe2 } from "lucide-react";
+import { Loader2, Presentation, ChevronRight, ChevronLeft, Globe2, Sparkles, FileDown } from "lucide-react";
 
 const GEO_POOL: GeoOption[] = [...CONTINENTS, ...COUNTRIES];
 

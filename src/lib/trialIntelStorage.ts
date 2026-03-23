@@ -1,5 +1,5 @@
 const KEY = "infinitygap_trial_intel_prompts_used";
-const MAX = 3;
+const MAX = 1;
 
 export function getTrialIntelPromptCount(): number {
   try {

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { getGeoNavLabel } from "@/lib/geoData";
 
 export function TopBar({ sidebarOpen, toggleSidebar }: { sidebarOpen: boolean; toggleSidebar: () => void }) {
-  const { isGlobal, geoString } = useGeoContext();
+  const { isGlobal, geoString, selections } = useGeoContext();
   const { profile, signOut } = useAuth();
   const location = useLocation();
   const [industriesOpen, setIndustriesOpen] = useState(false);
