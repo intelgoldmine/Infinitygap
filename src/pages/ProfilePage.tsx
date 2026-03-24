@@ -66,7 +66,7 @@ export default function ProfilePage() {
   };
 
   const handleDowngrade = async () => {
-    toast.info("To cancel your subscription, please contact support at support@infinitygap.app. We'll process your request within 24 hours.");
+    toast.info("To cancel your subscription, please contact support at support@infinitygap.onrender.com. We'll process your request within 24 hours.");
   };
 
   return (
