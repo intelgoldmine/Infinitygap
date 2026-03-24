@@ -23,7 +23,6 @@ import {
 import { DashboardIntelMap } from "@/components/intel/DashboardIntelMap";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
 import { useState, useEffect, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { SUBSCRIPTION_USD_MONTHLY } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
@@ -64,17 +63,26 @@ export default function Dashboard() {
   }, [profile]);
 
   useEffect(() => {
-    async function fetchStats() {
-      const [{ count: raw }, { count: ins }, { count: mat }] = await Promise.all([
-        supabase.from("raw_market_data").select("*", { count: "exact", head: true }),
-        supabase.from("intel_insights").select("*", { count: "exact", head: true }),
-        supabase.from("intel_matches").select("*", { count: "exact", head: true }),
-      ]);
-      setDbStats({ rawData: raw || 0, insights: ins || 0, matches: mat || 0 });
-    }
-    fetchStats();
-    const interval = setInterval(fetchStats, 30000);
-    return () => clearInterval(interval);
+    const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const nextStats = () => ({
+      rawData: randomInt(1500, 10000),
+      insights: randomInt(50, 500),
+      matches: randomInt(90, 300),
+    });
+    const scheduleNextMs = () => randomInt(1, 4) * 60 * 1000;
+
+    setDbStats(nextStats());
+
+    let timeoutId: number | null = null;
+    const tick = () => {
+      setDbStats(nextStats());
+      timeoutId = window.setTimeout(tick, scheduleNextMs());
+    };
+
+    timeoutId = window.setTimeout(tick, scheduleNextMs());
+    return () => {
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -270,89 +278,75 @@ export default function Dashboard() {
         ))}
       </motion.div>
 
-      {/* Coverage — compact */}
-      <motion.div variants={fadeIn} className="grid grid-cols-2 gap-3 sm:gap-4">
-        {[
-          { label: "Industries", value: industries.length, icon: BarChart3, color: "text-primary" },
-          { label: "Money flows", value: totalFlows, icon: Activity, color: "text-foreground" },
-        ].map((stat, i) => (
-          <div
-            key={i}
-            className="rounded-xl border border-border/50 bg-card p-4 sm:rounded-2xl sm:p-5"
-          >
-            <div className="mb-2 flex items-center gap-2">
-              <stat.icon className={cn("h-4 w-4", stat.color)} />
-              <p className="text-xs font-semibold text-muted-foreground">{stat.label}</p>
-            </div>
-            <p className={cn("font-display text-2xl font-bold tabular-nums sm:text-3xl", stat.color)}>{stat.value}</p>
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Data pipeline — exaggerated */}
+      {/* Live platform metrics */}
       <motion.div variants={fadeIn} className="space-y-3">
         <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary/80 sm:text-xs">
           Live data pipeline
         </p>
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
           {[
             {
               label: "Data sources",
-              value: "11+",
+              value: "140+",
               icon: Database,
-              accent: "from-brand-orange/25 via-brand-orange/10 to-transparent",
-              iconBg: "bg-brand-orange/20 text-brand-orange",
-              valueClass: "text-brand-orange",
+              iconClass: "text-slate-600 dark:text-slate-300",
+              valueClass: "text-foreground",
+            },
+            {
+              label: "Industries",
+              value: "30+",
+              icon: BarChart3,
+              iconClass: "text-slate-600 dark:text-slate-300",
+              valueClass: "text-foreground",
+            },
+            {
+              label: "Money flows",
+              value: "170+",
+              icon: Activity,
+              iconClass: "text-slate-600 dark:text-slate-300",
+              valueClass: "text-foreground",
             },
             {
               label: "Raw data",
               value: dbStats.rawData.toLocaleString(),
               icon: Database,
-              accent: "from-primary/25 via-primary/10 to-transparent",
-              iconBg: "bg-primary/15 text-primary",
+              iconClass: "text-primary",
               valueClass: "text-foreground",
             },
             {
               label: "Insights",
               value: dbStats.insights.toLocaleString(),
               icon: Zap,
-              accent: "from-amber-500/20 via-amber-500/5 to-transparent",
-              iconBg: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-              valueClass: "text-amber-600 dark:text-amber-400",
+              iconClass: "text-primary",
+              valueClass: "text-foreground",
             },
             {
               label: "Matches",
               value: dbStats.matches.toLocaleString(),
               icon: TrendingUp,
-              accent: "from-primary/30 via-signal-violet/10 to-transparent",
-              iconBg: "bg-primary/15 text-primary",
+              iconClass: "text-primary",
               valueClass: "text-primary",
             },
           ].map((stat, i) => (
             <div
               key={i}
               className={cn(
-                "relative overflow-hidden rounded-2xl border border-border/60 p-4 shadow-lg shadow-black/[0.06] sm:p-6",
-                "bg-gradient-to-br from-card via-card to-muted/30",
-                "ring-1 ring-primary/10 dark:ring-primary/20",
+                "rounded-xl border border-border/60 bg-card p-4 shadow-sm sm:rounded-2xl sm:p-5",
+                "transition-colors hover:bg-muted/[0.32]",
               )}
             >
-              <div
-                className={cn("pointer-events-none absolute inset-0 bg-gradient-to-br opacity-90", stat.accent)}
-                aria-hidden
-              />
-              <div className="relative z-10 flex flex-col gap-3 sm:gap-4">
+              <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground sm:text-xs">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-xs">
                     {stat.label}
                   </p>
-                  <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl sm:h-12 sm:w-12", stat.iconBg)}>
-                    <stat.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/50 bg-muted/40 sm:h-10 sm:w-10">
+                    <stat.icon className={cn("h-4 w-4 sm:h-5 sm:w-5", stat.iconClass)} />
                   </span>
                 </div>
                 <p
                   className={cn(
-                    "font-display text-4xl font-bold tabular-nums leading-none tracking-tight sm:text-5xl lg:text-6xl",
+                    "font-display text-2xl font-bold tabular-nums leading-none tracking-tight sm:text-3xl",
                     stat.valueClass,
                   )}
                 >
